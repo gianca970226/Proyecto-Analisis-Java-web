@@ -1,0 +1,361 @@
+/* ---------------Seccion de declaraciones preliminares--------------------*/
+package controladoras;
+
+import java_cup.runtime.*;
+import java.io.FileReader;
+   
+/* Codigo del parser, se copia integramente a la clase final.
+    Agregamos el manejo de errores. */
+parser code {:
+    
+    /* Reporte de error encontrado. */
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Error");
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {                
+                m.append(" in line "+(s.left+1));
+                if (s.right >= 0)
+                    m.append(", column "+(s.right+1));
+            }
+        }
+        m.append(" : "+message);
+        System.err.println(m);
+    }
+   
+    /* Cuando se encuentra un error de donde el sistema no puede
+        recuperarse, se lanza un error fatal. Se despliega el mensaje
+        de error y se finaliza la ejecucion. */
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        //System.exit(1);
+    }
+
+    /* Metodo main para garantizar la ejecucion del analizador
+       lexico y sintactico, ademas que se pase como parametro la tabla
+       de simbolos correspondiente. */
+    public static void main(String[] args){
+        try {
+            AnalizadorSintactico asin = new AnalizadorSintactico(
+                    new AnalizadorLexico( new FileReader(args[0])));
+            Object result = asin.parse().value;
+            System.out.println("\n*** Resultados finales ***");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+:}
+
+non terminal S, A, E, PIF, PELSE, CONDICION, OTRACONDICION, BOOLEANO, OPERADORR, OPERADORL, PWHILE, PFOR, PREPEAT, VALOR1, VALOR, OPERACION, OPERACION1, OPERADOR, VARIABLE, SUBRUTINA, PARAMETROS, PARAMETROS1, OTROPARAMETRO, MODO, LLAMADOS, VALORES, VALORES1, VALORES2;
+terminal comentario, identificador, numero, alfanumerico, cadena return, coma, while, for, to, do, repeat, until, if, then, else, begin, end, length, null, procedure, function, en, es, call, and, or, not, mod, div, true, false, pa1,pa2, pb1,pb2, asginacion, menor, mayor, menorgiual, mayorigual, igual, diferente, suma, resta, multiplicacion, division, corcheteabierto,corchetecerrado, parentesisabierto, parentesiscerrado, dospuntos, unpunto, potencia;
+start with S
+S::=begin A:va end
+{:
+    RESULT=va;
+:};
+A::=SUBRUTINA:vs
+{:
+    RESULT=vs;
+:} 
+begin E:ve end
+{:
+    RESULT=ve;
+:};
+E::=PIF:vpif
+{:
+    RESULT=vpif;
+:}
+|
+PWHILE:vpwhile
+{:
+    RESULT:vpwhile;
+:} 
+|
+PFOR:vpfor
+{:
+    RESULT=vpfor;
+:}
+|
+PREPEAT:vprepeat
+{:
+    RESULT=vprepeat;
+:} 
+|
+OPERACION:voperacion
+{:
+    RESULT=voperacion;
+:}
+|
+VARIABLE:vvariable
+{:
+    RESULT=vvariable;
+:} 
+|
+LLAMADOS:vllamados
+{:
+    RESULT=vllamados;
+:} 
+|;
+PIF::=if CONDICION:vcondicion then
+{:
+    RESULT=vcondicion;
+:} 
+begin E:ve end
+{:
+    RESULT=ve;
+:}
+PELSE:vpelse
+{:
+    RESULT=vpelse;
+:}
+E:ve
+{:
+    RESULT=ve;
+:};
+PELSE::= else begin E:ve end
+{:
+    RESULT=ve;
+:}
+|
+elif CONDICION:vcondicion
+{:
+    RESULT=vcondicion;
+:} 
+begin E:ve end
+{:
+    RESULT=ve;
+:} 
+PELSE:vpelse
+{:
+    RESULT=vpelse;
+:} 
+|;
+CONDICION::=BOOLEANO:vbooleano
+{:
+    RESULT=vbooleano;
+:}
+OTRACONDICION:votracondicion
+{:
+    RESULT=votracondicion;
+:} 
+|
+VALOR:vvalor
+{:
+    RESULT=vvalor;
+:} 
+OPERADORR:voperadorr
+{:
+    RESULT=voperadorr;
+:} 
+VALOR:vvalor
+{:
+    RESULT=vvalor;
+:} 
+OTRACONDICON:votracondicion
+{:
+    RESULT=votracondicion;
+:}
+|
+not identificador OTRACONDICION:votracondicion
+{:
+    RESULT=votracondicion;
+:} 
+|
+not BOOLEANO:vbooleano
+{:
+    RESULT=vbooleano;
+:} 
+OTRACONDICION:votracondicion
+{:
+    RESULT=votracondicion;
+:}
+;
+OTRACONDICION::=OPERADORL:voperadorl
+{:
+    
+:} 
+CONDICION:vcondicion
+{:
+    RESULT=vcondicion;
+:} 
+|;
+BOOLEANO::= true|false;
+OPERADORR::= menorigual | mayorigual | menor | mayor | igual | diferente;
+OPERADORL::= and | or;
+PWHILE::= while parentesisabierto CONDICION:vcondicion parentesiscerrado do
+{:
+    RESULT= vcondicion;
+:} 
+begin E:ve end
+{:
+    RESULT=ve;
+:}
+E:ve
+{:
+    RESULT=ve;
+:};
+PFOR::= for identificador asignacion VALOR1:vvalor1
+{:
+    RESULT=vvalor1;
+:} 
+TO VALOR1:vvalor1 do
+{:
+    RESULT=vvalor1;
+:}
+begin E:ve end
+{:
+    
+:} 
+E:ve
+{:
+    RESULT=ve;
+:};
+PREPEAT::= repeat E:ve until
+{:
+    RESULT=ve;
+:} 
+parentesisabierto CONDICION:vcondicion parentesiscerrado
+{:
+    RESULT=vcondicion;
+:} 
+E:ve
+{:
+    result=ve;
+:};
+VALOR1::= identificador | numero;
+VALOR::= identificador | numero | cadena;
+OPERACIÓN::= identificador asignacion VALOR1:vvalor1
+{:
+    RESULT=vvalor1;
+:} 
+OPERADOR:voperador
+{:
+    RESULT=voperador;
+:} 
+VALOR1:vvalor1
+{:
+    RESULT=vvalor1;
+:} 
+OPERACION1:voperacion1
+{:
+    RESULT=voperacion1;
+:} 
+E:ve
+{:
+    RESULT=ve;
+:};
+OPERACION1::= OPERADOR:voperador
+{:
+    RESULT=voperador;
+:} 
+VALOR1:vvalor1
+{:
+    RESULT=vvalor1;
+:} 
+OPERACION1:voperacion1
+{:
+    RESULT=voperacion1;
+:}
+|;
+OPERADOR::= suma | resta | multiplicación | division;
+VARIABLE::=identificador asignación VALOR:vvalor
+{:
+    RESULT=ve;
+:}
+E:ve
+{:
+    RESULT=ve;
+:};
+SUBRUTINA::= procedure identificador parentesisabierto PARAMETROS:vparametros parentesisabierto
+{:
+    RESULT=vparametros;
+:} 
+begin E:ve end
+{:
+    RESULT=ve;
+:} 
+SUBRUTINA:vsubrutina
+{:
+    RESULT=vsubrutina;
+:} 
+|
+function identificador parentesisabierto PARAMETROS:vparametros parentesisabierto
+{:
+    RESULT=vparametros;
+:} 
+begin E:ve
+{:
+    RESULT=ve;
+:} 
+return VALOR:vvalor
+{:
+    RESULT=vvalor;
+:} 
+end SUBRUTINA:vsubrutina
+{:
+    RESULT=vsubrutina
+:}
+|
+function identificador parentesisabierto PARAMETROS:vparametros parentesisabierto
+{:
+    RESULT= vparametros;
+:} 
+begin E:ve
+{:
+    RESULT=ve;
+:}
+return BOOLEANO:vbooleano end
+{:
+    RESULT=vbooleano;
+:} 
+SUBRUTINA: vsubrutina
+{:
+    RESULT=vsubrutina;
+:}
+|;
+PARAMETROS::= PARAMETROS:vparametros
+{:
+    RESULT=vparametros;
+:} 
+|;
+PARAMETROS1::= MODO:vmodo identificador
+{:
+    RESULT=vmodo;
+:} 
+OTROPARAMETRO:votroparametro
+{:
+    RESULT=votroparametro;
+:};
+OTROPARAMETRO::= coma PARAMETROS1:vparametros1
+{:
+    RESULT=vparametros1;
+:} 
+|;
+MODO::= es | en;
+LLAMADOS::= call identificador parentesisabierto VALORES:vvalores parentesiscerrado
+{:
+    RESULT=vvalores;
+:} 
+E:ve
+{:
+    RESULT=ve;
+:};
+VALORES::= VALORES1:vvalores1
+{:
+    RESULT=vvalores1;
+:} 
+|;
+VALORES1::= VALOR:vvalor
+{:
+    RESULT=vvalor;
+:} 
+VALORES2:vvalores2
+{:
+    RESULT=vvalores2;
+:};
+VALORES2::= coma VALORES1:vvalores1
+{:
+    RESULT=vvalores1;
+:} 
+|;
+ 
