@@ -29,6 +29,7 @@ $(function ()
     function enviar()
     {
         var texto = editAreaLoader.getValue("textarea_1");
+       alert(texto+"");
         $.post("Controladora", {
             operacion: "analizar",
             texto: texto
