@@ -5,8 +5,11 @@
  */
 package controladoras;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +22,29 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Controladora", urlPatterns = {"/Controladora"})
 public class Controladora extends HttpServlet {
+    
+    public static boolean moverArch(String archNombre) {
+        boolean efectuado = false;
+        File arch = new File(archNombre);
+        if (arch.exists()) {
+            System.out.println("\n*** Moviendo " + arch + " \n***");
+            Path currentRelativePath = Paths.get("");
+            String nuevoDir = currentRelativePath.toAbsolutePath().toString()
+                    + File.separator + "src" + File.separator
+                    + "controladoras" + File.separator + arch.getName();
+            File archViejo = new File(nuevoDir);
+            archViejo.delete();
+            if (arch.renameTo(new File(nuevoDir))) {
+                System.out.println("\n*** Generado " + archNombre + "***\n");
+                efectuado = true;
+            } else {
+                System.out.println("\n*** No movido " + archNombre + " ***\n");
+            }
+        } else {
+            System.out.println("\n*** Codigo no existente ***\n");
+        }
+        return efectuado;
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
