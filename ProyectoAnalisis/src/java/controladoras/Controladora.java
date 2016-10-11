@@ -64,6 +64,7 @@ public class Controladora extends HttpServlet {
         {
             System.out.println("HOLA MUNDO3");
         }
+<<<<<<< HEAD
         else if("analizar".equals(operacion))
         {
             System.out.println("HOLA MUNDO2");
@@ -72,6 +73,9 @@ public class Controladora extends HttpServlet {
             System.out.println("HOLA MUNDO5");
         }
         
+=======
+       
+>>>>>>> refs/remotes/gianca970226/revert-1-master
 //        try {
 //            /* TODO output your page here. You may use following sample code. */
 //            out.println("<!DOCTYPE html>");
