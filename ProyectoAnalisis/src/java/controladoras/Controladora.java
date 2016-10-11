@@ -64,7 +64,13 @@ public class Controladora extends HttpServlet {
         {
             System.out.println("HOLA MUNDO3");
         }
-       
+        else if("analizar".equals(operacion))
+        {
+            System.out.println("HOLA MUNDO2");
+            System.out.println("HOLA MUNDO3");
+            System.out.println("HOLA MUNDO4");
+            System.out.println("HOLA MUNDO5");
+        }
 //        try {
 //            /* TODO output your page here. You may use following sample code. */
 //            out.println("<!DOCTYPE html>");
