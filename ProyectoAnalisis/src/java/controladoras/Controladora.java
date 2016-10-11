@@ -62,11 +62,11 @@ public class Controladora extends HttpServlet {
         String operacion = request.getParameter("operacion");
         if ("generar".equals(operacion))
         {
-            
+            System.out.println("HOLA MUNDO3");
         }
         else if("analizar".equals(operacion))
         {
-            
+            System.out.println("HOLA MUNDO2");
         }
         
 //        try {
