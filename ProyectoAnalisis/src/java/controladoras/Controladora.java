@@ -67,6 +67,9 @@ public class Controladora extends HttpServlet {
         else if("analizar".equals(operacion))
         {
             System.out.println("HOLA MUNDO2");
+            System.out.println("HOLA MUNDO3");
+            System.out.println("HOLA MUNDO4");
+            
         }
         
 //        try {
