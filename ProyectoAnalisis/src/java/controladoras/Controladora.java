@@ -62,14 +62,32 @@ public class Controladora extends HttpServlet {
         String operacion = request.getParameter("operacion");
         if ("generar".equals(operacion))
         {
-            System.out.println("HOLA MUNDO3");
+            System.out.println("\n*** Generando ***\n");
+            String archLexico = "";
+            String archSintactico = "";
+            System.out.println("\n*** Procesando archivo default ***\n");
+            archLexico = "lexico.flex";
+            archSintactico = "sintactico.cup";
+            String[] alexico = {archLexico};
+            String[] asintactico = {"-parser", "AnalizadorSintactico", archSintactico};
+            jflex.Main.main(alexico);
+            try {
+                java_cup.Main.main(asintactico);
+            } catch (Exception ex) {
+                System.out.println("Error al generar el analizador sintactico");
+            }
+            //movemos los archivos generados
+            boolean mvAL = moverArch("AnalizadorLexico.java");
+            boolean mvAS = moverArch("AnalizadorSintactico.java");
+            boolean mvSym = moverArch("sym.java");
+            if (mvAL && mvAS && mvSym) {
+                System.exit(0);
+            }
+            System.out.println("Generado!");
         }
         else if("analizar".equals(operacion))
         {
-            System.out.println("HOLA MUNDO2");
-            System.out.println("HOLA MUNDO3");
-            System.out.println("HOLA MUNDO4");
-            System.out.println("HOLA MUNDO5");
+            
         }
 //        try {
 //            /* TODO output your page here. You may use following sample code. */
