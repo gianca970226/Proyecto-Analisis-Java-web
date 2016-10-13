@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-    var contador = 1;
-    var actual = 0;
-    function activar()
-    {
-        $('li.noactivo').click(function () {
+var contador = 1;
+var actual = 0;
+function activar()
+{
+    $('li.noactivo').click(function () {
 
-            $('li.noactivo').removeClass("active");
-            $(this).addClass("active");
-        });
-    }
-    
+        $('li.noactivo').removeClass("active");
+        $(this).addClass("active");
+    });
+}
+
 $(function ()
 {
 
@@ -45,7 +45,7 @@ $(function ()
     function generar()
     {
         $.post("Controladora", {
-            operacion: "generar",
+            operacion: "generar"
         }, function (data) {
             var resultado = data;
             alert(resultado);
@@ -54,8 +54,8 @@ $(function ()
             alert("Error en la operacion");
         });
     }
-$("#breakpoint").on("click", breakpoint);
-  function breakpoint()
+    $("#breakpoint").on("click", breakpoint);
+    function breakpoint()
     {
         var beackPoint1 = "";
         for (x in window.parent.frames[actual - 1].lineas)
@@ -63,6 +63,20 @@ $("#breakpoint").on("click", breakpoint);
             beackPoint1 = beackPoint1 + window.parent.frames[actual - 1].lineas[x];
         }
         alert(beackPoint1);
+
+    }
+    $("#mover").on("click", mover);
+    function mover()
+    {
+        $.post("Controladora", {
+            operacion: "mover"
+        }, function (data) {
+            var resultado = data;
+            alert(resultado);
+        }).fail(function ()
+        {
+            alert("Error en la operacion");
+        });
 
     }
 
@@ -95,6 +109,4 @@ function processFiles(files) {
         $("#frame_textarea_" + contador + "").attr("style", "heigth:1000");
     };
     reader.readAsText(file);
-
 }
-   
