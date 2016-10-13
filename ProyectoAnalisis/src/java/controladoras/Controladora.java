@@ -6,6 +6,7 @@
 package controladoras;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
@@ -23,8 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "Controladora", urlPatterns = {"/Controladora"})
 public class Controladora extends HttpServlet {
     
-    public static boolean moverArch(String archNombre) {
-        boolean efectuado = false;
+    public static void moverArch(String archNombre) {
         File arch = new File(archNombre);
         if (arch.exists()) {
             System.out.println("\n*** Moviendo " + arch + " \n***");
@@ -36,15 +36,25 @@ public class Controladora extends HttpServlet {
             archViejo.delete();
             if (arch.renameTo(new File(nuevoDir))) {
                 System.out.println("\n*** Generado " + archNombre + "***\n");
-                efectuado = true;
             } else {
                 System.out.println("\n*** No movido " + archNombre + " ***\n");
             }
         } else {
             System.out.println("\n*** Codigo no existente ***\n");
         }
-        return efectuado;
     }
+
+    public static void moverArch2(String archNombre) {
+        File forig = new File("C:\\xampp\\tomcat\\bin\\" + archNombre);
+        if (forig.exists()) {
+            File fdest = new File("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\" + archNombre);
+            forig.renameTo(fdest);
+            System.out.println("EL fichero" + archNombre + " movido correctamente");
+        } else {
+            System.out.print("El fichero " + archNombre + " no existe.");
+        }
+    }
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -66,43 +76,58 @@ public class Controladora extends HttpServlet {
             String archLexico = "";
             String archSintactico = "";
             System.out.println("\n*** Procesando archivo default ***\n");
-            archLexico = "lexico.flex";
-            archSintactico = "sintactico.cup";
+            archLexico = "C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\lexico.flex";
+            archSintactico = "C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\sintactico.cup";
             String[] alexico = {archLexico};
             String[] asintactico = {"-parser", "AnalizadorSintactico", archSintactico};
             jflex.Main.main(alexico);
+            System.out.println("Generado el lexico");
             try {
                 java_cup.Main.main(asintactico);
             } catch (Exception ex) {
                 System.out.println("Error al generar el analizador sintactico");
             }
-            //movemos los archivos generados
-            boolean mvAL = moverArch("AnalizadorLexico.java");
-            boolean mvAS = moverArch("AnalizadorSintactico.java");
-            boolean mvSym = moverArch("sym.java");
-            if (mvAL && mvAS && mvSym) {
-                System.exit(0);
-            }
             System.out.println("Generado!");
+            response.setContentType("text/plain");
+            response.getWriter().write("Generado correctamente");
+        }
+        else if ("mover".equals(operacion)) {
+//            movemos los archivos generados
+            moverArch("AnalizadorLexico.java");
+            moverArch2("AnalizadorSintactico.java");
+            moverArch2("sym.java");
+            response.setContentType("text/plain");
+            response.getWriter().write("Se intento moverlos");
         }
         else if("analizar".equals(operacion))
         {
+//            String texto = request.getParameter("texto");
+//            System.out.println(texto);
+//            FileWriter fichero = null;
+//            PrintWriter pw = null;
+//            try {
+//                fichero = new FileWriter("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\ProyectoAnalisisPrueba\\src\\java\\controladoras\\texto.txt");
+//                pw = new PrintWriter(fichero);
+//                pw.println(texto);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            } finally {
+//                try {
+//                    if (null != fichero) {
+//                        fichero.close();
+//                    }
+//                } catch (Exception e2) {
+//                    e2.printStackTrace();
+//                }
+//            }
             
+            String[] archivoPrueba = {"C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\ProyectoAnalisisPrueba\\src\\java\\controladoras\\texto.txt"};
+            AnalizadorSintactico.main(archivoPrueba);
+            System.out.println("Ejecutado!");
+            response.setContentType("text/plain");
+            response.getWriter().write("Ejecutado correctamente");
         }
-//        try {
-//            /* TODO output your page here. You may use following sample code. */
-//            out.println("<!DOCTYPE html>");
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet Controladora</title>");            
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet Controladora at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
-//        } finally {
-//            out.close();
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
