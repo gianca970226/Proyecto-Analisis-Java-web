@@ -124,11 +124,11 @@ public class Controladora extends HttpServlet {
 //                }
 //            }
             
-//            String[] archivoPrueba = {"D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\texto.txt"};//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\ProyectoAnalisisPrueba\\src\\java\\controladoras\\texto.txt
-//            AnalizadorSintactico.main(archivoPrueba);
-//            System.out.println("Ejecutado!");
-//            response.setContentType("text/plain");
-//            response.getWriter().write("Ejecutado correctamente");
+            String[] archivoPrueba = {"D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\texto.txt"};//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\ProyectoAnalisisPrueba\\src\\java\\controladoras\\texto.txt
+            AnalizadorSintactico.main(archivoPrueba);
+            System.out.println("Ejecutado!");
+            response.setContentType("text/plain");
+            response.getWriter().write("Ejecutado correctamente");
         }
     }
 
