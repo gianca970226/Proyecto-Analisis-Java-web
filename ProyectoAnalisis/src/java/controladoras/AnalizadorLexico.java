@@ -5,6 +5,7 @@ package controladoras;
 
 import java_cup.runtime.*;
 import java.io.Reader;
+import controladoras.GenerarJava;
 
 
 
@@ -656,7 +657,10 @@ class AnalizadorLexico implements java_cup.runtime.Scanner {
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             zzDoEOF();
-              { return new java_cup.runtime.Symbol(sym.EOF); }
+              { GenerarJava.escribir();
+System.out.println("FIN DEL ARCHIVO");
+return null;
+ }
           } 
           else {
             zzScanError(ZZ_NO_MATCH);

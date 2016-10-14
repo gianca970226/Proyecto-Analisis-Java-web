@@ -3,13 +3,13 @@ package controladoras;
 
 import java_cup.runtime.*;
 import java.io.FileReader;
-import controladoras.Compilador;
+import controladoras.GenerarJava;
    
 /* Codigo del parser, se copia integramente a la clase final.
     Agregamos el manejo de errores. */
 
 action code{:
-    public Compilador compilador=new Compilador();
+    public GenerarJava generar=new GenerarJava();
 :};
 
 parser code {:
@@ -61,18 +61,26 @@ exp_a ::= BEGIN exp_e END;
 exp_e ::= exp_variable exp_e | ;
 exp_variable ::= IDENTIFICADOR:i ASIGNACION NUMERO:n
 {:
-    compilador.addVariable(i, n);
-    compilador.showVariables();
+    String variable=i.toString();
+    generar.insertarVariable("int", variable);
+    String linea="int "+i.toString()+"= "+n.toString()+";";
+    generar.recibir(linea);
 :}
 | 
 IDENTIFICADOR:i ASIGNACION CADENA:c
 {:
-    compilador.addVariable(i,c);
-    compilador.showVariables();
+    String variable=i.toString();
+    generar.insertarVariable("String", variable);
+    String linea="String "+i.toString()+"= "+c.toString()+";";
+    generar.recibir(linea);
 :}
 | 
 IDENTIFICADOR:n ASIGNACION IDENTIFICADOR:v
 {:
-    compilador.findAddVariable(n, v);
-    compilador.showVariables();
-:};
+    String identificadorv=v.toString();
+    String tipo=generar.buscarVariable(identificadorv);
+    String identificadorn=n.toString();
+    String linea=tipo+" "+identificadorn+" = "+identificadorv+";";
+    generar.recibir(linea);
+:}
+;

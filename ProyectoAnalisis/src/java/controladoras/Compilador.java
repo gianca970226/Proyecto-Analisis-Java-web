@@ -13,34 +13,5 @@ import java.util.LinkedList;
  */
 public class Compilador {
 
-    private LinkedList<Variable>variables;
     
-    public Compilador() {
-        variables=new LinkedList<Variable>();
-    }
-    
-    public void addVariable(Object identificador, Object valor)
-    {
-        Variable variable=new Variable(identificador, valor);
-        variables.add(variable);
-    }
-    
-    public void findAddVariable(Object identificadorn, Object identificadorv)
-    {
-        Object valor=null;
-        for (Variable variable : variables) {
-            if (variable.getIdentificador().toString().equals(identificadorv.toString())) {
-                valor = variable.getValor();
-            }
-        }
-        Variable variable=new Variable(identificadorn, valor);
-        variables.add(variable);
-    }
-    
-    public void showVariables()
-    {
-        for (Variable variable : variables) {
-            System.out.println(variable.toString());
-        }
-    }
 }
