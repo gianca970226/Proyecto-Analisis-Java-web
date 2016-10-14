@@ -32,6 +32,7 @@ public class Controladora extends HttpServlet {
             String nuevoDir = currentRelativePath.toAbsolutePath().toString()
                     + File.separator + "src" + File.separator
                     + "controladoras" + File.separator + arch.getName();
+            System.out.println("------------"+nuevoDir);
             File archViejo = new File(nuevoDir);
             archViejo.delete();
             if (arch.renameTo(new File(nuevoDir))) {
@@ -47,7 +48,7 @@ public class Controladora extends HttpServlet {
     public static void moverArch2(String archNombre) {
         File forig = new File("C:\\xampp\\tomcat\\bin\\" + archNombre);
         if (forig.exists()) {
-            File fdest = new File("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\" + archNombre);
+            File fdest = new File("D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras" + archNombre);//"C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\
             forig.renameTo(fdest);
             System.out.println("EL fichero" + archNombre + " movido correctamente");
         } else {
@@ -76,12 +77,13 @@ public class Controladora extends HttpServlet {
             String archLexico = "";
             String archSintactico = "";
             System.out.println("\n*** Procesando archivo default ***\n");
-            archLexico = "C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\lexico.flex";
-            archSintactico = "C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\sintactico.cup";
+            archLexico = "D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\lexico.flex";//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\lexico.flex
+            archSintactico = "D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\sintactico.cup";//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\sintactico.cup
             String[] alexico = {archLexico};
             String[] asintactico = {"-parser", "AnalizadorSintactico", archSintactico};
             jflex.Main.main(alexico);
             System.out.println("Generado el lexico");
+            System.out.println(asintactico);
             try {
                 java_cup.Main.main(asintactico);
             } catch (Exception ex) {
@@ -93,7 +95,7 @@ public class Controladora extends HttpServlet {
         }
         else if ("mover".equals(operacion)) {
 //            movemos los archivos generados
-            moverArch("AnalizadorLexico.java");
+           
             moverArch2("AnalizadorSintactico.java");
             moverArch2("sym.java");
             response.setContentType("text/plain");
@@ -122,11 +124,11 @@ public class Controladora extends HttpServlet {
 //                }
 //            }
             
-            String[] archivoPrueba = {"C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\ProyectoAnalisisPrueba\\src\\java\\controladoras\\texto.txt"};
-            AnalizadorSintactico.main(archivoPrueba);
-            System.out.println("Ejecutado!");
-            response.setContentType("text/plain");
-            response.getWriter().write("Ejecutado correctamente");
+//            String[] archivoPrueba = {"D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\texto.txt"};//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\ProyectoAnalisisPrueba\\src\\java\\controladoras\\texto.txt
+//            AnalizadorSintactico.main(archivoPrueba);
+//            System.out.println("Ejecutado!");
+//            response.setContentType("text/plain");
+//            response.getWriter().write("Ejecutado correctamente");
         }
     }
 
