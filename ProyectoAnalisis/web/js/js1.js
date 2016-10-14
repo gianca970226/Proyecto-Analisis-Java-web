@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 var contador = 1;
-var actual = 0;
+var actual = 1;
+var texto;
 function activar()
 {
     $('li.noactivo').click(function () {
@@ -25,10 +26,44 @@ $(function ()
         $("#frame_textarea_" + id + "").show();
 
     });
+    $('#run').click(function (e) {
+        
+       
+        arreglo = texto.split("\n");
+        alert(arreglo.length);
+        sacarAmbientes(arreglo, 1);
+
+    });
+    function sacarProcedimientos(codigofuente)
+    {
+        
+        
+    }
+    function sacarAmbientes(codigofuente, i)
+    {
+        var mensaje = "";
+        while (codigofuente[i] != "end")
+        {
+
+            if (codigofuente[i].trim() == "begin")
+            {
+                i = sacarAmbientes(codigofuente, (i + 1)) + 1;
+            } else
+            {
+                mensaje = mensaje + codigofuente[i];
+                i++;
+            }
+        }
+        ambientes(mensaje);
+        return i;
+    }
     $("#enviar").on("click", enviar);
     function enviar()
     {
-        var texto = editAreaLoader.getValue("textarea_1");
+
+
+        texto = editAreaLoader.getValue("textarea_" + actual + "");
+        alert(texto);
         $.post("Controladora", {
             operacion: "analizar",
             texto: texto
@@ -94,11 +129,13 @@ function processFiles(files) {
 
 
         contador++;
+        $('li.noactivo').removeClass("active");
+
         var nuevoProyecto = $('<textarea id="textarea_' + contador + '" class="textarea" name="content" cols="80" rows="1"></textarea>');
-        var btnNuevo = $('<li class="noactivo" onclick="activar()" ><a id="' + contador + '" class="proyectos" href="#" >' + contador + '</a></li>');
+        var btnNuevo = $('<li class="noactivo active" onclick="activar()" ><a id="' + contador + '" class="proyectos" href="#" >' + contador + '</a></li>');
         $("#tabla").append(btnNuevo);
         $("#container").append(nuevoProyecto);
-
+        alert(e.target.result);
         $("#textarea_" + contador + "").val(e.target.result);
         editAreaLoader.init({
             id: "textarea_" + contador + ""		// textarea id
@@ -107,6 +144,24 @@ function processFiles(files) {
         });
         $("#frame_textarea_" + contador + "").addClass("frames");
         $("#frame_textarea_" + contador + "").attr("style", "heigth:1000");
+        actual = contador;
+
+
     };
     reader.readAsText(file);
+}
+function ambientes(mensaje) {
+    console.log(mensaje);
+     
+    var nuevoProyecto = $('<textarea id="textarea_'+(actual)+".1"+'" class="textarea" name="content" cols="80" rows="1"></textarea>');
+    $("#container").append(nuevoProyecto);
+    $(nuevoProyecto).attr("value",""+mensaje);
+    editAreaLoader.init({
+        id: "textarea_"+ (actual)+".1"		// textarea id
+        , syntax: "java"			// syntax to be uses for highgliting
+        , start_highlight: true		// to display with highlight mode on start-up
+    });
+    editAreaLoader.setValue("textarea_"+ (actual)+".1",mensaje+"");
+    alert(mensaje);
+  
 }
