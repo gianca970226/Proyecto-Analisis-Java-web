@@ -28,11 +28,7 @@ $(function ()
     });
     $('#run').click(function (e) {
         
-        var text1= texto.substring(0, texto.indexOf("main"));
-        var text2=texto.substring(texto.indexOf("main"), texto.length);
-        alert(text1);
-        alert(text2);
-        sacarProcedimientos(text1);
+       
         arreglo = texto.split("\n");
         alert(arreglo.length);
         sacarAmbientes(arreglo, 1);
@@ -52,17 +48,14 @@ $(function ()
             if (codigofuente[i].trim() == "begin")
             {
                 i = sacarAmbientes(codigofuente, (i + 1)) + 1;
-
             } else
             {
                 mensaje = mensaje + codigofuente[i];
                 i++;
             }
-
         }
-        alert(mensaje);
+        ambientes(mensaje);
         return i;
-
     }
     $("#enviar").on("click", enviar);
     function enviar()
@@ -168,7 +161,7 @@ function ambientes(mensaje) {
         , syntax: "java"			// syntax to be uses for highgliting
         , start_highlight: true		// to display with highlight mode on start-up
     });
-    
+    editAreaLoader.setValue("textarea_"+ (actual)+".1",mensaje+"");
     alert(mensaje);
   
 }
