@@ -63,16 +63,21 @@ public class Controladora extends HttpServlet {
 //                }
 //            }
 
-            String[] archivoPrueba = {"D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code.txt"};//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\ProyectoAnalisisPrueba\\src\\java\\controladoras\\texto.txt
+            String[] archivoPrueba = {"C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code.txt"};
+            //C:\Users\Jorge Alejandro\Documents\NetBeansProjects\ProyectoAnalisisPrueba\src\java\controladoras\texto.txt
             try {
                 AnalizadorSintactico.main(archivoPrueba);
             } catch (TokenMgrError ex) {
                 Logger.getLogger(Controladora.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             System.out.println("Ejecutado!");
             response.setContentType("text/plain");
             response.getWriter().write("Ejecutado correctamente");
+        }
+        else if("mover".equals(operacion))
+        {
+            Compilador compilador=new Compilador();
+            compilador.compilar();
         }
     }
 

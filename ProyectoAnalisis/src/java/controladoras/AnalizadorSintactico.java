@@ -29,61 +29,18 @@ GenerarJava generar= new GenerarJava();
   }
 
   final public void E() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case IF:
-      IF();
-      break;
-    case IDENTIFICADOR:
-      VARIABLE();
-      break;
-    default:
-      jj_la1[0] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-  }
-
-  final public void IF() throws ParseException {
-    jj_consume_token(IF);
-    jj_consume_token(PARENTESISABIERTO);
-    CONDICION();
-    jj_consume_token(PARENTESISCERRADO);
-    jj_consume_token(THEN);
-    jj_consume_token(BEGIN);
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IF:
       case IDENTIFICADOR:
         ;
         break;
       default:
-        jj_la1[1] = jj_gen;
+        jj_la1[0] = jj_gen;
         break label_1;
       }
-      E();
+      VARIABLE();
     }
-    jj_consume_token(END);
-    jj_consume_token(ELSE);
-    jj_consume_token(BEGIN);
-    label_2:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IF:
-      case IDENTIFICADOR:
-        ;
-        break;
-      default:
-        jj_la1[2] = jj_gen;
-        break label_2;
-      }
-      E();
-    }
-    jj_consume_token(END);
-  }
-
-  final public void CONDICION() throws ParseException {
-    jj_consume_token(BOLEANO);
   }
 
   final public void VARIABLE() throws ParseException {
@@ -91,7 +48,7 @@ GenerarJava generar= new GenerarJava();
     n = jj_consume_token(IDENTIFICADOR);
     jj_consume_token(ASIGNACION);
     valores = VALOR();
-                                                     generar.recibir(valores[1]+" "+n.image+" = "+valores[0]); generar.escribir();
+                                                 generar.recibir(valores[1]+" "+n.image+" = "+valores[0]+";"); generar.insertarVariable(valores[1], n.image); generar.escribir();
   }
 
   final public String [] VALOR() throws ParseException {
@@ -99,18 +56,18 @@ GenerarJava generar= new GenerarJava();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFICADOR:
       n = jj_consume_token(IDENTIFICADOR);
-                          valores[0]=n.image ; valores[1]="tipoVariable";{if (true) return valores;}
+                      valores[0]=n.image ; valores[1]=generar.buscarVariable(n.image);{if (true) return valores;}
       break;
     case NUMBER:
       n = jj_consume_token(NUMBER);
-                                                                                                      valores[0]=n.image ; valores[1]="int" ;{if (true) return valores;}
+                                                                                                                   valores[0]=n.image ; valores[1]="int" ;{if (true) return valores;}
       break;
     case CADENA:
       n = jj_consume_token(CADENA);
-                                                                                                                                                                           valores[0]=n.image ; valores[1]="String" ;{if (true) return valores;}
+                                                                                                                                                                                        valores[0]=n.image ; valores[1]="String" ;{if (true) return valores;}
       break;
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[1] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -126,13 +83,13 @@ GenerarJava generar= new GenerarJava();
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[4];
+  final private int[] jj_la1 = new int[2];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x800400,0x800400,0x800400,0x2800080,};
+      jj_la1_0 = new int[] {0x800000,0x2800080,};
    }
 
   /** Constructor with InputStream. */
@@ -146,7 +103,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -160,7 +117,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -170,7 +127,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -180,7 +137,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -189,7 +146,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -198,7 +155,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -254,7 +211,7 @@ GenerarJava generar= new GenerarJava();
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
