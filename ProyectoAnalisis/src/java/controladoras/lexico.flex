@@ -3,6 +3,7 @@ package controladoras;
 
 import java_cup.runtime.*;
 import java.io.Reader;
+import controladoras.GenerarJava;
 
 
 
@@ -22,6 +23,12 @@ import java.io.Reader;
 */
 %line
 %column
+
+%eofval{
+GenerarJava.escribir();
+System.out.println("FIN DEL ARCHIVO");
+return null;
+%eofval}
     
 /* 
    Activamos la compatibilidad con Java CUP para analizadores
