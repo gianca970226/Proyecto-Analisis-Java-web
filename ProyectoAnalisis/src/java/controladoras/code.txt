@@ -1,4 +1,6 @@
 begin
-oe <-234
+oe1 <-234
+oe2<-321
+oe3<-oe1
 end 
 

@@ -65,30 +65,20 @@ void Start() :
  E()
 
 <END>
-
 }
+
 void E() :
 {}
 {
-	IF()|VARIABLE()
-}
-void IF() :
-{}
-{
-	<IF><PARENTESISABIERTO>CONDICION()<PARENTESISCERRADO><THEN><BEGIN> (E())* <END> <ELSE> <BEGIN> (E())*  <END> 
-}
-void CONDICION() :
-{}
-{
-	<BOLEANO>
+    (VARIABLE())*
 }
 void VARIABLE() :
 {Token n;String []valores= new String[2];}
 {
-	n=<IDENTIFICADOR><ASIGNACION>valores=VALOR(){generar.recibir(valores[1]+" "+n.image+" = "+valores[0]); generar.escribir();}
+    n=<IDENTIFICADOR><ASIGNACION>valores=VALOR(){generar.recibir(valores[1]+" "+n.image+" = "+valores[0]+";"); generar.insertarVariable(valores[1], n.image); generar.escribir();}
 }
 String [] VALOR() :
 {Token n;String [] valores = new String[2];}
 {
-	n=<IDENTIFICADOR>{valores[0]=n.image ; valores[1]="tipoVariable";return valores;}| n=<NUMBER>{valores[0]=n.image ; valores[1]="int" ;return valores;}|  n=<CADENA>{valores[0]=n.image ; valores[1]="String" ;return valores;}
+    n=<IDENTIFICADOR>{valores[0]=n.image ; valores[1]=generar.buscarVariable(n.image);return valores;}| n=<NUMBER>{valores[0]=n.image ; valores[1]="int" ;return valores;}|  n=<CADENA>{valores[0]=n.image ; valores[1]="String" ;return valores;}
 }
