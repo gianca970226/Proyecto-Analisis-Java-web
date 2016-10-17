@@ -40,7 +40,7 @@ public class Controladora extends HttpServlet {
 //        response.setContentType("text/html;charset=UTF-8");
 //        PrintWriter out = response.getWriter();
         String operacion = request.getParameter("operacion");
-   if ("analizar".equals(operacion)) {
+        if ("analizar".equals(operacion)) {
 //            String texto = request.getParameter("texto");
 //            System.out.println(texto);
 //            FileWriter fichero = null;
@@ -68,6 +68,7 @@ public class Controladora extends HttpServlet {
             } catch (TokenMgrError ex) {
                 Logger.getLogger(Controladora.class.getName()).log(Level.SEVERE, null, ex);
             }
+
             System.out.println("Ejecutado!");
             response.setContentType("text/plain");
             response.getWriter().write("Ejecutado correctamente");
