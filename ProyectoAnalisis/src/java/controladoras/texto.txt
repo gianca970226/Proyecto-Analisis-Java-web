@@ -1,6 +1,0 @@
-BEGIN
-	BEGIN
-		x<-10
-		y<-20
-	END
-END

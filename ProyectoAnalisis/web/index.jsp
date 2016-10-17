@@ -42,7 +42,7 @@
 
         <button id="enviar">Enviar</button>
         <button id="breakpoint">breakpoint</button>
-        <button id="generar">generar</button>
+       
         <button id="mover">Mover Archivos</button>
         <button id="run">run</button>
     </body>

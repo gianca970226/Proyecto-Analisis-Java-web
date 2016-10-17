@@ -76,19 +76,7 @@ $(function ()
         });
     }
 
-    $("#generar").on("click", generar);
-    function generar()
-    {
-        $.post("Controladora", {
-            operacion: "generar"
-        }, function (data) {
-            var resultado = data;
-            alert(resultado);
-        }).fail(function ()
-        {
-            alert("Error en la operacion");
-        });
-    }
+
     $("#breakpoint").on("click", breakpoint);
     function breakpoint()
     {

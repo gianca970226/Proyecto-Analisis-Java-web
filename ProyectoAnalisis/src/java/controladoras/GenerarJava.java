@@ -3,8 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controladoras;
 
+package controladoras;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -16,23 +16,27 @@ import java.util.HashMap;
  */
 public class GenerarJava {
 
-    public static String codigo;
-    public static String java;
-    private HashMap<String, String> variables;
+    public  String codigo;
+    public  String java;
+    private  HashMap<String, String> variables;
 
     public GenerarJava() {
+        System.out.println("hola mundo");
         variables=new HashMap<String, String>();
         codigo = "";
         java = "";
 
     }
-
+    public static void oe()
+    {
+        System.out.println("asda");
+    }
     public void recibir(String texto) {
         codigo = codigo + texto + "\n";
 
     }
 
-    public static void escribir() {
+    public  void escribir() {
         java="package controladoras;\n"
                 + "public class Programa {\n"
                 + "public void principal() {\n"
