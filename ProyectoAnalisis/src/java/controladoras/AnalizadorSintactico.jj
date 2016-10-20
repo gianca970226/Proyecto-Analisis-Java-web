@@ -70,12 +70,22 @@ void Start() :
 void E() :
 {}
 {
-    (VARIABLE())*
+    (VARIABLE()|WHILE())*
+}
+void WHILE():
+{Token ncondicion;}
+{
+	<WHILE><PARENTESISABIERTO>ncondicion=CONDICION()<PARENTESISCERRADO> <DO>  <BEGIN>{generar.escribirWhile(ncondicion);} E() {generar.recibir("\n}\n"); generar.escribir();} <END>
+}
+Token CONDICION():
+{Token n;}
+{
+ 	n=<BOLEANO>{return n;}
 }
 void VARIABLE() :
 {Token n;String []valores= new String[2];}
 {
-    n=<IDENTIFICADOR><ASIGNACION>valores=VALOR(){generar.recibir(valores[1]+" "+n.image+" = "+valores[0]+";"); generar.insertarVariable(valores[1], n.image); generar.escribir();}
+    n=<IDENTIFICADOR><ASIGNACION>valores=VALOR(){generar.escribirDeclaraciones(n,valores);}E()
 }
 String [] VALOR() :
 {Token n;String [] valores = new String[2];}

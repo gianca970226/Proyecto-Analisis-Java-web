@@ -1,6 +1,10 @@
 begin
-oe1 <-234
-oe2<-321
+oe1 <-"234"
+oe2<-12
 oe3<-oe1
-end 
+while (true) do 
+begin
+x<-"12"
+end
+end
 
