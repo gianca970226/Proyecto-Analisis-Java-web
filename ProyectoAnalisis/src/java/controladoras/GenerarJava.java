@@ -36,8 +36,8 @@ public class GenerarJava {
         codigo = codigo + texto + "\n";
 
     }
-    public void escribirWhile(Token n) {
-        recibir("\n while("+n.image+"){");
+    public void escribirWhile(String condicion) {
+        recibir("\n while("+condicion+"){");
         escribir();
     }
     public void escribirDeclaraciones(Token n, String[] valores) {

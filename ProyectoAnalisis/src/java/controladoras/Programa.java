@@ -8,7 +8,7 @@ agregar("oe2",Integer.toString(oe2),3);
 String oe3 = oe1;
 agregar("oe3",oe3,4);
 
- while(true){
+ while(true  && !oe2 ){
 String x = "12";
 agregar("x",x,7);
 
