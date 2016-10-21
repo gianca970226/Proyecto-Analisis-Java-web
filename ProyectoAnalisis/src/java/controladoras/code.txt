@@ -1,8 +1,8 @@
 begin
 oe1 <-"234"
 oe2<-12
-oe3<-oe1
-while (true and not oe2) do 
+oe3<-oe2
+while (true  and oe3>oe2) do 
 begin
 x<-"12"
 end

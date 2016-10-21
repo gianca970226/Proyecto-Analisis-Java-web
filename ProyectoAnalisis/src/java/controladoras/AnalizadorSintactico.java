@@ -70,7 +70,7 @@ GenerarJava generar= new GenerarJava();
   }
 
   final public String CONDICION() throws ParseException {
- Token n=new Token(); String condicion="";
+ Token n=new Token(); String condicion="";String [] valor1;String [] valor2;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOLEANO:
       n = jj_consume_token(BOLEANO);
@@ -82,6 +82,15 @@ GenerarJava generar= new GenerarJava();
       n = jj_consume_token(IDENTIFICADOR);
       condicion = OTRACONDICION();
                                                                                                                                    {if (true) return ("!"+ n.image+" "+ condicion);}
+      break;
+    case NUMBER:
+    case IDENTIFICADOR:
+    case CADENA:
+      valor1 = VALOR();
+      n = jj_consume_token(OPERADORR);
+      valor2 = VALOR();
+      condicion = OTRACONDICION();
+                                                                                                                                                                                                                                                  {if (true) return valor1[0]+" "+n.image+" "+valor2[0];}
       break;
     default:
       jj_la1[2] = jj_gen;
@@ -157,7 +166,7 @@ GenerarJava generar= new GenerarJava();
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x820000,0x820000,0x6000,0x10000,0x2800080,};
+      jj_la1_0 = new int[] {0x820000,0x820000,0x2806080,0x10000,0x2800080,};
    }
 
   /** Constructor with InputStream. */

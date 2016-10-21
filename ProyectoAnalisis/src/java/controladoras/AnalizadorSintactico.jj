@@ -78,15 +78,16 @@ void WHILE():
 	<WHILE><PARENTESISABIERTO>ncondicion=CONDICION()<PARENTESISCERRADO> <DO>  <BEGIN>{generar.escribirWhile(ncondicion);} E() {generar.recibir("\n}\n"); generar.escribir();} <END>
 }
 String CONDICION():
-{Token n=new Token(); String condicion="";}
+{Token n=new Token(); String condicion="";String [] valor1;String [] valor2;}
 {
-	n= <BOLEANO>condicion=OTRACONDICION(){return (n.image+" "+ condicion); }|<NOT> n=<IDENTIFICADOR> condicion=OTRACONDICION(){return ("!"+ n.image+" "+ condicion); }
+	n= <BOLEANO>condicion=OTRACONDICION(){return (n.image+" "+ condicion); }|<NOT> n=<IDENTIFICADOR> condicion=OTRACONDICION(){return ("!"+ n.image+" "+ condicion); }| valor1=VALOR() n=<OPERADORR> valor2=VALOR() condicion=OTRACONDICION(){return valor1[0]+" "+n.image+" "+valor2[0];}
 }
 String OTRACONDICION():
 {Token n= new Token();n.image="";String condicion="";}
 {
 	(n=<OPERADORL> condicion=CONDICION())* {  if(n.image.equals("and")){return " && "+condicion;} else if(n.image.equals("or"))  {return (" || "+condicion);} else {return "";}}   
 }
+
 void VARIABLE() :
 {Token n;String []valores= new String[2];}
 {

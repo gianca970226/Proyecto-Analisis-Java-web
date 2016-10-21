@@ -5,10 +5,10 @@ String oe1 = "234";
 agregar("oe1",oe1,2);
 int oe2 = 12;
 agregar("oe2",Integer.toString(oe2),3);
-String oe3 = oe1;
-agregar("oe3",oe3,4);
+int oe3 = oe2;
+agregar("oe3",Integer.toString(oe3),4);
 
- while(true  && !oe2 ){
+ while(true  && oe3 > oe2){
 String x = "12";
 agregar("x",x,7);
 
