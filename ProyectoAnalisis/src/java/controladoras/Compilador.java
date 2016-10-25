@@ -5,6 +5,7 @@
  */
 package controladoras;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
@@ -17,7 +18,8 @@ import java.util.logging.Logger;
 public class Compilador {
 
     Class clase;
-
+    Object objeto;
+    String Resultado;
     public Compilador() {
     }
     
@@ -25,11 +27,12 @@ public class Compilador {
     {
         try {
             clase = Class.forName(Compilador.class.getPackage().getName()+"."+"Programa");
-            Object objeto=clase.newInstance();
+            objeto=clase.newInstance();
             Method ejecutarTarea = clase.getMethod("principal", null);
             ejecutarTarea.invoke(objeto, null);
             Method ejecutarTarea1 = clase.getMethod("mostrar", null);
-            ejecutarTarea1.invoke(objeto, null);
+            Resultado =(String) ejecutarTarea1.invoke(objeto, null);
+        
         
         } catch (ClassNotFoundException ex) {
             System.out.println("Error al obtener la clase");
@@ -47,8 +50,5 @@ public class Compilador {
             System.out.println("Error al invocar");
         }
     }
-    public static void main(String[] args) {
-        Compilador oe= new Compilador();
-        oe.compilar();
-    } 
+   
 }

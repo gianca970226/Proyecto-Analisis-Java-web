@@ -6,6 +6,8 @@
 var contador = 1;
 var actual = 1;
 var texto;
+var resultados;
+var contadorLineas = 0;
 function activar()
 {
     $('li.noactivo').click(function () {
@@ -15,9 +17,35 @@ function activar()
     });
 }
 
+function removeAllChilds(a)
+ {
+ var a=document.getElementById(a);
+ while(a.hasChildNodes())
+	a.removeChild(a.firstChild);	
+ }
 $(function ()
 {
+    $('#step').click(function (e) {
+        contadorLineas++;
+        removeAllChilds("tablaVariables");
+        var trEncabezado=$("<tr><td>Variable</td><td>Valor</td> </tr>");
+        $("#tablaVariables").append(trEncabezado);
+        for (i = 0; i < resultados.Variables.length; i++) {
+             var tr=document.createElement("tr");
+             tr.className="variables";
+            if ((i + 1) <= contadorLineas) {
+                var tdNombre=document.createElement("td");
+                tdNombre.appendChild(document.createTextNode(resultados.Variables[i].nombre));
+                var tdValor=document.createElement("td");
+                tdValor.appendChild(document.createTextNode(("value",resultados.Variables[i].valor)));
+                tr.appendChild(tdNombre);
+                tr.appendChild(tdValor);
+               
+            }
+            document.getElementById("tablaVariables").appendChild(tr);
+        }
 
+    });
     $('#tabla').click(function (e) {
 
         $(".frames").hide();
@@ -26,9 +54,9 @@ $(function ()
         $("#frame_textarea_" + id + "").show();
 
     });
-    $('#run').click(function (e) {
-        
-       
+    $('#run1').click(function (e) {
+
+
         arreglo = texto.split("\n");
         alert(arreglo.length);
         sacarAmbientes(arreglo, 1);
@@ -36,8 +64,8 @@ $(function ()
     });
     function sacarProcedimientos(codigofuente)
     {
-        
-        
+
+
     }
     function sacarAmbientes(codigofuente, i)
     {
@@ -102,6 +130,22 @@ $(function ()
         });
 
     }
+    $("#run").on("click", run);
+    function run()
+    {
+        contadorLineas=0;
+        $.post("Controladora", {
+            operacion: "run"
+        }, function (data) {
+            alert(data)
+            resultados = JSON.parse(data);
+            alert(resultados);
+        }).fail(function ()
+        {
+            alert("Error en la operacion");
+        });
+
+    }
 
 });
 function processFiles(files) {
@@ -140,16 +184,16 @@ function processFiles(files) {
 }
 function ambientes(mensaje) {
     console.log(mensaje);
-     
-    var nuevoProyecto = $('<textarea id="textarea_'+(actual)+".1"+'" class="textarea" name="content" cols="80" rows="1"></textarea>');
+
+    var nuevoProyecto = $('<textarea id="textarea_' + (actual) + ".1" + '" class="textarea" name="content" cols="80" rows="1"></textarea>');
     $("#container").append(nuevoProyecto);
-    $(nuevoProyecto).attr("value",""+mensaje);
+    $(nuevoProyecto).attr("value", "" + mensaje);
     editAreaLoader.init({
-        id: "textarea_"+ (actual)+".1"		// textarea id
+        id: "textarea_" + (actual) + ".1"		// textarea id
         , syntax: "java"			// syntax to be uses for highgliting
         , start_highlight: true		// to display with highlight mode on start-up
     });
-    editAreaLoader.setValue("textarea_"+ (actual)+".1",mensaje+"");
+    editAreaLoader.setValue("textarea_" + (actual) + ".1", mensaje + "");
     alert(mensaje);
-  
+
 }

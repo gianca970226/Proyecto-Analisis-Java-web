@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package controladoras;
-
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -79,6 +77,12 @@ public class Controladora extends HttpServlet {
         {
             Compilador compilador=new Compilador();
             compilador.compilar();
+        }
+        else if("run".equals(operacion))
+        {
+            Compilador compilador=new Compilador();
+            compilador.compilar();
+            response.getWriter().write(compilador.Resultado);
         }
     }
 

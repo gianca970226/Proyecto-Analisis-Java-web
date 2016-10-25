@@ -39,11 +39,17 @@
         <div id="container">
             <textarea id="textarea_1" onclick="activar()" class="textarea" name="content" cols="80" rows="1"></textarea>
         </div>
-
+        <div id="Variables">
+            <table id="tablaVariables">
+                
+                
+            </table>
+        </div>
         <button id="enviar">Enviar</button>
         <button id="breakpoint">breakpoint</button>
        
         <button id="mover">Mover Archivos</button>
         <button id="run">run</button>
+        <button id="step">step</button>
     </body>
 </html>
