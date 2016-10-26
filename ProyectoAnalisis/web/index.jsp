@@ -23,33 +23,39 @@
 
 
         <link rel="stylesheet" type="text/css" href="css/estilo.css" >
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" >
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
     </head>
     <body>
-
-        <input  id="archivo "type="file" onchange='processFiles(this.files)' >
-        <div id="cssmenu" >
-            <ul id="tabla">
-                <li class="noactivo active">
-                    <a id="1" class="proyectos" href="#" >1</a>
-                </li>
-
-            </ul>
-
+        <nav class="col-xs-12">
+            <input  id="archivo"type="file" onchange='processFiles(this.files)' >
+            <button id="enviar">Enviar</button>
+           <!-- <button id="breakpoint">breakpoint</button>
+            <button id="mover">Mover Archivos</button>-->
+            <button id="run"><span class="glyphicon glyphicon-play"></span></button>
+            <button id="step"><span class="glyphicon glyphicon-download"></span>
+            </button>
+        </nav>
+        <div class="col-xs-12">
+            <div id="cssmenu"  >
+                <ul id="tabla" >
+                    <li class="noactivo active">
+                        <a id="1" class="proyectos" href="#" >1</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div id="container">
-            <textarea id="textarea_1" onclick="activar()" class="textarea" name="content" cols="80" rows="1"></textarea>
+        <div class="col-xs-10">
+            <div id="container" >
+                <textarea id="textarea_1" onclick="activar()" class="textarea" name="content" cols="80" rows="1"></textarea>
+            </div>
         </div>
-        <div id="Variables">
+
+        <div id="Variables" class="col-xs-2" style="" >
             <table id="tablaVariables">
-                
-                
             </table>
         </div>
-        <button id="enviar">Enviar</button>
-        <button id="breakpoint">breakpoint</button>
-       
-        <button id="mover">Mover Archivos</button>
-        <button id="run">run</button>
-        <button id="step">step</button>
+
     </body>
 </html>

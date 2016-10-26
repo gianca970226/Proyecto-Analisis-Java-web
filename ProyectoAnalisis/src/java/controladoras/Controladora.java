@@ -41,28 +41,28 @@ public class Controladora extends HttpServlet {
 //        PrintWriter out = response.getWriter();
         String operacion = request.getParameter("operacion");
         if ("analizar".equals(operacion)) {
-//            String texto = request.getParameter("texto");
-//            System.out.println(texto);
-//            FileWriter fichero = null;
-//            PrintWriter pw = null;
-//            try {
-//                fichero = new FileWriter("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\ProyectoAnalisisPrueba\\src\\java\\controladoras\\texto.txt");
-//                pw = new PrintWriter(fichero);
-//                pw.println(texto);
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            } finally {
-//                try {
-//                    if (null != fichero) {
-//                        fichero.close();
-//                    }
-//                } catch (Exception e2) {
-//                    e2.printStackTrace();
-//                }
-//            }
+            String texto = request.getParameter("texto");
+            System.out.println(texto);
+            FileWriter fichero = null;
+            PrintWriter pw = null;
+            try {
+                fichero = new FileWriter("D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt");
+                pw = new PrintWriter(fichero);
+                pw.println(texto);
 
-            String[] archivoPrueba = {"D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code.txt"};
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (null != fichero) {
+                        fichero.close();
+                    }
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+            }
+
+            String[] archivoPrueba = {"D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt"};
             //C:\Users\Jorge Alejandro\Documents\NetBeansProjects\ProyectoAnalisisPrueba\src\java\controladoras\texto.txt
             try {
                 AnalizadorSintactico.main(archivoPrueba);
@@ -71,7 +71,7 @@ public class Controladora extends HttpServlet {
             }
             System.out.println("Ejecutado!");
             response.setContentType("text/plain");
-            response.getWriter().write("Ejecutado correctamente");
+            response.getWriter().print("Ejecutado correctamente");
         }
         else if("mover".equals(operacion))
         {

@@ -36,10 +36,12 @@ public class GenerarJava {
         codigo = codigo + texto + "\n";
 
     }
+
     public void escribirWhile(String condicion) {
-        recibir("\n while("+condicion+"){");
+        recibir("\n while(" + condicion + "){");
         escribir();
     }
+
     public void escribirDeclaraciones(Token n, String[] valores) {
         recibir(valores[1] + " " + n.image + " = " + valores[0] + ";");
         if (valores[1].equals("String")) {
@@ -49,10 +51,11 @@ public class GenerarJava {
             recibir("agregar(\"" + n.image + "\",Integer.toString(" + n.image + ")," + n.beginLine + ");");
         }
         insertarVariable(valores[1], n.image);
-           }
+    }
 
     public void escribir() {
         java = "package controladoras;\n"
+                + "import com.google.gson.Gson;"
                 + "import java.util.LinkedList;"
                 + "public class Programa {\n"
                 + "LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();"
@@ -61,7 +64,14 @@ public class GenerarJava {
                 + "}\n"
                 + "public void  agregar(String x,String valor,int linea)\n"
                 + "{\nlog.add(new EstructuraLog(x, valor,linea));\n}\n"
-                + "public void mostrar()\n{  \nfor (int i = 0; i < this.log.size(); i++) \n{\n\n        System.out.println(\"linea\"+this.log.get(i).linea+\"  variable=\"+this.log.get(i).nombre+\"=\"+this.log.get(i).valor);\n    }\n}\n"
+                + "public String mostrar()\n"
+                + "{  \n"
+                + "    Gson json = new Gson();\n"
+                + "    String resultados=\"{\\\"Variables\\\":\";\n"
+                + "    resultados += json.toJson(log)+\"}\";\n"
+                + "    \n"
+                + "    return resultados;\n"
+                + "}"
                 + "}\n";
         System.out.println(java);
         FileWriter fichero = null;

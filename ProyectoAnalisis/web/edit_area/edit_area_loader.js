@@ -42,8 +42,8 @@ function EditAreaLoader() {
         , is_multi_files: false		// enable the multi file mode (the textarea content is ignored)
         , allow_resize: "both"	// possible values: "no", "both", "x", "y"
         , show_line_colors: false	// if the highlight is disabled for the line currently beeing edited (if enabled => heavy CPU use)
-        , min_width: 1000
-        , min_height: 250
+        , min_width: 1100
+        , min_height: 450
         , replace_tab_by_spaces: false
         , allow_toggle: false		// true or false
         , language: "en"

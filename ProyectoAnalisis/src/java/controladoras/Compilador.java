@@ -50,5 +50,12 @@ public class Compilador {
             System.out.println("Error al invocar");
         }
     }
-   
+   public static void main( String []args )
+   {
+  
+       Compilador com= new Compilador();
+       com.compilar();
+       System.out.println("oeoe");
+       System.out.println(com.Resultado);
+   }
 }

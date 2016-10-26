@@ -11,12 +11,10 @@ var contadorLineas = 0;
 function activar()
 {
     $('li.noactivo').click(function () {
-
         $('li.noactivo').removeClass("active");
         $(this).addClass("active");
     });
 }
-
 function removeAllChilds(a)
  {
  var a=document.getElementById(a);
@@ -39,13 +37,14 @@ $(function ()
                 var tdValor=document.createElement("td");
                 tdValor.appendChild(document.createTextNode(("value",resultados.Variables[i].valor)));
                 tr.appendChild(tdNombre);
-                tr.appendChild(tdValor);
-               
+                tr.appendChild(tdValor);              
             }
             document.getElementById("tablaVariables").appendChild(tr);
         }
 
     });
+    
+    
     $('#tabla').click(function (e) {
 
         $(".frames").hide();
@@ -54,19 +53,18 @@ $(function ()
         $("#frame_textarea_" + id + "").show();
 
     });
+    
     $('#run1').click(function (e) {
-
-
         arreglo = texto.split("\n");
         alert(arreglo.length);
         sacarAmbientes(arreglo, 1);
 
     });
+    
     function sacarProcedimientos(codigofuente)
     {
-
-
     }
+    
     function sacarAmbientes(codigofuente, i)
     {
         var mensaje = "";
@@ -85,12 +83,12 @@ $(function ()
         ambientes(mensaje);
         return i;
     }
+    
+    
     $("#enviar").on("click", enviar);
     function enviar()
     {
-
-
-        texto = editAreaLoader.getValue("textarea_" + actual + "");
+        ttexto = editAreaLoader.getValue("textarea_" + actual + "");
         alert(texto);
         $.post("Controladora", {
             operacion: "analizar",
@@ -114,8 +112,9 @@ $(function ()
             beackPoint1 = beackPoint1 + window.parent.frames[actual - 1].lineas[x];
         }
         alert(beackPoint1);
-
     }
+    
+    
     $("#mover").on("click", mover);
     function mover()
     {
@@ -128,7 +127,6 @@ $(function ()
         {
             alert("Error en la operacion");
         });
-
     }
     $("#run").on("click", run);
     function run()
@@ -144,25 +142,18 @@ $(function ()
         {
             alert("Error en la operacion");
         });
-
     }
-
 });
 function processFiles(files) {
     var file = files[0];
-
     var reader = new FileReader();
-
     reader.onload = function (e) {
 // Cuando éste evento se dispara, los datos están ya disponibles.
 // Se trata de copiarlos a una área <div> en la página.
         $("#frame_textarea_1").addClass("frames");
         $(".frames").hide();
-
-
         contador++;
         $('li.noactivo').removeClass("active");
-
         var nuevoProyecto = $('<textarea id="textarea_' + contador + '" class="textarea" name="content" cols="80" rows="1"></textarea>');
         var btnNuevo = $('<li class="noactivo active" onclick="activar()" ><a id="' + contador + '" class="proyectos" href="#" >' + contador + '</a></li>');
         $("#tabla").append(btnNuevo);
@@ -177,14 +168,12 @@ function processFiles(files) {
         $("#frame_textarea_" + contador + "").addClass("frames");
         $("#frame_textarea_" + contador + "").attr("style", "heigth:1000");
         actual = contador;
-
-
     };
     reader.readAsText(file);
 }
+
 function ambientes(mensaje) {
     console.log(mensaje);
-
     var nuevoProyecto = $('<textarea id="textarea_' + (actual) + ".1" + '" class="textarea" name="content" cols="80" rows="1"></textarea>');
     $("#container").append(nuevoProyecto);
     $(nuevoProyecto).attr("value", "" + mensaje);

@@ -12,7 +12,7 @@ editAreaLoader.load_syntax["java"] = {
             'String', 'int', 'short', 'long', 'char', 'double', 'byte',
             'float', 'static', 'void', 'private', 'boolean', 'protected',
             'public', 'const', 'class', 'final', 'abstract', 'volatile',
-            'enum', 'transient', 'interface', 'return', 'procedure', 'function'
+            'enum', 'transient', 'interface', 'return', 'procedure', 'function',
         ]
         , 'statements': [
             'if', 'then', 'for', 'to', 'while',

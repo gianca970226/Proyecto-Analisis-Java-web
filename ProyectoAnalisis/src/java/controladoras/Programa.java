@@ -1,6 +1,5 @@
 package controladoras;
-import com.google.gson.Gson;
-import java.util.LinkedList;public class Programa {
+import com.google.gson.Gson;import java.util.LinkedList;public class Programa {
 LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();public void principal() {
 String oe1 = "234";
 agregar("oe1",oe1,2);
@@ -21,7 +20,6 @@ public void  agregar(String x,String valor,int linea)
 {
 log.add(new EstructuraLog(x, valor,linea));
 }
-
 public String mostrar()
 {  
     Gson json = new Gson();
@@ -29,6 +27,5 @@ public String mostrar()
     resultados += json.toJson(log)+"}";
     
     return resultados;
-}
-}
+}}
 
