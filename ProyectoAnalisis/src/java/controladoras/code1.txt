@@ -1,1 +1,14 @@
+begin
+oe1 <-"234"
+oe2<-12
+oe3<-oe2
+oe8<-12
+oe4<-15
+oe5<-12
+oe6<-3344
+while (oe3>oe2) do 
+begin
+x<-"12"
+end
+end
 

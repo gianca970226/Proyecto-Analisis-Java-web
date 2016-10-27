@@ -56,6 +56,9 @@
             <table id="tablaVariables">
             </table>
         </div>
+        <div class="col-xs-12">
+            <label id="Errores">Eroores</label>
+        </div>
 
     </body>
 </html>

@@ -8,6 +8,7 @@ var actual = 1;
 var texto;
 var resultados;
 var contadorLineas = 0;
+var bandera = true;
 function activar()
 {
     $('li.noactivo').click(function () {
@@ -16,35 +17,73 @@ function activar()
     });
 }
 function removeAllChilds(a)
- {
- var a=document.getElementById(a);
- while(a.hasChildNodes())
-	a.removeChild(a.firstChild);	
- }
+{
+    var a = document.getElementById(a);
+    while (a.hasChildNodes())
+        a.removeChild(a.firstChild);
+}
 $(function ()
 {
-    $('#step').click(function (e) {
-        contadorLineas++;
-        removeAllChilds("tablaVariables");
-        var trEncabezado=$("<tr><td>Variable</td><td>Valor</td> </tr>");
-        $("#tablaVariables").append(trEncabezado);
-        for (i = 0; i < resultados.Variables.length; i++) {
-             var tr=document.createElement("tr");
-             tr.className="variables";
-            if ((i + 1) <= contadorLineas) {
-                var tdNombre=document.createElement("td");
-                tdNombre.appendChild(document.createTextNode(resultados.Variables[i].nombre));
-                var tdValor=document.createElement("td");
-                tdValor.appendChild(document.createTextNode(("value",resultados.Variables[i].valor)));
-                tr.appendChild(tdNombre);
-                tr.appendChild(tdValor);              
-            }
-            document.getElementById("tablaVariables").appendChild(tr);
-        }
-
+    
+    $.post("Controladora", {
+        operacion: "leer",
+        texto: texto
+    }, function (data) {
+        var resultado = data;
+        editAreaLoader.setValue("textarea_" + actual, resultado);
+    }).fail(function ()
+    {
+        alert("Error en la operacion");
     });
-    
-    
+    $('#step').click(function (e) {
+        
+        if (bandera)
+        {
+           
+            $.post("Controladora", {
+                operacion: "analizar",
+            }, function (data) {
+              
+                resultados = JSON.parse(data);
+             
+            }).fail(function ()
+            {
+                alert("Error en la operacion");
+            });
+            contadorLineas--;
+            bandera = false;
+        } else {
+            
+            contadorLineas++;
+            
+            document.getElementById('frame_textarea_1').contentWindow.step(contadorLineas+1);
+            console.log(contadorLineas);
+            removeAllChilds("tablaVariables");
+            var trEncabezado = $("<tr><td>Variable</td><td>Valor</td> </tr>");
+            $("#tablaVariables").append(trEncabezado);
+            for (i = 0; i < resultados.Variables.length; i++) {
+
+                var tr = document.createElement("tr");
+                tr.className = "variables";
+                if ((i + 1) <= contadorLineas) {
+                    var tdNombre = document.createElement("td");
+                    tdNombre.appendChild(document.createTextNode(resultados.Variables[i].nombre));
+                    var tdValor = document.createElement("td");
+                    tdValor.appendChild(document.createTextNode(("value", resultados.Variables[i].valor)));
+                    tr.appendChild(tdNombre);
+                    tr.appendChild(tdValor);
+                }
+                document.getElementById("tablaVariables").appendChild(tr);
+            }
+            if(contadorLineas==resultados.Variables.length+1)
+            {
+                alert('fin');
+                contadorLineas=0
+            }
+        }
+    });
+
+
     $('#tabla').click(function (e) {
 
         $(".frames").hide();
@@ -53,18 +92,18 @@ $(function ()
         $("#frame_textarea_" + id + "").show();
 
     });
-    
+
     $('#run1').click(function (e) {
         arreglo = texto.split("\n");
         alert(arreglo.length);
         sacarAmbientes(arreglo, 1);
 
     });
-    
+
     function sacarProcedimientos(codigofuente)
     {
     }
-    
+
     function sacarAmbientes(codigofuente, i)
     {
         var mensaje = "";
@@ -83,24 +122,24 @@ $(function ()
         ambientes(mensaje);
         return i;
     }
-    
-    
-    $("#enviar").on("click", enviar);
-    function enviar()
-    {
-        ttexto = editAreaLoader.getValue("textarea_" + actual + "");
-        alert(texto);
-        $.post("Controladora", {
-            operacion: "analizar",
-            texto: texto
-        }, function (data) {
-            var resultado = data;
-            alert(resultado);
-        }).fail(function ()
-        {
-            alert("Error en la operacion");
-        });
-    }
+
+
+//    $("#enviar").on("click", enviar);
+//    function enviar()
+//    {
+//        texto = editAreaLoader.getValue("textarea_" + actual + "");
+//        alert(texto);
+//        $.post("Controladora", {
+//            operacion: "analizar",
+//            texto: texto
+//        }, function (data) {
+//            var resultado = data;
+//            alert(resultado);
+//        }).fail(function ()
+//        {
+//            alert("Error en la operacion");
+//        });
+//    }
 
 
     $("#breakpoint").on("click", breakpoint);
@@ -113,8 +152,8 @@ $(function ()
         }
         alert(beackPoint1);
     }
-    
-    
+
+
     $("#mover").on("click", mover);
     function mover()
     {
@@ -131,13 +170,15 @@ $(function ()
     $("#run").on("click", run);
     function run()
     {
-        contadorLineas=0;
+        texto = editAreaLoader.getValue("textarea_" + actual + "");
+        contadorLineas = 0;
         $.post("Controladora", {
-            operacion: "run"
+            operacion: "run",
+            texto: texto
         }, function (data) {
-            alert(data)
-            resultados = JSON.parse(data);
-            alert(resultados);
+
+
+            document.getElementById("Errores").appendChild(document.createTextNode(("value", data)));
         }).fail(function ()
         {
             alert("Error en la operacion");

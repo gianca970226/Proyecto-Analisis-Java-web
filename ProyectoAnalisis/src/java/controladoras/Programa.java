@@ -7,10 +7,18 @@ int oe2 = 12;
 agregar("oe2",Integer.toString(oe2),3);
 int oe3 = oe2;
 agregar("oe3",Integer.toString(oe3),4);
+int oe8 = 12;
+agregar("oe8",Integer.toString(oe8),5);
+int oe4 = 15;
+agregar("oe4",Integer.toString(oe4),6);
+int oe5 = 12;
+agregar("oe5",Integer.toString(oe5),7);
+int oe6 = 3344;
+agregar("oe6",Integer.toString(oe6),8);
 
- while(true  && oe3 > oe2){
+ while(oe3 > oe2){
 String x = "12";
-agregar("x",x,7);
+agregar("x",x,11);
 
 }
 

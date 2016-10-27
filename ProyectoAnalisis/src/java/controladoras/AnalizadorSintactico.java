@@ -6,19 +6,14 @@ import java.util.logging.Logger;
 
 public class AnalizadorSintactico implements AnalizadorSintacticoConstants {
 GenerarJava generar= new GenerarJava();
-  public static void main(String[] args) {
+  public static void main(String[] args) throws FileNotFoundException, ParseException {
 
 
-        try {
+  
             AnalizadorSintactico parser = new AnalizadorSintactico(new FileReader(args[0]));
-            try {
+      
                 parser.Start();
-            } catch (ParseException ex) {
-                Logger.getLogger(AnalizadorSintactico.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AnalizadorSintactico.class.getName()).log(Level.SEVERE, null, ex);
-        }
+      
 
     }
 
