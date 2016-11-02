@@ -1,2 +1,7 @@
-ProyectoAnalisis/build/web/WEB-INF/classes/controladoras/Controladora.class
-ProyectoAnalisis/nbproject/private/private.xml
+ProyectoAnalisis/build/web
+ProyectoAnalisis/nbproject
+*.class
+*.jar
+*.war
+*.ear
+*.xml

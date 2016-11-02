@@ -17,7 +17,7 @@ editAreaLoader.load_syntax["java"] = {
         , 'statements': [
             'if', 'then', 'for', 'to', 'while',
             'else', 'elif', 'end', 'do',
-            'until', 'begin', 'repet', 'to', 'call'
+            'until', 'begin', 'repet', 'to', 'call','enddeclare','declare'
         ]
      
     }

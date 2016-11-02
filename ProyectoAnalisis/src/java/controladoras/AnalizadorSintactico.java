@@ -7,61 +7,242 @@ import java.util.logging.Logger;
 public class AnalizadorSintactico implements AnalizadorSintacticoConstants {
 GenerarJava generar= new GenerarJava();
   public static void main(String[] args) throws FileNotFoundException, ParseException {
+        AnalizadorSintactico parser = new AnalizadorSintactico(new FileReader(args[0]));
+        parser.Start();
 
-
-  
-            AnalizadorSintactico parser = new AnalizadorSintactico(new FileReader(args[0]));
-      
-                parser.Start();
-      
-
-    }
+}
 
   final public void Start() throws ParseException {
-    jj_consume_token(BEGIN);
-    E();
-    jj_consume_token(END);
-  }
-
-  final public void E() throws ParseException {
+    jj_consume_token(DECLARE);
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case WHILE:
-      case IDENTIFICADOR:
+      case PROCEDURE:
+      case FUNCTION:
         ;
         break;
       default:
         jj_la1[0] = jj_gen;
         break label_1;
       }
+      SUBRUTINA();
+    }
+    jj_consume_token(ENDDECLARE);
+        generar.escribirPrincipal();
+    jj_consume_token(BEGIN);
+        generar.ambienteVariables();
+    E();
+    jj_consume_token(END);
+        generar.escribir();
+  }
+
+  final public void SUBRUTINA() throws ParseException {
+ Token id1; Token id2; Token retorno; String parametros="";String parametro;String []valores=new String[2];
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case FUNCTION:
+      jj_consume_token(FUNCTION);
+            generar.ambienteVariables();
+      retorno = jj_consume_token(TIPO);
+      id1 = jj_consume_token(IDENTIFICADOR);
+      jj_consume_token(PARENTESISABIERTO);
+      label_2:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case TIPO:
+          ;
+          break;
+        default:
+          jj_la1[1] = jj_gen;
+          break label_2;
+        }
+        parametro = PARAMETRO();
+            parametros=parametros+parametro;
+      }
+      jj_consume_token(PARENTESISCERRADO);
+      jj_consume_token(BEGIN);
+            generar.escribirFunction(retorno.image, id1.image,parametros);
+
+            valores[0]=id1.image;
+            valores[1]="subrutina";
+            generar.escribirLog(id1,valores);
+      E();
+      jj_consume_token(RETURN);
+      id2 = jj_consume_token(IDENTIFICADOR);
+      jj_consume_token(END);
+            generar.escribirFinFunction(id2.image);
+      break;
+    case PROCEDURE:
+      jj_consume_token(PROCEDURE);
+            generar.ambienteVariables();
+      id1 = jj_consume_token(IDENTIFICADOR);
+      jj_consume_token(PARENTESISABIERTO);
+      label_3:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case TIPO:
+          ;
+          break;
+        default:
+          jj_la1[2] = jj_gen;
+          break label_3;
+        }
+        parametro = PARAMETRO();
+            parametros=parametros+parametro;
+      }
+      jj_consume_token(PARENTESISCERRADO);
+      jj_consume_token(BEGIN);
+            generar.escribirProcedure(id1.image,parametros);
+            valores[0]=id1.image;
+            valores[1]="subrutina";
+            generar.escribirLog(id1,valores);
+      E();
+      jj_consume_token(END);
+            generar.escribirFinProcedure();
+      break;
+    default:
+      jj_la1[3] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public String PARAMETRO() throws ParseException {
+ Token id1; Token tipo; Token coma=null;
+    tipo = jj_consume_token(TIPO);
+    id1 = jj_consume_token(IDENTIFICADOR);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COMA:
+      coma = jj_consume_token(COMA);
+      break;
+    default:
+      jj_la1[4] = jj_gen;
+      ;
+    }
+        if (coma!=null)
+        {
+            generar.insertarVariable(tipo.image,id1.image);
+            {if (true) return tipo.image+" "+id1.image+coma.image;}
+        }
+        else
+        {
+            generar.insertarVariable(tipo.image,id1.image);
+            {if (true) return tipo.image+" "+id1.image;}
+        }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void E() throws ParseException {
+    label_4:
+    while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CALL:
+      case IF:
+      case WHILE:
+      case FOR:
       case IDENTIFICADOR:
-        VARIABLE();
+        ;
+        break;
+      default:
+        jj_la1[5] = jj_gen;
+        break label_4;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CALL:
+      case IDENTIFICADOR:
+        INSTRUCCION();
         break;
       case WHILE:
         WHILE();
         break;
+      case FOR:
+        FOR();
+        break;
+      case IF:
+        BIFURCACION();
+        break;
       default:
-        jj_la1[1] = jj_gen;
+        jj_la1[6] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
     }
   }
 
+  final public void BIFURCACION() throws ParseException {
+ String ncondicion; Token lif;
+    lif = jj_consume_token(IF);
+    jj_consume_token(PARENTESISABIERTO);
+    ncondicion = CONDICION();
+    jj_consume_token(PARENTESISCERRADO);
+    jj_consume_token(THEN);
+    jj_consume_token(BEGIN);
+        generar.escribirIf(ncondicion);
+        generar.escribirLog(lif,null);
+    E();
+        generar.recibir("}");
+    jj_consume_token(END);
+    label_5:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ELIF:
+      case ELSE:
+        ;
+        break;
+      default:
+        jj_la1[7] = jj_gen;
+        break label_5;
+      }
+      BIFURCACION2();
+    }
+    E();
+  }
+
+  final public void BIFURCACION2() throws ParseException {
+ String ncondicion; Token lelif; Token lelse;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case ELIF:
+      lelif = jj_consume_token(ELIF);
+      jj_consume_token(PARENTESISABIERTO);
+      ncondicion = CONDICION();
+      jj_consume_token(PARENTESISCERRADO);
+      jj_consume_token(THEN);
+      jj_consume_token(BEGIN);
+        generar.escribirElif(ncondicion);
+        generar.escribirLog(lelif,null);
+      E();
+       generar.recibir("}");
+      jj_consume_token(END);
+      break;
+    case ELSE:
+      lelse = jj_consume_token(ELSE);
+      jj_consume_token(BEGIN);
+        generar.escribirElse();
+        generar.escribirLog(lelse,null);
+      E();
+        generar.recibir("}");
+      jj_consume_token(END);
+      break;
+    default:
+      jj_la1[8] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
   final public void WHILE() throws ParseException {
- String ncondicion;
-    jj_consume_token(WHILE);
+ String ncondicion; Token lwhile;
+    lwhile = jj_consume_token(WHILE);
     jj_consume_token(PARENTESISABIERTO);
     ncondicion = CONDICION();
     jj_consume_token(PARENTESISCERRADO);
     jj_consume_token(DO);
     jj_consume_token(BEGIN);
-                                                                                          generar.escribirWhile(ncondicion);
+            generar.escribirWhile(ncondicion);
+            generar.escribirLog(lwhile,null);
     E();
-                                                                                                                                   generar.recibir("\u005cn}\u005cn"); generar.escribir();
+            generar.recibir("}");
     jj_consume_token(END);
+    E();
   }
 
   final public String CONDICION() throws ParseException {
@@ -70,13 +251,13 @@ GenerarJava generar= new GenerarJava();
     case BOLEANO:
       n = jj_consume_token(BOLEANO);
       condicion = OTRACONDICION();
-                                              {if (true) return (n.image+" "+ condicion);}
+            {if (true) return (n.image+" "+ condicion);}
       break;
     case NOT:
       jj_consume_token(NOT);
       n = jj_consume_token(IDENTIFICADOR);
       condicion = OTRACONDICION();
-                                                                                                                                   {if (true) return ("!"+ n.image+" "+ condicion);}
+            {if (true) return ("!"+ n.image+" "+ condicion);}
       break;
     case NUMBER:
     case IDENTIFICADOR:
@@ -85,10 +266,10 @@ GenerarJava generar= new GenerarJava();
       n = jj_consume_token(OPERADORR);
       valor2 = VALOR();
       condicion = OTRACONDICION();
-                                                                                                                                                                                                                                                  {if (true) return valor1[0]+" "+n.image+" "+valor2[0];}
+            {if (true) return valor1[0]+" "+n.image+" "+valor2[0];}
       break;
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -96,50 +277,399 @@ GenerarJava generar= new GenerarJava();
   }
 
   final public String OTRACONDICION() throws ParseException {
- Token n= new Token();n.image="";String condicion="";
-    label_2:
+ Token n=new Token();n.image=""; String condicion="";
+    label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case OPERADORL:
         ;
         break;
       default:
-        jj_la1[3] = jj_gen;
-        break label_2;
+        jj_la1[10] = jj_gen;
+        break label_6;
       }
       n = jj_consume_token(OPERADORL);
       condicion = CONDICION();
     }
-                                                  if(n.image.equals("and")){{if (true) return " && "+condicion;}} else if(n.image.equals("or"))  {{if (true) return (" || "+condicion);}} else {{if (true) return "";}}
+        if(n.image.equals("and"))
+        {
+            {if (true) return " && "+condicion;}
+        }
+        else if(n.image.equals("or"))
+        {
+            {if (true) return " || "+condicion;}
+        } else
+        {
+            {if (true) return "";}
+        }
     throw new Error("Missing return statement in function");
   }
 
-  final public void VARIABLE() throws ParseException {
- Token n;String []valores= new String[2];
-    n = jj_consume_token(IDENTIFICADOR);
-    jj_consume_token(ASIGNACION);
+  final public void INSTRUCCION() throws ParseException {
+ Token id; String elemento; String elementos="";
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case IDENTIFICADOR:
+      id = jj_consume_token(IDENTIFICADOR);
+      OPERACION(id);
+      E();
+      break;
+    case CALL:
+      jj_consume_token(CALL);
+      id = jj_consume_token(IDENTIFICADOR);
+      jj_consume_token(PARENTESISABIERTO);
+      label_7:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NUMBER:
+        case IDENTIFICADOR:
+        case CADENA:
+          ;
+          break;
+        default:
+          jj_la1[11] = jj_gen;
+          break label_7;
+        }
+        elemento = ELEMENTO();
+        elementos=elementos+elemento;
+      }
+      jj_consume_token(PARENTESISCERRADO);
+        generar.escribirCallProcedure(id.image,elementos);
+        generar.escribirLog(id,null);
+      break;
+    default:
+      jj_la1[12] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void OPERACION(Token id) throws ParseException {
+ Token id1=id; String[] valores1=null; String []valores=new String[2]; String elemento; String elementos="";
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case ASIGNACION:
+      jj_consume_token(ASIGNACION);
+      OPERACION2(id, null);
+      break;
+    case CORCHETEABIERTO:
+      jj_consume_token(CORCHETEABIERTO);
+      valores1 = VALOR();
+      jj_consume_token(CORCHETECERRADO);
+      jj_consume_token(ASIGNACION);
+      OPERACION2(id1, valores1);
+      break;
+    default:
+      jj_la1[13] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void OPERACION2(Token id, String []valores) throws ParseException {
+ Token id1=id; String []valores3=valores; String []valores1=null; Token id2=null; Token op=null; String[] valores2=new String [2]; String elementos=""; String elemento="";
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case NUMBER:
+    case IDENTIFICADOR:
+    case CADENA:
+      valores1 = VALOR();
+      OPERACION3(id1,valores1, valores3);
+      break;
+    case CORCHETEABIERTO:
+      jj_consume_token(CORCHETEABIERTO);
+      label_8:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NUMBER:
+        case IDENTIFICADOR:
+        case CADENA:
+          ;
+          break;
+        default:
+          jj_la1[14] = jj_gen;
+          break label_8;
+        }
+        elemento = ELEMENTO();
+        elementos=elementos+elemento;
+      }
+      jj_consume_token(CORCHETECERRADO);
+        valores2[0]=id1.image;
+        valores2[1]="int[]";
+        generar.insertarVariable("int []", id1.image);
+        generar.escribirArreglo("int", id1.image, elementos);
+        generar.escribirLog(id1, valores2);
+      break;
+    case CALL:
+      jj_consume_token(CALL);
+      id2 = jj_consume_token(IDENTIFICADOR);
+      jj_consume_token(PARENTESISABIERTO);
+      label_9:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NUMBER:
+        case IDENTIFICADOR:
+        case CADENA:
+          ;
+          break;
+        default:
+          jj_la1[15] = jj_gen;
+          break label_9;
+        }
+        elemento = ELEMENTO();
+        elementos=elementos+elemento;
+      }
+      jj_consume_token(PARENTESISCERRADO);
+        if (valores3==null)
+        {
+            String tipo=generar.buscarVariable(id1.image);
+            if (tipo==null)
+            {
+                tipo=generar.buscarFunction(id2.image);
+                generar.insertarVariable(tipo,id1.image);
+                generar.escribirCallFunctionVariableOArreglo(tipo,id1.image,id2.image,elementos);
+            }
+            else
+            {
+                generar.escribirCallFunctionVariableOArreglo(null,id1.image,id2.image,elementos);
+            }
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+        else
+        {
+            generar.escribirCallFunctionArregloPos(id1.image,valores3[0],id2.image,elementos);
+            //no hay que verificar el tipo de variable ya que es una posicion de arreglo y el arreglo ya debe estar definido
+            String tipo=generar.buscarVariable(id1.image);
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+      break;
+    default:
+      jj_la1[16] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void OPERACION3(Token id, String []valores, String []valoresb) throws ParseException {
+ Token id1=id; String []valores1=valores; String []valores4=valoresb; String []valores2=null; String []valores3=null; Token op;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case CORCHETEABIERTO:
+      jj_consume_token(CORCHETEABIERTO);
+      valores2 = VALOR();
+      jj_consume_token(CORCHETECERRADO);
+        if (valores4==null)
+        {
+            String tipo=generar.buscarVariable(id1.image);
+            if (tipo==null)
+            {
+                generar.insertarVariable("int",id1.image);
+                tipo=generar.buscarVariable(id1.image);
+                generar.escribirVariableAccesoArreglo(tipo, id1.image, valores1[0],valores2);
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=tipo;
+                generar.escribirLog(id1,valores5);
+            }
+            else
+            {
+                generar.escribirVariableAccesoArreglo(null, id1.image, valores1[0],valores2);
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=tipo;
+                generar.escribirLog(id1,valores5);
+            }
+        }
+        else
+        {
+            String tipo=generar.buscarVariable(id1.image);
+            if (tipo==null)
+            {
+                generar.insertarVariable("int",id1.image);
+                tipo=generar.buscarVariable(id1.image);
+                generar.escribirArregloAccesoArreglo(tipo, id1.image,valores4[0], valores1[0],valores2[0]);
+                generar.escribirLog(id1,valores1);
+            }
+            else
+            {
+                generar.escribirArregloAccesoArreglo(null, id1.image,valores4[0], valores1[0],valores2[0]);
+                generar.escribirLog(id1,valores1);
+            }
+        }
+      break;
+    case OPERADOR:
+      op = jj_consume_token(OPERADOR);
+      valores2 = VALOR();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CORCHETEABIERTO:
+        jj_consume_token(CORCHETEABIERTO);
+        valores3 = VALOR();
+        jj_consume_token(CORCHETECERRADO);
+        break;
+      default:
+        jj_la1[17] = jj_gen;
+        ;
+      }
+        if (valores4!=null) //Es cuando se le asigna una operacion a una posicion de un arreglo, si es diferente de null es porque la asignacion a una posicion de un arreglo
+        {
+            if (valores3!=null) //arreglo que indica si el ultimo operador es una posicion de un arreglo
+            {
+                generar.escribirArregloVariableOperacionArreglo(null,id1.image,valores4[0],valores1[0], op.image,valores2[0],valores3[0]);
+                String tipo=generar.buscarVariable(id1.image);
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=tipo;
+                generar.escribirLog(id1,valores5);
+            }
+            else
+            {
+                generar.escribirArregloVariableOperacionVariable(null, id1.image, valores4[0],valores1[0], op.image,valores2[0]);
+                String tipo=generar.buscarVariable(id1.image);
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=tipo;
+                generar.escribirLog(id1,valores5);
+            }
+        }
+        else
+        {
+            if (valores3!=null)
+            {
+                String existe=generar.buscarVariable(id1.image);
+                if (existe==null)
+                {
+                    generar.insertarVariable("int",id1.image);
+                    generar.escribirVariableVariableOperacionArreglo("int", id1.image,valores1[0], op.image,valores2[0],valores3[0]);
+                    valores1[1]=generar.buscarVariable(id1.image);
+                }
+                else
+                {
+                    generar.escribirVariableVariableOperacionArreglo(null, id1.image,valores1[0], op.image,valores2[0],valores3[0]);
+                }
+                generar.escribirLog(id1,valores1);
+            }
+            else
+            {
+               String existe=generar.buscarVariable(id1.image);
+                if (existe==null)
+                {
+                    generar.insertarVariable("int",id1.image);
+                    generar.escribirVariableVariableOperacionVariable("int", id1.image,valores1[0], op.image,valores2[0]);
+                }
+                else
+                {
+                    generar.escribirVariableVariableOperacionVariable(null, id1.image,valores1[0], op.image,valores2[0]);
+                }
+                generar.escribirLog(id1,valores1);
+            }
+        }
+      break;
+    default:
+      jj_la1[18] = jj_gen;
+        //si no paso por la gramatica de empezar con una posicion de un arreglo entonces fue una variable
+        if (valores4==null)
+        {
+            String existe=generar.buscarVariable(id1.image);
+            if (existe==null)
+            {
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=valores1[1];
+                generar.insertarVariable(valores5[1],id1.image);
+                generar.escribirVariable(id1.image,valores1);
+                generar.escribirLog(id1,valores5);
+            }
+            else
+            {
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=valores1[1];
+                generar.escribirVariable(id1.image,valores1);
+                generar.escribirLog(id1,valores5);
+            }
+
+        }
+        else
+        {
+            String tipo=generar.buscarVariable(id1.image);
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirArregloAccesoVariable(id1.image, valores4[0], valores1[0]);
+            generar.escribirLog(id1,valores5);
+        }
+    }
+  }
+
+//Esta produccion permite obtener los elementos para un arreglo o para asignar parametros a una funcion o procedimiento
+  final public String ELEMENTO() throws ParseException {
+ String[] valores; Token coma=null;
     valores = VALOR();
-                                                 generar.escribirDeclaraciones(n,valores);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case COMA:
+      coma = jj_consume_token(COMA);
+      break;
+    default:
+      jj_la1[19] = jj_gen;
+      ;
+    }
+        if (coma!=null)
+        {
+            {if (true) return valores[0]+coma.image;}
+        }
+        else
+        {
+            {if (true) return valores[0];}
+        }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void FOR() throws ParseException {
+ Token id1; String[] valores1; String[] valores2;
+    jj_consume_token(FOR);
+    jj_consume_token(PARENTESISABIERTO);
+    id1 = jj_consume_token(IDENTIFICADOR);
+    jj_consume_token(ASIGNACION);
+    valores1 = VALOR();
+    jj_consume_token(TO);
+    valores2 = VALOR();
+    jj_consume_token(PARENTESISCERRADO);
+    jj_consume_token(DO);
+    jj_consume_token(BEGIN);
+        generar.insertarVariable(valores1[1],id1.image);
+        generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<"+valores2[0]+";"+id1.image+"++");
+        generar.escribirLog(id1,valores1);
+    E();
+    jj_consume_token(END);
+        generar.recibir("}");
     E();
   }
 
   final public String [] VALOR() throws ParseException {
- Token n;String [] valores = new String[2];
+ Token valor;String [] valores = new String[2];
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFICADOR:
-      n = jj_consume_token(IDENTIFICADOR);
-                      valores[0]=n.image ; valores[1]=generar.buscarVariable(n.image);{if (true) return valores;}
+      valor = jj_consume_token(IDENTIFICADOR);
+        valores[0]=valor.image;
+        valores[1]=generar.buscarVariable(valor.image);
+        {if (true) return valores;}
       break;
     case NUMBER:
-      n = jj_consume_token(NUMBER);
-                                                                                                                   valores[0]=n.image ; valores[1]="int" ;{if (true) return valores;}
+      valor = jj_consume_token(NUMBER);
+        valores[0]=valor.image;
+        valores[1]="int";
+        {if (true) return valores;}
       break;
     case CADENA:
-      n = jj_consume_token(CADENA);
-                                                                                                                                                                                        valores[0]=n.image ; valores[1]="String" ;{if (true) return valores;}
+      valor = jj_consume_token(CADENA);
+        valores[0]=valor.image;
+        valores[1]="String";
+        {if (true) return valores;}
       break;
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[20] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -155,13 +685,18 @@ GenerarJava generar= new GenerarJava();
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[5];
+  final private int[] jj_la1 = new int[21];
   static private int[] jj_la1_0;
+  static private int[] jj_la1_1;
   static {
       jj_la1_init_0();
+      jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x820000,0x820000,0x2806080,0x10000,0x2800080,};
+      jj_la1_0 = new int[] {0x3000,0x100000,0x100000,0x3000,0x0,0x3008800,0x3008800,0x60000,0x60000,0x280040,0x800000,0x40,0x800,0x50000000,0x40,0x40,0x10000840,0x10000000,0x10000000,0x0,0x40,};
+   }
+   private static void jj_la1_init_1() {
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x2,0x4,0x4,0x0,0x0,0x14,0x0,0x14,0x4,0x0,0x14,0x14,0x14,0x0,0x20,0x2,0x14,};
    }
 
   /** Constructor with InputStream. */
@@ -175,7 +710,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -189,7 +724,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -199,7 +734,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -209,7 +744,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -218,7 +753,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -227,7 +762,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -278,21 +813,24 @@ GenerarJava generar= new GenerarJava();
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[27];
+    boolean[] la1tokens = new boolean[38];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 21; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
             la1tokens[j] = true;
           }
+          if ((jj_la1_1[i] & (1<<j)) != 0) {
+            la1tokens[32+j] = true;
+          }
         }
       }
     }
-    for (int i = 0; i < 27; i++) {
+    for (int i = 0; i < 38; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
@@ -314,4 +852,4 @@ GenerarJava generar= new GenerarJava();
   final public void disable_tracing() {
   }
 
-}
+ }

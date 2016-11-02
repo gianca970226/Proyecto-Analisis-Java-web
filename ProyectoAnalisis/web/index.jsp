@@ -11,6 +11,7 @@
         <title>EditArea Test</title>
         <script language="javascript" type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/js1.js"></script>
+        <script type="text/javascript" src="js/stack.js"></script>
         <script language="javascript" type="text/javascript" src="edit_area/edit_area_loader.js"></script>
         <script language="javascript" type="text/javascript">
             editAreaLoader.init({
@@ -20,8 +21,6 @@
             });
             $("#line_number").attr('onclick', "breakpoint()");
         </script>
-
-
         <link rel="stylesheet" type="text/css" href="css/estilo.css" >
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" >
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -30,9 +29,9 @@
     <body>
         <nav class="col-xs-12">
             <input  id="archivo"type="file" onchange='processFiles(this.files)' >
-            <button id="enviar">Enviar</button>
-           <!-- <button id="breakpoint">breakpoint</button>
-            <button id="mover">Mover Archivos</button>-->
+            <!--  <button id="enviar">Enviar</button>
+            <button id="breakpoint">breakpoint</button>
+             <button id="mover">Mover Archivos</button>-->
             <button id="run"><span class="glyphicon glyphicon-play"></span></button>
             <button id="step"><span class="glyphicon glyphicon-download"></span>
             </button>

@@ -3,12 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+var Ambiente= function (nombre,valor,linea)
+{    this.nombre=nombre;
+    this.valor=valor;
+    this.linea=linea;
+}
 var contador = 1;
 var actual = 1;
 var texto;
 var resultados;
 var contadorLineas = 0;
 var bandera = true;
+var subrutinas = new Object();
+var contadorSubrutinas = 0;
+var contadorSub = 0;
+
+var objetoAux= new Array();
 function activar()
 {
     $('li.noactivo').click(function () {
@@ -24,62 +34,104 @@ function removeAllChilds(a)
 }
 $(function ()
 {
-    
+    var pila = new stack();
+
+    pila.push(new rutina(0, "textarea_" + actual + " ", 0))
+
+
+
     $.post("Controladora", {
         operacion: "leer",
         texto: texto
     }, function (data) {
         var resultado = data;
-        editAreaLoader.setValue("textarea_" + actual, resultado);
+        editAreaLoader.setValue("textarea_" + actual, resultado + "");
     }).fail(function ()
     {
         alert("Error en la operacion");
     });
     $('#step').click(function (e) {
-        
         if (bandera)
         {
-           
             $.post("Controladora", {
                 operacion: "analizar",
             }, function (data) {
-              
                 resultados = JSON.parse(data);
-             
+                alert(data);
             }).fail(function ()
             {
                 alert("Error en la operacion");
             });
-            contadorLineas--;
             bandera = false;
+            enviar()
         } else {
+            var codigo = editAreaLoader.getValue(pila.peek().nombre.trim());
+            codigo = codigo.split('\n')
+            console.log(resultados.Variables[(pila.peek().contadorLinea)].valor+"")
+            console.log(pila.peek().contadorLineas)
+            if (resultados.Variables[(pila.peek().contadorLinea)].valor == "subrutina")
+            {
+                aux=pila.peek().contadorLinea;
+                ambientes(subrutinas[resultados.Variables[(pila.peek().contadorLinea)].nombre])
+                
+                while(resultados.Variables[aux].nombre!="subrutina")
+                {
+                objetoAux.push(new Ambiente(resultados.Variables[aux].nombre,resultados.Variables[aux].valor,resultados.Variables[aux].linea))
+                aux=aux+1;
+                }
+                
+                console.log(objetoAux);
+                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(resultados.Variables[(aux+1)].linea - pila.peek().aux, resultados.Variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
+          
+                pila.push(new rutina(0, "textarea_" + actual + "." + contadorSub))
+                contadorSub++;
+                var aux2 = resultados.Variables[(pila.peek().contadorLinea)].linea;
+                pila.actualizar1(aux2 - 1)
+                
+            }
             
-            contadorLineas++;
-            
-            document.getElementById('frame_textarea_1').contentWindow.step(contadorLineas+1);
-            console.log(contadorLineas);
+            if (pila.peek().contadorLinea == 0)
+            {
+                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(resultados.Variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, resultados.Variables[pila.peek().contadorLinea ].linea - pila.peek().aux);
+            } else
+            {
+                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(resultados.Variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, resultados.Variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
+            }
             removeAllChilds("tablaVariables");
             var trEncabezado = $("<tr><td>Variable</td><td>Valor</td> </tr>");
             $("#tablaVariables").append(trEncabezado);
             for (i = 0; i < resultados.Variables.length; i++) {
-
                 var tr = document.createElement("tr");
                 tr.className = "variables";
-                if ((i + 1) <= contadorLineas) {
+                if ((i + 1) <= pila.peek().contadorLinea) {
                     var tdNombre = document.createElement("td");
                     tdNombre.appendChild(document.createTextNode(resultados.Variables[i].nombre));
                     var tdValor = document.createElement("td");
-                    tdValor.appendChild(document.createTextNode(("value", resultados.Variables[i].valor)));
+                    if (resultados.Variables[i].valor != null)
+                    {
+                        tdValor.appendChild(document.createTextNode(("value", resultados.Variables[i].valor)));
+                    } else
+                    {
+                        tdValor.appendChild(document.createTextNode(("value", resultados.Variables[i].lista)));
+                    }
                     tr.appendChild(tdNombre);
                     tr.appendChild(tdValor);
                 }
                 document.getElementById("tablaVariables").appendChild(tr);
             }
-            if(contadorLineas==resultados.Variables.length+1)
+
+
+            if (resultados.Variables[contadorLineas].valor == 'fin')
             {
-                alert('fin');
-                contadorLineas=0
+                var oe = pila.peek().contadorLinea
+                var frame = document.getElementById("frame_textarea_1.0"),
+                        frameDoc = frame.contentDocument || frame.contentWindow.document;
+                frameDoc.documentElement.innerHTML = "";
+                pila.pop();
+                pila.actualizar(pila.peek().contadorLinea + oe)
             }
+            pila.actualizar(pila.peek().contadorLinea + 1)
+            contadorLineas++;
         }
     });
 
@@ -93,12 +145,6 @@ $(function ()
 
     });
 
-    $('#run1').click(function (e) {
-        arreglo = texto.split("\n");
-        alert(arreglo.length);
-        sacarAmbientes(arreglo, 1);
-
-    });
 
     function sacarProcedimientos(codigofuente)
     {
@@ -124,22 +170,42 @@ $(function ()
     }
 
 
-//    $("#enviar").on("click", enviar);
-//    function enviar()
-//    {
-//        texto = editAreaLoader.getValue("textarea_" + actual + "");
-//        alert(texto);
-//        $.post("Controladora", {
-//            operacion: "analizar",
-//            texto: texto
-//        }, function (data) {
-//            var resultado = data;
-//            alert(resultado);
-//        }).fail(function ()
-//        {
-//            alert("Error en la operacion");
-//        });
-//    }
+    function enviar()
+    {
+        var codigo = editAreaLoader.getValue("textarea_" + actual + "");
+        var indice1 = codigo.indexOf("declare");
+        var indice2 = codigo.indexOf("enddeclare");
+        codigo = codigo.substring(indice1 + 7, indice2);
+        sacarSubRutinas(codigo.split("\n"))
+        mostrarSubrutinas()
+
+    }
+    function sacarSubRutinas(codigo)
+    {
+        for (var i = 0; i < codigo.length; i++) {
+            if (codigo[i].indexOf("function") != -1 || codigo[i].indexOf("procedure") != -1)
+            {
+                var j = i;
+                var cadena = '';
+                while (codigo[j].trim() != 'end')
+                {
+                    cadena += codigo[j] + '\n'
+                    j++
+                }
+                cadena += 'end'
+                var cadena2 = codigo[i].substring(codigo[i].indexOf(" "), codigo[i].indexOf("(")).trim()
+
+                subrutinas[cadena2.substring(cadena2.indexOf(" "), cadena2.length).trim()] = cadena
+            }
+        }
+    }
+    function mostrarSubrutinas()
+    {
+        for (x in subrutinas)
+        {
+            console.log(x + '-> ' + subrutinas[x])
+        }
+    }
 
 
     $("#breakpoint").on("click", breakpoint);
@@ -200,12 +266,13 @@ function processFiles(files) {
         $("#tabla").append(btnNuevo);
         $("#container").append(nuevoProyecto);
         alert(e.target.result);
-        $("#textarea_" + contador + "").val(e.target.result);
+
         editAreaLoader.init({
             id: "textarea_" + contador + ""		// textarea id
             , syntax: "java"			// syntax to be uses for highgliting
             , start_highlight: true		// to display with highlight mode on start-up
         });
+        editAreaLoader.setValue("textarea_" + contador + "", e.target.result + "");
         $("#frame_textarea_" + contador + "").addClass("frames");
         $("#frame_textarea_" + contador + "").attr("style", "heigth:1000");
         actual = contador;
@@ -215,15 +282,18 @@ function processFiles(files) {
 
 function ambientes(mensaje) {
     console.log(mensaje);
-    var nuevoProyecto = $('<textarea id="textarea_' + (actual) + ".1" + '" class="textarea" name="content" cols="80" rows="1"></textarea>');
+    var nombre = "textarea_" + (actual) + "." + contadorSubrutinas;
+    var nuevoProyecto = $('<textarea id="textarea_' + (actual) + "." + contadorSubrutinas + '" class="textarea" name="content" cols="80" rows="1"></textarea>');
     $("#container").append(nuevoProyecto);
     $(nuevoProyecto).attr("value", "" + mensaje);
+
     editAreaLoader.init({
-        id: "textarea_" + (actual) + ".1"		// textarea id
+        id: nombre		// textarea id
         , syntax: "java"			// syntax to be uses for highgliting
         , start_highlight: true		// to display with highlight mode on start-up
     });
-    editAreaLoader.setValue("textarea_" + (actual) + ".1", mensaje + "");
-    alert(mensaje);
+
+    editAreaLoader.setValue(nombre, mensaje + "");
+    contadorSubrutinas++;
 
 }

@@ -11,47 +11,69 @@ public interface AnalizadorSintacticoConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int PLUS = 6;
+  int NUMBER = 6;
   /** RegularExpression Id. */
-  int NUMBER = 7;
+  int BEGIN = 7;
   /** RegularExpression Id. */
-  int BEGIN = 8;
+  int END = 8;
   /** RegularExpression Id. */
-  int END = 9;
+  int DECLARE = 9;
   /** RegularExpression Id. */
-  int IF = 10;
+  int ENDDECLARE = 10;
   /** RegularExpression Id. */
-  int THEN = 11;
+  int CALL = 11;
   /** RegularExpression Id. */
-  int ELSE = 12;
+  int PROCEDURE = 12;
   /** RegularExpression Id. */
-  int BOLEANO = 13;
+  int FUNCTION = 13;
   /** RegularExpression Id. */
-  int NOT = 14;
+  int RETURN = 14;
   /** RegularExpression Id. */
-  int OPERADORR = 15;
+  int IF = 15;
   /** RegularExpression Id. */
-  int OPERADORL = 16;
+  int THEN = 16;
   /** RegularExpression Id. */
-  int WHILE = 17;
+  int ELIF = 17;
   /** RegularExpression Id. */
-  int PARENTESISABIERTO = 18;
+  int ELSE = 18;
   /** RegularExpression Id. */
-  int DO = 19;
+  int BOLEANO = 19;
   /** RegularExpression Id. */
-  int PARENTESISCERRADO = 20;
+  int TIPO = 20;
   /** RegularExpression Id. */
-  int ASIGNACION = 21;
+  int NOT = 21;
   /** RegularExpression Id. */
-  int TO = 22;
+  int OPERADORR = 22;
   /** RegularExpression Id. */
-  int IDENTIFICADOR = 23;
+  int OPERADORL = 23;
   /** RegularExpression Id. */
-  int DOUBLECOMMA = 24;
+  int WHILE = 24;
   /** RegularExpression Id. */
-  int CADENA = 25;
+  int FOR = 25;
   /** RegularExpression Id. */
-  int OPERADOR = 26;
+  int PARENTESISABIERTO = 26;
+  /** RegularExpression Id. */
+  int PARENTESISCERRADO = 27;
+  /** RegularExpression Id. */
+  int CORCHETEABIERTO = 28;
+  /** RegularExpression Id. */
+  int CORCHETECERRADO = 29;
+  /** RegularExpression Id. */
+  int ASIGNACION = 30;
+  /** RegularExpression Id. */
+  int DO = 31;
+  /** RegularExpression Id. */
+  int TO = 32;
+  /** RegularExpression Id. */
+  int COMA = 33;
+  /** RegularExpression Id. */
+  int IDENTIFICADOR = 34;
+  /** RegularExpression Id. */
+  int DOUBLECOMMA = 35;
+  /** RegularExpression Id. */
+  int CADENA = 36;
+  /** RegularExpression Id. */
+  int OPERADOR = 37;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -64,23 +86,34 @@ public interface AnalizadorSintacticoConstants {
     "\"\\r\"",
     "\"\\r\\n\"",
     "\"\\t\"",
-    "\"+\"",
     "<NUMBER>",
     "\"begin\"",
     "\"end\"",
+    "\"declare\"",
+    "\"enddeclare\"",
+    "\"call\"",
+    "\"procedure\"",
+    "\"function\"",
+    "\"return\"",
     "\"if\"",
     "\"then\"",
+    "\"elif\"",
     "\"else\"",
     "<BOLEANO>",
+    "<TIPO>",
     "\"not\"",
     "<OPERADORR>",
     "<OPERADORL>",
     "\"while\"",
+    "\"for\"",
     "\"(\"",
-    "\"do\"",
     "\")\"",
+    "\"[\"",
+    "\"]\"",
     "\"<-\"",
+    "\"do\"",
     "\"to\"",
+    "\",\"",
     "<IDENTIFICADOR>",
     "\"\\\"\"",
     "<CADENA>",

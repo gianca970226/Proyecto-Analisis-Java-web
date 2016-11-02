@@ -10,91 +10,487 @@ import java.util.logging.Logger;
 
 public class AnalizadorSintactico{
 GenerarJava generar= new GenerarJava();
-  public static void main(String[] args) {
-
-       
-        try {
-            AnalizadorSintactico parser = new AnalizadorSintactico(new FileReader(args[0]));
-            try {
-                parser.Start();
-            } catch (ParseException ex) {
-                Logger.getLogger(AnalizadorSintactico.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AnalizadorSintactico.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       
-    }
-}
+  public static void main(String[] args) throws FileNotFoundException, ParseException { 
+        AnalizadorSintactico parser = new AnalizadorSintactico(new FileReader(args[0]));
+        parser.Start();
+      
+}}
 PARSER_END(AnalizadorSintactico)
-
 
 SKIP : 
 { 
 	" "|"\n" | "\r" | "\r\n" | "\t"
 }
 
-TOKEN : { < PLUS : "+" > }
 TOKEN : { < NUMBER : (["0"-"9"])+ > }
 TOKEN:
 {
 	  <BEGIN: "begin"> 
 	| <END: "end"> 
+	| <DECLARE: "declare"> 
+	| <ENDDECLARE: "enddeclare"> 
+	| <CALL: "call"> 
+	| <PROCEDURE: "procedure"> 
+	| <FUNCTION: "function"> 
+	| <RETURN: "return"> 
 	| <IF: "if"> 
 	| <THEN: "then"> 
+	| <ELIF: "elif"> 
 	| <ELSE: "else"> 
 	| <BOLEANO: "true"|"false" > 
+	| <TIPO: "int"|"string"|"int[]" > 
 	| <NOT:"not" > 
 	| <OPERADORR:"<="|">="|"<"|">"|"="|"<>" > 
 	| <OPERADORL :"and"|"or" > 
 	| <WHILE:"while" > 
+	| <FOR:"for" > 
 	| <PARENTESISABIERTO:"(" > 
-	| <DO:"do" > 
 	| <PARENTESISCERRADO:")" > 
-	| <ASIGNACION:"<-" > 
+	| <CORCHETEABIERTO:"[" > 
+	| <CORCHETECERRADO:"]" > 
+	| <ASIGNACION:"<-" >
+        | <DO:"do" > 
 	| <TO:"to" > 
+	| <COMA:"," > 
 	| <IDENTIFICADOR : ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*>
 	| <DOUBLECOMMA: "\""> 
 	| <CADENA : <DOUBLECOMMA>["a"-"z","A"-"Z","0"-"9"," "](["a"-"z","A"-"Z","0"-"9"," ",":",";","."])*<DOUBLECOMMA>>
-	|<OPERADOR : "+"|"-"|"*"|"/">
+	| <OPERADOR : "+"|"-"|"*"|"/">
 }
 void Start() :
 {}
 {
-<BEGIN>
- E()
-
-<END>
+    <DECLARE>(SUBRUTINA())*<ENDDECLARE>
+    {
+        generar.escribirPrincipal();
+    }
+    <BEGIN>
+    {
+        generar.ambienteVariables();
+    }
+    E()<END>
+    {
+        generar.escribir();
+    }
 }
-
+void SUBRUTINA():
+{Token id1; Token id2; Token retorno; String parametros="";String parametro;String []valores=new String[2];}
+{
+        <FUNCTION>
+        {
+            generar.ambienteVariables();
+        }
+        retorno=<TIPO>id1=<IDENTIFICADOR><PARENTESISABIERTO>(parametro=PARAMETRO()
+        {
+            parametros=parametros+parametro;
+        }
+        )*<PARENTESISCERRADO><BEGIN>
+        {
+            generar.escribirFunction(retorno.image, id1.image,parametros);
+            
+            valores[0]=id1.image;
+            valores[1]="subrutina";
+            generar.escribirLog(id1,valores);
+        }
+        E()<RETURN>id2=<IDENTIFICADOR><END>
+        {
+            generar.escribirFinFunction(id2.image);
+        }
+        | <PROCEDURE>
+        {
+            generar.ambienteVariables();
+        }
+        id1=<IDENTIFICADOR><PARENTESISABIERTO>(parametro=PARAMETRO()
+        {
+            parametros=parametros+parametro;
+        }
+        )*<PARENTESISCERRADO><BEGIN>
+        {
+            generar.escribirProcedure(id1.image,parametros);
+            valores[0]=id1.image;
+            valores[1]="subrutina";
+            generar.escribirLog(id1,valores);
+        }
+        E()<END>
+        {
+            generar.escribirFinProcedure();
+        }
+}
+String PARAMETRO():
+{Token id1; Token tipo; Token coma=null;}
+{
+    tipo=<TIPO>id1=<IDENTIFICADOR>(coma=<COMA>)?
+    {
+        if (coma!=null)
+        {
+            generar.insertarVariable(tipo.image,id1.image);
+            return tipo.image+" "+id1.image+coma.image;
+        }
+        else
+        {
+            generar.insertarVariable(tipo.image,id1.image);
+            return tipo.image+" "+id1.image;
+        }
+    }
+}
 void E() :
 {}
 {
-    (VARIABLE()|WHILE())*
+    (INSTRUCCION()|WHILE()| FOR()|BIFURCACION())*
+}
+void BIFURCACION():
+{String ncondicion; Token lif;}
+{
+    lif=<IF><PARENTESISABIERTO>ncondicion=CONDICION()<PARENTESISCERRADO> <THEN> <BEGIN>
+    {
+        generar.escribirIf(ncondicion);
+        generar.escribirLog(lif,null);
+    } 
+    E() 
+    {
+        generar.recibir("}");
+    }
+    <END>(BIFURCACION2())*E()
+}
+void BIFURCACION2():
+{String ncondicion; Token lelif; Token lelse;}
+{
+    lelif=<ELIF><PARENTESISABIERTO>ncondicion=CONDICION()<PARENTESISCERRADO> <THEN> <BEGIN>
+    {
+        generar.escribirElif(ncondicion);
+        generar.escribirLog(lelif,null);
+    }
+    E()
+    {
+       generar.recibir("}"); 
+    }
+    <END>
+    | lelse=<ELSE><BEGIN>
+    {
+        generar.escribirElse();
+        generar.escribirLog(lelse,null);
+    }
+    E()
+    {
+        generar.recibir("}");
+    }
+    <END>
 }
 void WHILE():
-{String ncondicion;}
+{String ncondicion; Token lwhile;}
 {
-	<WHILE><PARENTESISABIERTO>ncondicion=CONDICION()<PARENTESISCERRADO> <DO>  <BEGIN>{generar.escribirWhile(ncondicion);} E() {generar.recibir("\n}\n"); generar.escribir();} <END>
+	lwhile=<WHILE><PARENTESISABIERTO>ncondicion=CONDICION()<PARENTESISCERRADO> <DO> <BEGIN>
+        {
+            generar.escribirWhile(ncondicion);
+            generar.escribirLog(lwhile,null);
+        } 
+        E() 
+        {
+            generar.recibir("}");
+        } 
+        <END>
+        E()
 }
 String CONDICION():
 {Token n=new Token(); String condicion="";String [] valor1;String [] valor2;}
 {
-	n= <BOLEANO>condicion=OTRACONDICION(){return (n.image+" "+ condicion); }|<NOT> n=<IDENTIFICADOR> condicion=OTRACONDICION(){return ("!"+ n.image+" "+ condicion); }| valor1=VALOR() n=<OPERADORR> valor2=VALOR() condicion=OTRACONDICION(){return valor1[0]+" "+n.image+" "+valor2[0];}
+	n= <BOLEANO>condicion=OTRACONDICION()
+        {
+            return (n.image+" "+ condicion); 
+        }
+        |<NOT> n=<IDENTIFICADOR> condicion=OTRACONDICION()
+        {
+            return ("!"+ n.image+" "+ condicion); 
+        }
+        | valor1=VALOR() n=<OPERADORR> valor2=VALOR() condicion=OTRACONDICION()
+        {
+            return valor1[0]+" "+n.image+" "+valor2[0];
+        }
 }
 String OTRACONDICION():
-{Token n= new Token();n.image="";String condicion="";}
+{Token n=new Token();n.image=""; String condicion="";}
 {
-	(n=<OPERADORL> condicion=CONDICION())* {  if(n.image.equals("and")){return " && "+condicion;} else if(n.image.equals("or"))  {return (" || "+condicion);} else {return "";}}   
+    (n=<OPERADORL> condicion=CONDICION())* 
+    {
+        if(n.image.equals("and"))
+        {
+            return " && "+condicion;
+        } 
+        else if(n.image.equals("or"))
+        {
+            return " || "+condicion;
+        } else 
+        {
+            return "";
+        }
+    }   
 }
 
-void VARIABLE() :
-{Token n;String []valores= new String[2];}
+void INSTRUCCION():
+{Token id; String elemento; String elementos="";}
 {
-    n=<IDENTIFICADOR><ASIGNACION>valores=VALOR(){generar.escribirDeclaraciones(n,valores);}E()
+    id=<IDENTIFICADOR>OPERACION(id)E()
+    | <CALL>id=<IDENTIFICADOR><PARENTESISABIERTO>(elemento=ELEMENTO()
+    {
+        elementos=elementos+elemento;
+    }
+    )*<PARENTESISCERRADO>
+    {
+        generar.escribirCallProcedure(id.image,elementos);
+        generar.escribirLog(id,null);
+    }
 }
+
+void OPERACION(Token id):
+{Token id1=id; String[] valores1=null; String []valores=new String[2]; String elemento; String elementos="";}
+{
+    <ASIGNACION>OPERACION2(id, null)
+    |<CORCHETEABIERTO>valores1=VALOR()<CORCHETECERRADO><ASIGNACION>OPERACION2(id1, valores1)
+}
+
+void OPERACION2(Token id, String []valores):
+{Token id1=id; String []valores3=valores; String []valores1=null; Token id2=null; Token op=null; String[] valores2=new String [2]; String elementos=""; String elemento="";}
+{
+    valores1=VALOR()OPERACION3(id1,valores1, valores3) //esto es para la operacion entre variables y arreglos
+    | <CORCHETEABIERTO>(elemento=ELEMENTO() //Esto es para la creacion de un arreglo
+    {
+        elementos=elementos+elemento;
+    }
+    )*<CORCHETECERRADO>
+    {
+        valores2[0]=id1.image;
+        valores2[1]="int[]";
+        generar.insertarVariable("int []", id1.image);
+        generar.escribirArreglo("int", id1.image, elementos);
+        generar.escribirLog(id1, valores2);
+    }
+    | <CALL>id2=<IDENTIFICADOR><PARENTESISABIERTO>(elemento=ELEMENTO() //Llamo a funciones segun la asignacion variable, arreglo o posicion de un arreglo
+    {
+        elementos=elementos+elemento;
+    }
+    )*<PARENTESISCERRADO>
+    {
+        if (valores3==null)
+        {
+            String tipo=generar.buscarVariable(id1.image);
+            if (tipo==null)
+            {
+                tipo=generar.buscarFunction(id2.image);
+                generar.insertarVariable(tipo,id1.image);
+                generar.escribirCallFunctionVariableOArreglo(tipo,id1.image,id2.image,elementos);
+            }
+            else
+            {
+                generar.escribirCallFunctionVariableOArreglo(null,id1.image,id2.image,elementos);
+            }
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+        else
+        {
+            generar.escribirCallFunctionArregloPos(id1.image,valores3[0],id2.image,elementos); 
+            //no hay que verificar el tipo de variable ya que es una posicion de arreglo y el arreglo ya debe estar definido
+            String tipo=generar.buscarVariable(id1.image);
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+    }
+}
+
+void OPERACION3(Token id, String []valores, String []valoresb):
+{Token id1=id; String []valores1=valores; String []valores4=valoresb; String []valores2=null; String []valores3=null; Token op;}
+{
+    <CORCHETEABIERTO>valores2=VALOR()<CORCHETECERRADO>
+    {
+        if (valores4==null)
+        {
+            String tipo=generar.buscarVariable(id1.image);
+            if (tipo==null)
+            {
+                generar.insertarVariable("int",id1.image);
+                tipo=generar.buscarVariable(id1.image);
+                generar.escribirVariableAccesoArreglo(tipo, id1.image, valores1[0],valores2);
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=tipo;
+                generar.escribirLog(id1,valores5);
+            }
+            else
+            {
+                generar.escribirVariableAccesoArreglo(null, id1.image, valores1[0],valores2);
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=tipo;
+                generar.escribirLog(id1,valores5);
+            }
+        }
+        else 
+        {
+            String tipo=generar.buscarVariable(id1.image);
+            if (tipo==null)
+            {
+                generar.insertarVariable("int",id1.image);
+                tipo=generar.buscarVariable(id1.image);
+                generar.escribirArregloAccesoArreglo(tipo, id1.image,valores4[0], valores1[0],valores2[0]);
+                generar.escribirLog(id1,valores1);
+            }
+            else
+            {
+                generar.escribirArregloAccesoArreglo(null, id1.image,valores4[0], valores1[0],valores2[0]);
+                generar.escribirLog(id1,valores1);
+            } 
+        }
+    }
+    | op=<OPERADOR>valores2=VALOR()(<CORCHETEABIERTO>valores3=VALOR()<CORCHETECERRADO>)?
+    {
+        if (valores4!=null) //Es cuando se le asigna una operacion a una posicion de un arreglo, si es diferente de null es porque la asignacion a una posicion de un arreglo
+        {
+            if (valores3!=null) //arreglo que indica si el ultimo operador es una posicion de un arreglo
+            {
+                generar.escribirArregloVariableOperacionArreglo(null,id1.image,valores4[0],valores1[0], op.image,valores2[0],valores3[0]);
+                String tipo=generar.buscarVariable(id1.image);
+                String []valores5=new String[2];
+                valores5[0]=id1.image;              
+                valores5[1]=tipo;
+                generar.escribirLog(id1,valores5);
+            }
+            else
+            {
+                generar.escribirArregloVariableOperacionVariable(null, id1.image, valores4[0],valores1[0], op.image,valores2[0]);
+                String tipo=generar.buscarVariable(id1.image);
+                String []valores5=new String[2];
+                valores5[0]=id1.image;              
+                valores5[1]=tipo;
+                generar.escribirLog(id1,valores5); 
+            }
+        }
+        else
+        {
+            if (valores3!=null)
+            {
+                String existe=generar.buscarVariable(id1.image);
+                if (existe==null)
+                {
+                    generar.insertarVariable("int",id1.image);
+                    generar.escribirVariableVariableOperacionArreglo("int", id1.image,valores1[0], op.image,valores2[0],valores3[0]);
+                    valores1[1]=generar.buscarVariable(id1.image);
+                }
+                else
+                {
+                    generar.escribirVariableVariableOperacionArreglo(null, id1.image,valores1[0], op.image,valores2[0],valores3[0]);
+                }
+                generar.escribirLog(id1,valores1);
+            }
+            else
+            {
+               String existe=generar.buscarVariable(id1.image);
+                if (existe==null)
+                {
+                    generar.insertarVariable("int",id1.image);
+                    generar.escribirVariableVariableOperacionVariable("int", id1.image,valores1[0], op.image,valores2[0]);
+                }
+                else
+                {
+                    generar.escribirVariableVariableOperacionVariable(null, id1.image,valores1[0], op.image,valores2[0]);
+                }
+                generar.escribirLog(id1,valores1); 
+            }
+        }
+    }
+    |
+    {
+        //si no paso por la gramatica de empezar con una posicion de un arreglo entonces fue una variable
+        if (valores4==null)
+        {
+            String existe=generar.buscarVariable(id1.image);
+            if (existe==null)
+            {
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=valores1[1];
+                generar.insertarVariable(valores5[1],id1.image);
+                generar.escribirVariable(id1.image,valores1);
+                generar.escribirLog(id1,valores5);
+            }
+            else 
+            {
+                String []valores5=new String[2];
+                valores5[0]=id1.image;
+                valores5[1]=valores1[1];
+                generar.escribirVariable(id1.image,valores1);
+                generar.escribirLog(id1,valores5);
+            }
+            
+        }
+        else
+        {
+            String tipo=generar.buscarVariable(id1.image);
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirArregloAccesoVariable(id1.image, valores4[0], valores1[0]);
+            generar.escribirLog(id1,valores5);
+        }
+        
+    }
+}
+//Esta produccion permite obtener los elementos para un arreglo o para asignar parametros a una funcion o procedimiento
+String ELEMENTO():
+{String[] valores; Token coma=null;}
+{
+    valores=VALOR()(coma=<COMA>)?
+    {
+        if (coma!=null)
+        {
+            return valores[0]+coma.image;
+        }
+        else
+        {
+            return valores[0];
+        }
+    }
+}
+    
+void FOR():
+{Token id1; String[] valores1; String[] valores2;}
+{
+    <FOR><PARENTESISABIERTO>id1=<IDENTIFICADOR><ASIGNACION>valores1=VALOR()<TO>valores2=VALOR()<PARENTESISCERRADO><DO><BEGIN>
+    {
+        generar.insertarVariable(valores1[1],id1.image);
+        generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<"+valores2[0]+";"+id1.image+"++");
+        generar.escribirLog(id1,valores1);
+    }
+    E()<END>
+    {
+        generar.recibir("}");
+    }
+    E()
+}
+
 String [] VALOR() :
-{Token n;String [] valores = new String[2];}
+{Token valor;String [] valores = new String[2];}
 {
-    n=<IDENTIFICADOR>{valores[0]=n.image ; valores[1]=generar.buscarVariable(n.image);return valores;}| n=<NUMBER>{valores[0]=n.image ; valores[1]="int" ;return valores;}|  n=<CADENA>{valores[0]=n.image ; valores[1]="String" ;return valores;}
+    valor=<IDENTIFICADOR>
+    {
+        valores[0]=valor.image;
+        valores[1]=generar.buscarVariable(valor.image);
+        return valores;
+    }
+    | valor=<NUMBER>
+    {
+        valores[0]=valor.image;
+        valores[1]="int";
+        return valores;
+    }
+    | valor=<CADENA>
+    {
+        valores[0]=valor.image;
+        valores[1]="String";
+        return valores;
+    }
 }
+

@@ -1,14 +1,79 @@
+declare
+function int funcion1(int y)
 begin
-oe1 <-"234"
-oe2<-12
-oe3<-oe2
-oe8<-12
-oe4<-15
-oe5<-12
-oe6<-3344
-while (oe3>oe2) do 
+s<-y*5
+call funcion(5)
+return s
+end 
+procedure funcion(int y)
 begin
-x<-"12"
+s<-y*5
+
+end 
+enddeclare
+begin
+oe1<-"234"
+x<-2
+a<-[2,8,10]
+y<-5*a[0]
+z<-x*a[0]
+a[1]<-z
+a[x]<-z
+a[x]<-z*5
+a[1]<-z+y
+a[x]<-z+a[1]
+while(x<z) do
+begin
+x<-x+1
+end
+a[2]<-call funcion1(x)
+if (x<z) then
+begin
+t<-x
+t<-10*5
+end
+else
+begin
+t<-x
 end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

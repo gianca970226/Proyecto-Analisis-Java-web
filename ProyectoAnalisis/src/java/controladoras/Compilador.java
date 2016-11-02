@@ -20,20 +20,19 @@ public class Compilador {
     Class clase;
     Object objeto;
     String Resultado;
+
     public Compilador() {
     }
-    
-    public void compilar()
-    {
+
+    public void compilar() {
         try {
-            clase = Class.forName(Compilador.class.getPackage().getName()+"."+"Programa");
-            objeto=clase.newInstance();
+            System.out.println("asda");
+            clase = Class.forName(Compilador.class.getPackage().getName() + "." + "Programa");
+            objeto = clase.newInstance();
             Method ejecutarTarea = clase.getMethod("principal", null);
             ejecutarTarea.invoke(objeto, null);
             Method ejecutarTarea1 = clase.getMethod("mostrar", null);
-            Resultado =(String) ejecutarTarea1.invoke(objeto, null);
-        
-        
+            Resultado =  (String) ejecutarTarea1.invoke(objeto, null);
         } catch (ClassNotFoundException ex) {
             System.out.println("Error al obtener la clase");
         } catch (InstantiationException ex) {
@@ -47,15 +46,15 @@ public class Compilador {
         } catch (IllegalArgumentException ex) {
             System.out.println("Argumentacion ilegal");
         } catch (InvocationTargetException ex) {
-            System.out.println("Error al invocar");
+            System.out.println("Error al invocar" + ex.getMessage()+ex.getCause());
         }
     }
-   public static void main( String []args )
-   {
-  
-       Compilador com= new Compilador();
-       com.compilar();
-       System.out.println("oeoe");
-       System.out.println(com.Resultado);
-   }
+
+    public static void main(String[] args) {
+
+        Compilador com = new Compilador();
+        com.compilar();
+        System.out.println("oeoe");
+        System.out.println(com.Resultado);
+    }
 }

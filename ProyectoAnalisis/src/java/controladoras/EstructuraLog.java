@@ -7,23 +7,28 @@ import controladoras.*;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Gianka
  */
 public class EstructuraLog {
+
     String nombre;
     String valor;
+    int[] lista;
     int linea;
 
-    public EstructuraLog(String nombre, String valor,int linea) {
+    public EstructuraLog(String nombre, String valor, int linea) {
         this.nombre = nombre;
         this.valor = valor;
-        this.linea=linea;
+        this.linea = linea;
     }
 
-    public EstructuraLog() {
+    public EstructuraLog(String nombre, int[] lista, int linea) {
+        this.nombre = nombre;
+        this.valor = null;
+        this.lista = lista;
+        this.linea = linea;
     }
-    
+
 }

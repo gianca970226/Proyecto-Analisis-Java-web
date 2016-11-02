@@ -1,35 +1,54 @@
 
 
 var lineas = new Object();
+function oe() {
+    console.log("asd")
+}
 function pintarPuntos(actual)
 {
     for (x in lineas)
     {
-        if(x != actual ){
-        var linea = document.getElementById("line_" + x)
-        linea.setAttribute('style', 'background-color:red')
+        if (x != actual) {
+            var linea = document.getElementById("line_" + x)
+            linea.setAttribute('style', 'background-color:red')
+        }
     }
-    }
-};
-function step(idLine) {
+}
+;
+function step(idLine, idanterior) {
+
+    console.log(idLine + '-' + idanterior)
 
     var linea = document.getElementById("line_" + idLine)
-    if (idLine > 1) {
-        var linea1 = document.getElementById("line_" + (idLine - 1))
-    } else {
-        var linea1 = document.getElementById("line_" + (idLine))
-    }
-    if (linea.getAttribute('style') == "background-color:red")
-    {
-
-        linea.setAttribute('style', 'background-color:yellow')
-        linea1.setAttribute('style', 'background-color:white')
+    if (idLine != idanterior) {
+        if (idLine > 1) {
+            var linea1 = document.getElementById("line_" + (idanterior))
+        } else {
+            var linea1 = document.getElementById("line_" + (idLine))
+        }
+        if (linea.getAttribute('style') == "background-color:red")
+        {
+            linea.setAttribute('style', 'background-color:yellow')
+            linea1.setAttribute('style', 'background-color:white')
+        } else
+        {
+            linea.setAttribute('style', 'background-color:blue')
+            linea1.setAttribute('style', 'background-color:white')
+        }
+        pintarPuntos(idLine)
     } else
     {
-        linea.setAttribute('style', 'background-color:blue')
-        linea1.setAttribute('style', 'background-color:white')
+        if (linea.getAttribute('style') == "background-color:red")
+        {
+            linea.setAttribute('style', 'background-color:yellow')
+
+        } else
+        {
+            linea.setAttribute('style', 'background-color:blue')
+
+        }
+        pintarPuntos(idLine)
     }
-    pintarPuntos(idLine)
 }
 ;
 function breakPoint(idLine) {
