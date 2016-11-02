@@ -2,7 +2,8 @@ declare
 function int funcion1(int y)
 begin
 s<-y*5
-call funcion(5)
+x<-4
+
 return s
 end 
 procedure funcion(int y)
@@ -37,6 +38,9 @@ begin
 t<-x
 end
 end
+
+
+
 
 
 

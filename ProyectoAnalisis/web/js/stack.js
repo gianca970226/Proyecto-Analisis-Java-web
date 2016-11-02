@@ -1,8 +1,10 @@
-var rutina= function (contador,nom,aux)
+var rutina= function (nombreRutina,contador,nom,aux,variables)
 {
+    this.nombreRutina=nombreRutina
     this.contadorLinea=contador;
     this.nombre=nom;
     this.aux=aux;
+    this.variables=variables;
     
 }
 var node = function()
