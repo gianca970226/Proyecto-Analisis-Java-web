@@ -117,7 +117,7 @@ $(function ()
         var tr = document.createElement("tr");
         tr.className = "variables";
         if ((i + 1) <= pila.peek().contadorLinea) {
-            if(pila.peek().variables[i].valor!="undefined"||pila.peek().variables[i].lista!="undefined"){
+            if(typeof pila.peek().variables[i].valor!='undefined'||typeof pila.peek().variables[i].lista!='undefined'){
                 var tdNombre = document.createElement("td");
                 tdNombre.appendChild(document.createTextNode(pila.peek().variables[i].nombre));
                 var tdValor = document.createElement("td");
