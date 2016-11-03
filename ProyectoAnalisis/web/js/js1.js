@@ -117,19 +117,21 @@ $(function ()
         var tr = document.createElement("tr");
         tr.className = "variables";
         if ((i + 1) <= pila.peek().contadorLinea) {
-            var tdNombre = document.createElement("td");
-            tdNombre.appendChild(document.createTextNode(pila.peek().variables[i].nombre));
-            var tdValor = document.createElement("td");
-            if (pila.peek().variables[i].valor != null)
-            {
-                tdValor.appendChild(document.createTextNode(("value", pila.peek().variables[i].valor)));
-            } else
-            {
-                tdValor.appendChild(document.createTextNode(("value", pila.peek().variables[i].lista)));
-            }
-            tr.appendChild(tdNombre);
+            if(pila.peek().variables[i].valor!="undefined"||pila.peek().variables[i].lista!="undefined"){
+                var tdNombre = document.createElement("td");
+                tdNombre.appendChild(document.createTextNode(pila.peek().variables[i].nombre));
+                var tdValor = document.createElement("td");
+                if (pila.peek().variables[i].valor != null)
+                 {
+                    tdValor.appendChild(document.createTextNode(("value", pila.peek().variables[i].valor)));
+              } else
+              {
+                     tdValor.appendChild(document.createTextNode(("value", pila.peek().variables[i].lista)));
+             }
+             tr.appendChild(tdNombre);
             tr.appendChild(tdValor);
         }
+    }
         document.getElementById("tablaVariables").appendChild(tr);
     }
     if (resultados.Variables[contadorLineas].valor == 'fin')
