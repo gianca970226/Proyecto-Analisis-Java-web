@@ -47,20 +47,19 @@ public class Controladora extends HttpServlet {
         if ("run".equals(operacion)) {
             String texto = request.getParameter("texto");
             escribir(texto);
-            String[] archivoPrueba = {"D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt"};
+            String[] archivoPrueba = {"C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt"};
             //C:\Users\Jorge Alejandro\Documents\NetBeansProjects\ProyectoAnalisisPrueba\src\java\controladoras\texto.txt
 
             try {
                 try {
                     AnalizadorSintactico.main(archivoPrueba);
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Controladora.class.getName()).log(Level.SEVERE, null, ex);
+                    response.getWriter().print(ex.getMessage());
                 } catch (ParseException ex) {
                      response.getWriter().print(ex.getMessage());
-                    Logger.getLogger(Controladora.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } catch (TokenMgrError ex) {
-                Logger.getLogger(Controladora.class.getName()).log(Level.SEVERE, null, ex);
+                response.getWriter().print(ex.getMessage());
             }
             System.out.println("Ejecutado!");
             response.setContentType("text/plain");
@@ -80,7 +79,7 @@ public class Controladora extends HttpServlet {
             response.getWriter().write(compilador.Resultado);
         }
         else if ("leer".equals(operacion)) {
-            String cadena=muestraContenido("D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt");
+            String cadena=muestraContenido("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt");
             response.getWriter().write(cadena);
         }
     }
@@ -102,7 +101,7 @@ public class Controladora extends HttpServlet {
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt");
+            fichero = new FileWriter("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt");
             pw = new PrintWriter(fichero);
             pw.println(texto);
 

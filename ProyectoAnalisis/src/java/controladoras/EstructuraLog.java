@@ -1,7 +1,5 @@
 package controladoras;
 
-import controladoras.*;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -21,9 +19,10 @@ public class EstructuraLog {
     public EstructuraLog(String nombre, String valor, int linea) {
         this.nombre = nombre;
         this.valor = valor;
+        this.lista=null;
         this.linea = linea;
     }
-
+    //Constructor para las listas
     public EstructuraLog(String nombre, int[] lista, int linea) {
         this.nombre = nombre;
         this.valor = null;

@@ -3,13 +3,11 @@ function int funcion1(int y)
 begin
 s<-y*5
 x<-4
-
 return s
 end 
 procedure funcion(int y)
 begin
 s<-y*5
-
 end 
 enddeclare
 begin
@@ -38,6 +36,13 @@ begin
 t<-x
 end
 end
+
+
+
+
+
+
+
 
 
 
