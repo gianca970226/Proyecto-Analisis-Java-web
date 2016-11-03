@@ -74,7 +74,7 @@ void Start() :
     }
 }
 void SUBRUTINA():
-{Token id1; Token id2; Token retorno; String parametros="";String parametro;String []valores=new String[2];}
+{Token id1; Token id2;Token id3; Token retorno; String parametros="";String parametro;String []valores=new String[2];}
 {
         <FUNCTION>
         {
@@ -91,8 +91,16 @@ void SUBRUTINA():
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
+            
         }
-        E()<RETURN>id2=<IDENTIFICADOR><END>
+        E()
+        <RETURN>id2=<IDENTIFICADOR>
+        {
+            valores[0]=id1.image;
+            valores[1]="subrutina";
+            generar.escribirLog(id2,valores);
+        }
+        <END>
         {
             generar.escribirFinFunction(id2.image);
         }
@@ -111,8 +119,11 @@ void SUBRUTINA():
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
         }
-        E()<END>
+        E()id3=<END>
         {
+            valores[0]=id1.image;
+            valores[1]="subrutina";
+            generar.escribirLog(id3,valores);
             generar.escribirFinProcedure();
         }
 }
@@ -136,7 +147,22 @@ String PARAMETRO():
 void E() :
 {}
 {
-    (INSTRUCCION()|WHILE()| FOR()|BIFURCACION())*
+    (INSTRUCCION()|WHILE()| FOR()|BIFURCACION() | REPEAT())*
+}
+void REPEAT():
+{Token lrepeat;}
+{
+    lrepeat=<REPEAT><BEGIN>
+    {
+        generar.escribirRepeat();
+        generar.escribirLog(lrepeat,null);
+    }
+    E()<UNTIL><PARETESISABIERTO>(ncondicion=CONDICION())<PARENTESISCERRADO>
+    {
+        generar.escribirFinRepeat(ncondicion);
+        
+    }
+    <END>E()
 }
 void BIFURCACION():
 {String ncondicion; Token lif;}
@@ -249,18 +275,19 @@ void OPERACION(Token id):
 }
 
 void OPERACION2(Token id, String []valores):
-{Token id1=id; String []valores3=valores; String []valores1=null; Token id2=null; Token op=null; String[] valores2=new String [2]; String elementos=""; String elemento="";}
+{Token id1=id; String []valores3=valores; String []valores1=null; Token id2=null; Token op=null; String[] valores2=new String [2]; String elementos=""; String elemento=""; int celementos=0;}
 {
     valores1=VALOR()OPERACION3(id1,valores1, valores3) //esto es para la operacion entre variables y arreglos
     | <CORCHETEABIERTO>(elemento=ELEMENTO() //Esto es para la creacion de un arreglo
     {
         elementos=elementos+elemento;
+        celementos++;
     }
     )*<CORCHETECERRADO>
     {
         valores2[0]=id1.image;
         valores2[1]="int[]";
-        generar.insertarVariable("int []", id1.image);
+        generar.insertarVariable("int[]", id1.image);
         generar.escribirArreglo("int", id1.image, elementos);
         generar.escribirLog(id1, valores2);
     }
@@ -304,7 +331,7 @@ void OPERACION2(Token id, String []valores):
 void OPERACION3(Token id, String []valores, String []valoresb):
 {Token id1=id; String []valores1=valores; String []valores4=valoresb; String []valores2=null; String []valores3=null; Token op;}
 {
-    <CORCHETEABIERTO>valores2=VALOR()<CORCHETECERRADO>
+    <CORCHETEABIERTO>valores2=VALOR()<CORCHETECERRADO> //Si una variable va a acceder a una posicion de un arreglo
     {
         if (valores4==null)
         {

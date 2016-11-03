@@ -37,7 +37,7 @@ GenerarJava generar= new GenerarJava();
   }
 
   final public void SUBRUTINA() throws ParseException {
- Token id1; Token id2; Token retorno; String parametros="";String parametro;String []valores=new String[2];
+ Token id1; Token id2;Token id3; Token retorno; String parametros="";String parametro;String []valores=new String[2];
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case FUNCTION:
       jj_consume_token(FUNCTION);
@@ -68,6 +68,9 @@ GenerarJava generar= new GenerarJava();
       E();
       jj_consume_token(RETURN);
       id2 = jj_consume_token(IDENTIFICADOR);
+            valores[0]=id1.image;
+            valores[1]="subrutina";
+            generar.escribirLog(id2,valores);
       jj_consume_token(END);
             generar.escribirFinFunction(id2.image);
       break;
@@ -96,7 +99,10 @@ GenerarJava generar= new GenerarJava();
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
       E();
-      jj_consume_token(END);
+      id3 = jj_consume_token(END);
+            valores[0]=id1.image;
+            valores[1]="subrutina";
+            generar.escribirLog(id3,valores);
             generar.escribirFinProcedure();
       break;
     default:
@@ -365,7 +371,7 @@ GenerarJava generar= new GenerarJava();
   }
 
   final public void OPERACION2(Token id, String []valores) throws ParseException {
- Token id1=id; String []valores3=valores; String []valores1=null; Token id2=null; Token op=null; String[] valores2=new String [2]; String elementos=""; String elemento="";
+ Token id1=id; String []valores3=valores; String []valores1=null; Token id2=null; Token op=null; String[] valores2=new String [2]; String elementos=""; String elemento=""; int celementos=0;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NUMBER:
     case IDENTIFICADOR:
@@ -389,11 +395,12 @@ GenerarJava generar= new GenerarJava();
         }
         elemento = ELEMENTO();
         elementos=elementos+elemento;
+        celementos++;
       }
       jj_consume_token(CORCHETECERRADO);
         valores2[0]=id1.image;
         valores2[1]="int[]";
-        generar.insertarVariable("int []", id1.image);
+        generar.insertarVariable("int[]", id1.image);
         generar.escribirArreglo("int", id1.image, elementos);
         generar.escribirLog(id1, valores2);
       break;
