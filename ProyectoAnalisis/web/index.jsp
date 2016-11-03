@@ -12,6 +12,7 @@
         <script language="javascript" type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/js1.js"></script>
         <script type="text/javascript" src="js/stack.js"></script>
+         <script type="text/javascript" src="js/keypress.js"></script>
         <script language="javascript" type="text/javascript" src="edit_area/edit_area_loader.js"></script>
         <script language="javascript" type="text/javascript">
             editAreaLoader.init({
@@ -51,9 +52,8 @@
             </div>
         </div>
 
-        <div id="Variables" class="col-xs-2" style="" >
-            <table id="tablaVariables">
-            </table>
+        <div id="Variables" class="col-xs-2 table-responsive" style="" >
+            
         </div>
         <div class="col-xs-12">
             <label id="Errores">Eroores</label>

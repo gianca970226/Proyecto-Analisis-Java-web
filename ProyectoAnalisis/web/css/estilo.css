@@ -95,3 +95,31 @@
 #cssmenu > ul > li > a:hover:after {
     background: #ff3333;
 }
+.ambientes {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.ambientes td{
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 100%;
+}
+.ambientes tr 
+{
+    background-color: #d9edf7;
+    width: 100%;
+}
+.ambientes tr:nth-child(even){background-color: #f2f2f2;}
+
+.ambientes tr:hover {background-color: #ddd;}
+
+.ambientes th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #1b6d85;
+    color: white;
+    width: 100%;
+}
