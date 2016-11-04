@@ -74,7 +74,10 @@ log.add(new EstructuraLog(x, valor,linea));
 }
 public void  agregarLista(String x,int[] lista,int linea)
 {
-log.add(new EstructuraLog(x, lista, linea));
+int []aux=new int[lista.length];
+System.arraycopy(lista, 0, aux,0, lista.length);
+
+log.add(new EstructuraLog(x, aux, linea));
 }
 public String mostrar()
 {  
