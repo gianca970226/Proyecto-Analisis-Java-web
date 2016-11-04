@@ -88,25 +88,21 @@ $(function ()
                         frameDoc = frame.contentDocument || frame.contentWindow.document;
                 frameDoc.documentElement.innerHTML = "";
                 removeAllChilds("tabla_" + pila.peek().nombre);
-                
+
                 document.getElementById("Variables").removeChild(document.getElementById("tabla_" + pila.peek().nombre));
-               
+
                 pila.pop();
                 console.log(pila)
             }
-           
-
-           
-
             var tabla = document.createElement("tabla")
             tabla.setAttribute("id", "tabla_" + pila.peek().nombre);
             tabla.setAttribute("class", "table table-bordered ambientes");
-           
+
             if (!contiene(document.getElementById("Variables").children, "tabla_" + pila.peek().nombre))
             {
 
                 document.getElementById("Variables").appendChild(tabla);
-                 var thhead=document.createElement("thead")
+                var thhead = document.createElement("thead")
                 var trEncabezado = document.createElement("tr")
                 var tdVariable = document.createElement("th")
                 tdVariable.appendChild(document.createTextNode("Variable"))
@@ -119,7 +115,7 @@ $(function ()
                 console.log("Aquii")
             } else {
                 removeAllChilds("tabla_" + pila.peek().nombre);
-                var thhead=document.createElement("thead")
+                var thhead = document.createElement("thead")
                 var trEncabezado = document.createElement("tr")
                 var tdVariable = document.createElement("th")
                 tdVariable.appendChild(document.createTextNode("NomVar"))
@@ -129,9 +125,9 @@ $(function ()
                 trEncabezado.appendChild(tdValor)
                 thhead.appendChild(trEncabezado)
                 document.getElementById("Variables").lastChild.appendChild(thhead);
-                var thbody=document.createElement("tbody")
+                var thbody = document.createElement("tbody")
                 for (i = 0; i < pila.peek().variables.length; i++) {
-                    
+
                     var tr = document.createElement("tr");
                     tr.className = "variables";
                     if ((i + 1) <= pila.peek().contadorLinea) {
@@ -139,30 +135,30 @@ $(function ()
                             var tdNombre = document.createElement("td");
                             tdNombre.appendChild(document.createTextNode(pila.peek().variables[i].nombre));
                             var tdValor = document.createElement("td");
-                            if (pila.peek().variables[i].valor != null )
+                            if (pila.peek().variables[i].valor != null)
                             {
-                                tdValor.appendChild(document.createTextNode( ""+pila.peek().variables[i].valor ));
-                                
+                                tdValor.appendChild(document.createTextNode("" + pila.peek().variables[i].valor));
+
                             } else
                             {
-                                if(typeof pila.peek().variables[i].lista != 'undefined'){
-                                tdValor.appendChild(document.createTextNode(pila.peek().variables[i].lista));
-                                
+                                if (typeof pila.peek().variables[i].lista != 'undefined') {
+                                    tdValor.appendChild(document.createTextNode(pila.peek().variables[i].lista));
+
                                 }
                             }
-                         
+
                             tr.appendChild(tdNombre);
                             tr.appendChild(tdValor);
-                            
+
                         }
                     }
-                    
+
                     thbody.appendChild(tr)
-                    
+
                 }
                 document.getElementById("Variables").lastChild.appendChild(thbody);
             }
-             var codigo = editAreaLoader.getValue(pila.peek().nombre.trim());
+            var codigo = editAreaLoader.getValue(pila.peek().nombre.trim());
             codigo = codigo.split('\n')
             if (pila.peek().variables[(pila.peek().contadorLinea)].valor == "subrutina")
             {
@@ -181,7 +177,7 @@ $(function ()
                 pila.actualizar1(aux2 - 1)
 
             }
-             if (pila.peek().contadorLinea == 0)
+            if (pila.peek().contadorLinea == 0)
             {
                 document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea ].linea - pila.peek().aux);
             } else
