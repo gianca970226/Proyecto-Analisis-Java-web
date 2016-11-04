@@ -38,7 +38,7 @@ function step(idLine, idanterior) {
         pintarPuntos(idLine)
     } else
     {
-        if (linea.getAttribute('style') == "background-color:red")
+      if (linea.getAttribute('style') == "background-color:red")
         {
             linea.setAttribute('style', 'background-color:yellow')
 
