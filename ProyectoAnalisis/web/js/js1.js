@@ -83,6 +83,7 @@ $(function ()
             console.log(pila)
             if (pila.peek().contadorLinea == pila.peek().variables.length)
             {
+                if(pila.peek().nombre!="textarea_1 "){
                 var oe = pila.peek().contadorLinea
                 var frame = document.getElementById("frame_" + pila.peek().nombre),
                         frameDoc = frame.contentDocument || frame.contentWindow.document;
@@ -93,6 +94,11 @@ $(function ()
 
                 pila.pop();
                 console.log(pila)
+            }else 
+            {
+                    alert("Fin")
+                    location.reload();
+            }
             }
             var tabla = document.createElement("tabla")
             tabla.setAttribute("id", "tabla_" + pila.peek().nombre);
