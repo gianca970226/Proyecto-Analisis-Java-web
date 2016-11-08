@@ -83,23 +83,33 @@ $(function ()
             console.log(pila)
             if (pila.peek().contadorLinea == pila.peek().variables.length)
             {
-                if(pila.peek().nombre!="textarea_1 "){
-                var oe = pila.peek().contadorLinea
-                var frame = document.getElementById("frame_" + pila.peek().nombre),
-                        frameDoc = frame.contentDocument || frame.contentWindow.document;
-                frameDoc.documentElement.innerHTML = "";
-                removeAllChilds("tabla_" + pila.peek().nombre);
+                if (pila.peek().nombre != "textarea_1 ") {
+                    var oe = pila.peek().contadorLinea
+//                    var frame = document.getElementById("frame_" + pila.peek().nombre),
+//                            frameDoc = frame.contentDocument || frame.contentWindow.document;
+//                    frameDoc.documentElement.innerHTML = "";
+                    removeAllChilds("tabla_" + pila.peek().nombre);
+                    var iframes = document.getElementsByTagName('iframe');
 
-                document.getElementById("Variables").removeChild(document.getElementById("tabla_" + pila.peek().nombre));
+                    for (var i = 0; i < iframes.length; i++) {
+             
+                        if (iframes[i].id.trim() == "frame_"+pila.peek().nombre) {
+                            iframes[i].parentNode.removeChild(iframes[i]);
+                        }
+                    }
 
-                pila.pop();
-                console.log(pila)
-            }else 
-            {
+                    document.getElementById("Variables").removeChild(document.getElementById("tabla_" + pila.peek().nombre));
+
+                    pila.pop();
+                    console.log(pila)
+                } else
+                {
                     alert("Fin")
                     location.reload();
+                }
             }
-            }
+
+
             var tabla = document.createElement("tabla")
             tabla.setAttribute("id", "tabla_" + pila.peek().nombre);
             tabla.setAttribute("class", "table table-bordered ambientes");
