@@ -53,33 +53,30 @@ public class Controladora extends HttpServlet {
             try {
                 try {
                     AnalizadorSintactico.main(archivoPrueba);
+                    System.out.println("Ejecutado!");
+                    response.setContentType("text/plain");
+                    response.getWriter().print("Ejecutado correctamente");
                 } catch (FileNotFoundException ex) {
                     response.getWriter().print(ex.getMessage());
                 } catch (ParseException ex) {
-                     response.getWriter().print(ex.getMessage());
+                    response.getWriter().print(ex.getMessage());
                 }
             } catch (TokenMgrError ex) {
                 response.getWriter().print(ex.getMessage());
             }
-            System.out.println("Ejecutado!");
-            response.setContentType("text/plain");
-            response.getWriter().print("Ejecutado correctamente");
-        
         } else if ("analizar".equals(operacion)) {
-        
+
             Compilador compilador = new Compilador();
             try {
                 compilador.compilar();
-            }catch(Exception e)
-            {
-                
+            } catch (Exception e) {
+
                 System.out.println(e);
             }
-            
+
             response.getWriter().write(compilador.Resultado);
-        }
-        else if ("leer".equals(operacion)) {
-            String cadena=muestraContenido("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt");
+        } else if ("leer".equals(operacion)) {
+            String cadena = muestraContenido("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt");
             response.getWriter().write(cadena);
         }
     }
@@ -90,7 +87,7 @@ public class Controladora extends HttpServlet {
         FileReader f = new FileReader(archivo);
         BufferedReader b = new BufferedReader(f);
         while ((cadena = b.readLine()) != null) {
-           resultado +=cadena+"\n";
+            resultado += cadena + "\n";
         }
         b.close();
         return resultado;
