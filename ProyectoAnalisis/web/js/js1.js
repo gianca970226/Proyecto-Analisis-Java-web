@@ -82,8 +82,14 @@ $(function ()
                 if (typeof resultados.Variables[i].lista != 'undefined')
                 {
                     arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].lista.toString(), resultados.Variables[i].linea))
-                } else {
+                } else if (typeof resultados.Variables[i].valor != 'undefined')  {
                     arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].valor, resultados.Variables[i].linea))
+                }
+                else if (typeof resultados.Variables[i].pila != 'undefined')  {
+                    arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].pila.toString(), resultados.Variables[i].linea))
+                }
+                else if (typeof resultados.Variables[i].cola != 'undefined')  {
+                    arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].cola.toString(), resultados.Variables[i].linea))
                 }
             }
 
@@ -95,7 +101,9 @@ $(function ()
                 if (pila.peek().nombre != "textarea_1 ") {
                     var oe = pila.peek().contadorLinea
 //                    var frame = document.getElementById("frame_" + pila.peek().nombre),
-//                            frameDoc = frame.contentDocument || frame.contentWindow.document;
+//             
+//                            
+//                                                          frameDoc = frame.contentDocument || frame.contentWindow.document;
 //                    frameDoc.documentElement.innerHTML = "";
                     removeAllChilds("tabla_" + pila.peek().nombre);
                     var iframes = document.getElementsByTagName('iframe');
