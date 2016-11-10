@@ -34,6 +34,15 @@ function removeAllChilds(a)
     while (a.hasChildNodes())
         a.removeChild(a.firstChild);
 }
+function removeAllFrame()
+{
+    var iframes = document.getElementsByTagName('iframe');
+
+    for (var i = 0; i < iframes.length; i++) {
+            iframes[i].parentNode.removeChild(iframes[i]);
+      
+    }
+}
 $(function ()
 {
     var listener = new window.keypress.Listener();
@@ -83,23 +92,33 @@ $(function ()
             console.log(pila)
             if (pila.peek().contadorLinea == pila.peek().variables.length)
             {
-                if(pila.peek().nombre!="textarea_1 "){
-                var oe = pila.peek().contadorLinea
-                var frame = document.getElementById("frame_" + pila.peek().nombre),
-                        frameDoc = frame.contentDocument || frame.contentWindow.document;
-                frameDoc.documentElement.innerHTML = "";
-                removeAllChilds("tabla_" + pila.peek().nombre);
+                if (pila.peek().nombre != "textarea_1 ") {
+                    var oe = pila.peek().contadorLinea
+//                    var frame = document.getElementById("frame_" + pila.peek().nombre),
+//                            frameDoc = frame.contentDocument || frame.contentWindow.document;
+//                    frameDoc.documentElement.innerHTML = "";
+                    removeAllChilds("tabla_" + pila.peek().nombre);
+                    var iframes = document.getElementsByTagName('iframe');
 
-                document.getElementById("Variables").removeChild(document.getElementById("tabla_" + pila.peek().nombre));
+                    for (var i = 0; i < iframes.length; i++) {
 
-                pila.pop();
-                console.log(pila)
-            }else 
-            {
+                        if (iframes[i].id.trim() == "frame_" + pila.peek().nombre) {
+                            iframes[i].parentNode.removeChild(iframes[i]);
+                        }
+                    }
+
+                    document.getElementById("Variables").removeChild(document.getElementById("tabla_" + pila.peek().nombre));
+
+                    pila.pop();
+                    console.log(pila)
+                } else
+                {
                     alert("Fin")
                     location.reload();
+                }
             }
-            }
+
+
             var tabla = document.createElement("tabla")
             tabla.setAttribute("id", "tabla_" + pila.peek().nombre);
             tabla.setAttribute("class", "table table-bordered ambientes");
@@ -331,7 +350,7 @@ $(function ()
             texto: texto
         }, function (data) {
 
-
+            removeAllChilds("Errores")
             document.getElementById("Errores").appendChild(document.createTextNode(("value", data)));
         }).fail(function ()
         {
@@ -364,12 +383,14 @@ function processFiles(files) {
         $("#frame_textarea_" + contador + "").addClass("frames");
         $("#frame_textarea_" + contador + "").attr("style", "heigth:1000");
         actual = contador;
+      
     };
     reader.readAsText(file);
 }
 
 function ambientes(mensaje) {
     console.log(mensaje);
+   
     var nombre = "textarea_" + (actual) + "." + contadorSubrutinas;
     var nuevoProyecto = $('<textarea id="textarea_' + (actual) + "." + contadorSubrutinas + '" class="textarea" name="content" cols="80" rows="1"></textarea>');
     $("#container").append(nuevoProyecto);

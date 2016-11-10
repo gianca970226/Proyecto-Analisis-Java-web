@@ -8,10 +8,19 @@ return s
 end 
 procedure funcion(int y)
 begin
+
 s<-y*5
-end 
+end
+function int funcion3(int y)
+begin
+s<-y*5
+x<-4
+call funcion(5)
+return s
+end
 enddeclare
 begin
+call4 <-1
 oe1<-"234"
 x<-2
 a<-[2,8,10]
@@ -27,6 +36,7 @@ begin
 x<-x+1
 end
 a[2]<-call funcion1(x)
+c<-call funcion3(3)
 if (x<z) then
 begin
 t<-x
@@ -37,50 +47,6 @@ begin
 t<-x
 end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
