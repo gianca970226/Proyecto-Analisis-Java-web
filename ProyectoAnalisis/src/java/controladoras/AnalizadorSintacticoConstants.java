@@ -51,29 +51,45 @@ public interface AnalizadorSintacticoConstants {
   /** RegularExpression Id. */
   int FOR = 25;
   /** RegularExpression Id. */
-  int PARENTESISABIERTO = 26;
+  int REPEAT = 26;
   /** RegularExpression Id. */
-  int PARENTESISCERRADO = 27;
+  int UNTIL = 27;
   /** RegularExpression Id. */
-  int CORCHETEABIERTO = 28;
+  int STACK = 28;
   /** RegularExpression Id. */
-  int CORCHETECERRADO = 29;
+  int QUEUE = 29;
   /** RegularExpression Id. */
-  int ASIGNACION = 30;
+  int ADD = 30;
   /** RegularExpression Id. */
-  int DO = 31;
+  int POP = 31;
   /** RegularExpression Id. */
-  int TO = 32;
+  int PISOBAJO = 32;
   /** RegularExpression Id. */
-  int COMA = 33;
+  int PARENTESISABIERTO = 33;
   /** RegularExpression Id. */
-  int IDENTIFICADOR = 34;
+  int PARENTESISCERRADO = 34;
   /** RegularExpression Id. */
-  int DOUBLECOMMA = 35;
+  int CORCHETEABIERTO = 35;
   /** RegularExpression Id. */
-  int CADENA = 36;
+  int CORCHETECERRADO = 36;
   /** RegularExpression Id. */
-  int OPERADOR = 37;
+  int ASIGNACION = 37;
+  /** RegularExpression Id. */
+  int DO = 38;
+  /** RegularExpression Id. */
+  int TO = 39;
+  /** RegularExpression Id. */
+  int COMA = 40;
+  /** RegularExpression Id. */
+  int IDENTIFICADOR = 41;
+  /** RegularExpression Id. */
+  int DOUBLECOMMA = 42;
+  /** RegularExpression Id. */
+  int CADENA = 43;
+  /** RegularExpression Id. */
+  int OPERADOR = 44;
+  /** RegularExpression Id. */
+  int LENGTH = 45;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -106,6 +122,13 @@ public interface AnalizadorSintacticoConstants {
     "<OPERADORL>",
     "\"while\"",
     "\"for\"",
+    "\"repeat\"",
+    "\"until\"",
+    "\"stack\"",
+    "\"queue\"",
+    "\".add\"",
+    "\".pop\"",
+    "\"!\"",
     "\"(\"",
     "\")\"",
     "\"[\"",
@@ -118,6 +141,7 @@ public interface AnalizadorSintacticoConstants {
     "\"\\\"\"",
     "<CADENA>",
     "<OPERADOR>",
+    "\".length\"",
   };
 
 }

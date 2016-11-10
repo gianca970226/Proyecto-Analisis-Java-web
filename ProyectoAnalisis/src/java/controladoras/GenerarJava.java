@@ -5,7 +5,6 @@
  */
 package controladoras;
 
-
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class GenerarJava {
     public String codigo;
     public String java;
     private HashMap<String, String> funciones;
-    private LinkedList<HashMap>ambientesvariables;
+    private LinkedList<HashMap> ambientesvariables;
 //    private LinkedList<LinkedList<Estructura>> ambientesvariables;
 
     public GenerarJava() {
@@ -32,18 +31,16 @@ public class GenerarJava {
     }
 
     public void ambienteVariables() {
-        HashMap<String,String>variables=new HashMap<String, String>();
+        HashMap<String, String> variables = new HashMap<String, String>();
         ambientesvariables.add(variables);
 //        LinkedList<Estructura> variables = new LinkedList<Estructura>();
 //        ambientesvariables.add(variables);
     }
 
     public void escribirFunction(String retorno, String id, String parametros) {
-        if ("string".equals(retorno)) {
-            retorno = "String";
-        }
         insertarFunction(retorno, id);
-        recibir("\npublic " + retorno + " " + id + " (" + parametros + ") {");
+        String convertido=conversionTipo(retorno);
+        recibir("\npublic " + convertido + " " + id + " (" + parametros + ") {");
     }
 
     public void escribirFinFunction(String id) {
@@ -82,14 +79,22 @@ public class GenerarJava {
         codigo = codigo + texto + "\n";
 
     }
-    
-    public void escribirRepeat()
-    {
+
+    public void escribirInstruccion(String tipo, String id, String instruccion) {
+        if (tipo == null) {
+            recibir(id + "=" + instruccion + ";");
+        } else {
+            recibir(tipo + " " + id + "=" + instruccion + ";");
+        }
+
+    }
+
+    public void escribirRepeat() {
         recibir("do{");
     }
-    public void escribirRepeat(String condicion)
-    {
-        recibir("while("+condicion+");");
+
+    public void escribirFinRepeat(String condicion) {
+        recibir("while(" + condicion + ");");
     }
 
     public void escribirIf(String condicion) {
@@ -112,68 +117,205 @@ public class GenerarJava {
         recibir("for(" + condicion + "){");
     }
 
-    public void escribirVariable(String identificador, String valores[]) {
-        recibir(valores[1] + " " + identificador + " = " + valores[0] + ";");
+    public void escribirVariable(String identificador, String valores[], Token longitud) {
+        valores[1]=conversionTipo(valores[1]);
+        if (longitud == null) {
+            recibir(valores[1] + " " + identificador + " = " + valores[0] + ";");
+        } else {
+            valores[1] = "int";
+            recibir(valores[1] + " " + identificador + " = " + valores[0] + ".length;");
+        }
     }
 
     public void escribirArreglo(String tipo, String identificador, String elementos) {
-        recibir(tipo + " [] " + identificador + " = {" + elementos + "};");
+        tipo=conversionTipo(tipo);
+        recibir(tipo + " " + identificador + " = {" + elementos + "};");
+    }
+    
+    public void escribirPila(String id1)
+    {
+        recibir("Stack<Object>"+id1+"= new Stack<Object>();");
+    }
+    public void escribirCola(String id1)
+    {
+        recibir("Queue<Object>"+id1+"= new Queue<Object>();");
+    }
+    
+    public void escribirAnadir(String id1, String valor)
+    {
+        recibir(id1+".add("+valor+");");
+    }
+    
+    public void escribirRetirar(String tipo, String id1, String id2)
+    {
+        if (tipo==null)
+        {
+            insertarVariable("number", id1);
+            tipo = buscarVariable(id1);
+            tipo = conversionTipo(tipo);
+            recibir(tipo+" "+id1+"=Integer.parseInt("+id2+".pop().toString());");
+        }
+        else
+        {
+            if (tipo.equals("number"))
+            {
+               recibir(id1+"=Integer.parseInt("+id2+".pop().toString());"); 
+            }
+            else
+            {
+                recibir(id1+"="+id2+".pop().toString();"); 
+            }
+            
+        }
+        
     }
 
-    public void escribirVariableAccesoArreglo(String tipo, String id1, String id2, String[] valores1) {
+    public void escribirVariableAccesoArreglo(String tipo, String id1,String id2, String pos1) {
         if (tipo == null) {
-            recibir(id1 + "=" + id2 + "[" + valores1[0] + "];");
+            insertarVariable("number", id1);
+            tipo = buscarVariable(id1);
+            tipo = conversionTipo(tipo);
+            recibir(tipo + " " + id1 + "=" + id2 + "[" + pos1 + "];");
         } else {
-            recibir(tipo + " " + id1 + "=" + id2 + "[" + valores1[0] + "];");
+            recibir(id1 + "=" + id2 + "[" + pos1 + "];");
         }
     }
 
-    public void escribirArregloAccesoVariable(String id1, String id2, String id3) {
-        recibir(id1 + "[" + id2 + "]" + "=" + id3 + ";");
+    public void escribirArregloAccesoVariable(String id1, String id2, String id3, Token longitud) {
+        if (longitud == null) {
+            recibir(id1 + "[" + id2 + "]" + "=" + id3 + ";");
+        } else {
+            recibir(id1 + "[" + id2 + "]" + "=" + id3 + ".length;");
+        }
     }
 
     public void escribirArregloAccesoArreglo(String tipo, String id1, String id2, String id3, String id4) {
+        recibir(id1 + "[" + id2 + "]=" + id3 + "[" + id4 + "];");
+    }
+
+    public void escribirVariableVariableOperacionVariable(String tipo, String id1, String id2, String operacion, String id3, Token pisobajo1, Token pisobajo2) {
         if (tipo == null) {
-            recibir(id1 + "[" + id2 + "]=" + id3 + "[" + id4 + "];");
+            if (pisobajo1 == null || pisobajo2 == null) {
+                recibir(id1 + "=" + id2 + operacion + id3 + ";");
+            } else {
+                recibir(id1 + "=(int) Math.floor(" + id2 + operacion + id3 + ");");
+            }
+
         } else {
-            recibir(tipo + " " + id1 + "[" + id2 + "]=" + id3 + "[" + id4 + "];");
+            tipo=conversionTipo(tipo);
+            if (pisobajo1 == null || pisobajo2 == null) {
+                recibir(tipo + " " + id1 + "=" + id2 + operacion + id3 + ";");
+            } else {
+                recibir(tipo + " " + id1 + "=(int) Math.floor(" + id2 + operacion + id3 + ");");
+            }
         }
     }
 
-    public void escribirVariableVariableOperacionVariable(String tipo, String id1, String id2, String operacion, String id3) {
+    public void escribirVariableVariableOperacionArreglo(String tipo, String id1, String id2, String operacion, String id3, String id4, Token pisobajo1, Token pisobajo2) {
         if (tipo == null) {
-            recibir(id1 + "=" + id2 + operacion + id3 + ";");
+            if (pisobajo1 == null || pisobajo2 == null) {
+                recibir(id1 + "=" + id2 + operacion + id3 + "[" + id4 + "];");
+            } else {
+                recibir(id1 + "=(int) Math.floor(" + id2 + operacion + id3 + "[" + id4 + "]);");
+            }
         } else {
-            recibir(tipo + " " + id1 + "=" + id2 + operacion + id3 + ";");
+            tipo=conversionTipo(tipo);
+            if (pisobajo1 == null || pisobajo2 == null) {
+                
+                recibir(tipo + " " + id1 + "=" + id2 + operacion + id3 + "[" + id4 + "];");
+            } else {
+                recibir(tipo + " " + id1 + "=(int) Math.floor(" + id2 + operacion + id3 + "[" + id4 + "]);");
+            }
         }
     }
 
-    public void escribirVariableVariableOperacionArreglo(String tipo, String id1, String id2, String operacion, String id3, String id4) {
-        if (tipo == null) {
-            recibir(id1 + "=" + id2 + operacion + id3 + "[" + id4 + "];");
+    public void escribirArregloVariableOperacionArreglo(String tipo, String id1, String id2, String id3, String operador, String id4, String id5, Token pisobajo1, Token pisobajo2) {
+        if (pisobajo1 == null || pisobajo2 == null) {
+            recibir(id1 + "[" + id2 + "]=" + id3 + operador + id4 + "[" + id5 + "];");
         } else {
-            recibir(tipo + " " + id1 + "=" + id2 + operacion + id3 + "[" + id4 + "];");
+            recibir(id1 + "[" + id2 + "]=(int) Math.floor(" + id3 + operador + id4 + "[" + id5 + "]);");
+        }
+
+    }
+
+    public void escribirArregloVariableOperacionVariable(String tipo, String id1, String id2, String id3, String operador, String id4, Token pisobajo1, Token pisobajo2) {
+        if (pisobajo1 == null || pisobajo2 == null) {
+            recibir(id1 + "[" + id2 + "]=" + id3 + operador + id4 + ";");
+        } else {
+            recibir(id1 + "[" + id2 + "]=(int) Math.floor(" + id3 + operador + id4 + ");");
         }
     }
 
-    public void escribirArregloVariableOperacionArreglo(String tipo, String id1, String id2, String id3, String operador, String id4, String id5) {
-        recibir(id1 + "[" + id2 + "]=" + id3 + operador + id4 + "[" + id5 + "];");
+    public void escribirVariableArregloOperacionVariable(String tipo, String id1, String id2, String pos1, String operacion, String id3, Token pisobajo1, Token pisobajo2) {
+        if (pisobajo1 == null || pisobajo2 == null) {
+            if (tipo == null) {
+                insertarVariable("number", id1);
+                tipo = buscarVariable(id1);
+                tipo=conversionTipo(tipo);
+                recibir(tipo + " " + id1 + "= " + id2 + "[" + pos1 + "]" + operacion + id3 + ";");
+            }
+        } else {
+            recibir(id1 + "= (int) Math.floor(" + id2 + "[" + pos1 + "]" + operacion + id3 + ");");
+        }
+
     }
 
-    public void escribirArregloVariableOperacionVariable(String tipo, String id1, String id2, String id3, String operador, String id4) {
-        recibir(id1 + "[" + id2 + "]=" + id3 + operador + id4 + ";");
+    public void escribirVariableArregloOperacionArreglo(String tipo, String id1, String id2, String pos1, String operacion, String id3, String pos2, Token pisobajo1, Token pisobajo2) {
+        if (pisobajo1 == null || pisobajo2 == null) {
+            if (tipo == null) {
+                insertarVariable("number", id1);
+                tipo = buscarVariable(id1);
+                tipo = conversionTipo(tipo);
+                recibir(tipo + " " + id1 + "= " + id2 + "[" + pos1 + "]" + operacion + id3 + "[" + pos2 + "];");
+            }
+        } else {
+            recibir(id1 + "= (int) Math.floor(" + id2 + "[" + pos1 + "]" + operacion + id3 + "[" + pos2 + "]);");
+        }
+    }
+
+    public void escribirArregloArregloOperacionVariable(String tipo, String id1, String pos1, String id2, String pos2, String operacion, String id3, Token pisobajo1, Token pisobajo2) {
+        if (pisobajo1 == null || pisobajo2 == null) {
+            recibir(id1 + "[" + pos1 + "]" + " = " + id2 + "[" + pos1 + "]" + operacion + id3 + ";");
+        } else {
+            recibir(id1 + "[" + pos1 + "] = (int) Math.floor(" + id2 + "[" + pos2 + "]" + operacion + id3 + ");");
+        }
+    }
+
+    public void escribirArregloArregloOperacionArreglo(String tipo, String id1, String pos1, String id2, String pos2, String operacion, String id3, String pos3, Token pisobajo1, Token pisobajo2) {
+        if (pisobajo1 == null || pisobajo2 == null) {
+            recibir(id1 + "[" + pos1 + "]" + " = " + id2 + "[" + pos1 + "]" + operacion + id3 + "[" + pos3 + "];");
+        } else {
+            recibir(id1 + "[" + pos1 + "] = (int) Math.floor(" + id2 + "[" + pos2 + "]" + operacion + id3 + "[" + pos3 + "]);");
+        }
+    }
+
+    public String conversionTipo(String tipo) {
+        if ("number".equals(tipo)) {
+            return "int";
+        } else if ("chain".equals(tipo)) {
+            return "String";
+        } else {
+            return "int []";
+        }
     }
 
     public void escribirLog(Token n, String[] valores) {
         if (valores == null) {
             recibir("agregar(" + null + "," + null + "," + n.beginLine + ");");
-        } else if (valores[1].equals("String")) {
+        } else if (valores[1].equals("chain")) {
             recibir("agregar(\"" + n.image + "\"," + n.image + "," + n.beginLine + ");");
-        } else if (valores[1].equals("int")) {
+        } else if (valores[1].equals("number")) {
             recibir("agregar(\"" + n.image + "\",Integer.toString(" + n.image + ")," + n.beginLine + ");");
         } else if (valores[1].equals("subrutina")) {
             recibir("agregar(\"" + valores[0] + "\",\"" + valores[1] + "\"," + n.beginLine + ");");
-        } else {
+        }
+        else if (valores[1].equals("stack")) {
+            recibir("agregarPila(\"" + valores[0] + "\"," + n.image + "," + n.beginLine + ");");
+        }
+        else if (valores[1].equals("queue")) {
+            recibir("agregarCola(\"" + valores[0] + "\"," + n.image + "," + n.beginLine + ");");
+        }
+        else {
             recibir("agregarLista(\"" + n.image + "\"," + n.image + "," + n.beginLine + ");");
         }
     }
@@ -181,7 +323,7 @@ public class GenerarJava {
     public void escribir() {
         java = "package controladoras;\n"
                 + "import com.google.gson.Gson;\n"
-                + "import java.util.LinkedList;\n"
+                + "import java.util.*;\n"
                 + "public class Programa {\n"
                 + "LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();\n"
                 + codigo + "\n"
@@ -189,7 +331,14 @@ public class GenerarJava {
                 + "public void  agregar(String x,String valor,int linea)\n"
                 + "{\nlog.add(new EstructuraLog(x, valor,linea));\n}\n"
                 + "public void  agregarLista(String x,int[] lista,int linea)\n"
-                + "{\nlog.add(new EstructuraLog(x, lista, linea));\n}\n"
+                + "{\n"
+                + "int []aux=new int[lista.length];\n"
+                + "System.arraycopy(lista, 0, aux,0, lista.length);\n"
+                + "log.add(new EstructuraLog(x, aux, linea));\n}\n"
+                + "public void  agregarPila(String x,Stack<Object>pila,int linea)\n"
+                + "{\nlog.add(new EstructuraLog(x, pila,linea));\n}\n"
+                + "public void  agregarCola(String x,Queue<Object>cola,int linea)\n"
+                + "{\nlog.add(new EstructuraLog(x, cola,linea));\n}\n"
                 + "public String mostrar()\n"
                 + "{  \n"
                 + "    Gson json = new Gson();\n"
@@ -203,7 +352,7 @@ public class GenerarJava {
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("D:\\Proyectos\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\Programa.java");//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\Programa.java
+            fichero = new FileWriter("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\Programa.java");//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\Programa.java
             pw = new PrintWriter(fichero);
             pw.println(java);
 
@@ -221,7 +370,7 @@ public class GenerarJava {
     }
 
     public void insertarVariable(String tipo, String identificador) {
-        ambientesvariables.get(ambientesvariables.size()-1).put(identificador,tipo);
+        ambientesvariables.get(ambientesvariables.size() - 1).put(identificador, tipo);
     }
 //    public void insertarVariable(String tipo, String identificador) {
 //        boolean existe = false;
@@ -239,7 +388,7 @@ public class GenerarJava {
 
     public String buscarVariable(String identificador) {
         try {
-            String tipo = (String) ambientesvariables.get(ambientesvariables.size()-1).get(identificador);
+            String tipo = (String) ambientesvariables.get(ambientesvariables.size() - 1).get(identificador);
             return tipo;
         } catch (Exception E) {
             return null;
@@ -256,7 +405,7 @@ public class GenerarJava {
 //        }
 //        return tipo;
 //    }
-    
+
 //    public int buscarTamaño(String identificador)
 //    {
 //        int tamaño=-1;
@@ -269,7 +418,6 @@ public class GenerarJava {
 //        }
 //        return tamaño;
 //    }
-
     public String buscarFunction(String identificador) {
         try {
             String tipo = funciones.get(identificador);
