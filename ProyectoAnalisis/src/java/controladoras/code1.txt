@@ -8,23 +8,10 @@ return s
 end 
 procedure funcion(number y)
 begin
-
 s<-y*5
-end
-function int funcion3(int y)
-begin
-s<-y*5
-x<-4
-call funcion(5)
-return s
-end
+end 
 enddeclare
 begin
-<<<<<<< HEAD
-call4 <-1
-oe1<-"234"
-=======
->>>>>>> refs/remotes/origin/rama-jorge2
 x<-2
 a<-[2,8,10]
 b<-[10,5]
@@ -45,7 +32,6 @@ begin
 x<-x+1
 end
 a[2]<-call funcion1(x)
-c<-call funcion3(3)
 if (x<z) then
 begin
 t<-x
@@ -56,50 +42,3 @@ begin
 t<-x
 end
 end
-
-
-
-
-
-
-
-
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> refs/remotes/origin/rama-jorge2
