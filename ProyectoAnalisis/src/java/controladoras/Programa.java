@@ -1,6 +1,6 @@
 package controladoras;
 import com.google.gson.Gson;
-import java.util.LinkedList;
+import java.util.*;
 public class Programa {
 LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();
 
@@ -27,44 +27,56 @@ agregar("funcion","subrutina",12);
 }
 
 public void principal() {
-String oe1 = "234";
-agregar("oe1",oe1,15);
 int x = 2;
-agregar("x",Integer.toString(x),16);
+agregar("x",Integer.toString(x),15);
 int [] a = {2,8,10};
-agregarLista("a",a,17);
-int y=5*a[0];
+agregarLista("a",a,16);
+int [] b = {10,5};
+agregarLista("b",b,17);
+int y= b[1]*a[0];
 agregar("y",Integer.toString(y),18);
+a[1] = b[1]*a[0];
+agregarLista("a",a,19);
 int z=x*a[0];
-agregar("z",Integer.toString(z),19);
-a[1]=z;
-agregarLista("a",a,20);
+agregar("z",Integer.toString(z),20);
+Stack<Object>f= new Stack<Object>();
+agregarPila("f",f,21);
+f.add(x);
+agregarPila("f",f,22);
+int i=Integer.parseInt(f.pop().toString());
+agregar("i",Integer.toString(i),23);
+int p=(int) Math.floor(y/z);
+agregar("p",Integer.toString(p),24);
+a[1] = a[1]+z;
+agregarLista("a",a,25);
 a[x]=z;
-agregarLista("a",a,21);
+agregarLista("a",a,26);
 a[x]=z*5;
-agregarLista("a",a,22);
+agregarLista("a",a,27);
 a[1]=z+y;
-agregarLista("a",a,23);
-a[x]=z+a[1];
-agregarLista("a",a,24);
+agregarLista("a",a,28);
+int q = a.length;
+agregar("q",Integer.toString(q),29);
+agregar(null,null,30);
 while(x < z){
-agregar(null,null,25);
+agregar(null,null,30);
 x=x+1;
-agregar("x",Integer.toString(x),27);
+agregar("x",Integer.toString(x),32);
 }
 a[2]=funcion1(x);
-agregarLista("a",a,29);
+agregarLista("a",a,34);
+agregar(null,null,35);
 if(x < z){
-agregar(null,null,30);
-int t = x;
-agregar("t",Integer.toString(t),32);
-t=10*5;
-agregar("t",Integer.toString(t),33);
-}
-else{
 agregar(null,null,35);
 int t = x;
 agregar("t",Integer.toString(t),37);
+t=10*5;
+agregar("t",Integer.toString(t),38);
+}
+else{
+agregar(null,null,40);
+int t = x;
+agregar("t",Integer.toString(t),42);
 }
 
 }
@@ -76,8 +88,15 @@ public void  agregarLista(String x,int[] lista,int linea)
 {
 int []aux=new int[lista.length];
 System.arraycopy(lista, 0, aux,0, lista.length);
-
 log.add(new EstructuraLog(x, aux, linea));
+}
+public void  agregarPila(String x,Stack<Object>pila,int linea)
+{
+log.add(new EstructuraLog(x, pila,linea));
+}
+public void  agregarCola(String x,Queue<Object>cola,int linea)
+{
+log.add(new EstructuraLog(x, cola,linea));
 }
 public String mostrar()
 {  

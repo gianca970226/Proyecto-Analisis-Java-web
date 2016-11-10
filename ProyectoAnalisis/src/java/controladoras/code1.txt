@@ -1,12 +1,12 @@
 declare
-function int funcion1(int y)
+function number funcion1(number y)
 begin
 s<-y*5
 x<-4
 call funcion(5)
 return s
 end 
-procedure funcion(int y)
+procedure funcion(number y)
 begin
 
 s<-y*5
@@ -20,17 +20,26 @@ return s
 end
 enddeclare
 begin
+<<<<<<< HEAD
 call4 <-1
 oe1<-"234"
+=======
+>>>>>>> refs/remotes/origin/rama-jorge2
 x<-2
 a<-[2,8,10]
-y<-5*a[0]
+b<-[10,5]
+y<-b[1]*a[0]
+a[1]<-b[1]*a[0]
 z<-x*a[0]
-a[1]<-z
+f<-stack()
+f.add(x)
+i<-f.pop()
+p<-!y/z!
+a[1]<-a[0]+z
 a[x]<-z
 a[x]<-z*5
 a[1]<-z+y
-a[x]<-z+a[1]
+q<-a.length
 while(x<z) do
 begin
 x<-x+1
@@ -55,3 +64,42 @@ end
 
 
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> refs/remotes/origin/rama-jorge2
