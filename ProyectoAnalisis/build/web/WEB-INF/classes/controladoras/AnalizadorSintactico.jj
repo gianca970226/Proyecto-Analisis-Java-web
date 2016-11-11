@@ -49,7 +49,7 @@ TOKEN:
 	| <STACK:"stack" > 
 	| <QUEUE:"queue" > 
 	| <ADD:".add" > 
-	| <POP:".pop" > 
+	| <REMOVE:".pop" > 
 	| <PISOBAJO:"!" > 
 	| <PARENTESISABIERTO:"(" > 
 	| <PARENTESISCERRADO:")" > 
@@ -82,9 +82,9 @@ void Start() :
     }
 }
 void SUBRUTINA():
-{Token id1; Token id2;Token id3; Token retorno; String parametros="";String parametro;String []valores=new String[2];}
+{Token id1; Token id2;Token id3; Token retorno; Token lfunction; Token lprocedure; String parametros="";String parametro;String []valores=new String[2];}
 {
-        <FUNCTION>
+        lfunction=<FUNCTION>
         {
             generar.ambienteVariables();
         }
@@ -96,10 +96,11 @@ void SUBRUTINA():
         {
             
             generar.escribirFunction(retorno.image, id1.image,parametros);
-            
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
+            generar.escribirParametros(lfunction);
+            
             
         }
         E()
@@ -113,7 +114,7 @@ void SUBRUTINA():
         {
             generar.escribirFinFunction(id2.image);
         }
-        | <PROCEDURE>
+        | lprocedure=<PROCEDURE>
         {
             generar.ambienteVariables();
         }
@@ -127,6 +128,8 @@ void SUBRUTINA():
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
+            generar.escribirParametros(lprocedure);
+            
         }
         E()id3=<END>
         {
@@ -289,13 +292,23 @@ void OPERACION(Token id):
     |<CORCHETEABIERTO>valores1=VALOR()<CORCHETECERRADO><ASIGNACION>(pisobajo1=<PISOBAJO>)?OPERACION2(id1, valores1, pisobajo1)
     |<ADD><PARENTESISABIERTO>valores1=VALOR()<PARENTESISCERRADO>
     {
-        
-        generar.escribirAnadir(id1.image, valores1[0]);
         String tipo=generar.buscarVariable(id1.image);
-        String []valores5=new String[2];
-        valores5[0]=id1.image;
-        valores5[1]=tipo;
-        generar.escribirLog(id1,valores5);
+        if (tipo.equals("stack"))
+        {
+            generar.escribirApilar(id1.image, valores1[0]);
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+        else
+        {
+            generar.escribirEncolar(id1.image, valores1[0]);
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
     }
 }
 void OPERACION2(Token id, String []valores, Token pisobajo):
@@ -437,15 +450,28 @@ void OPERACION3(Token id, String []valores, String []valoresb, Token pisobajo):
             }
         }
     }
-    | <POP><PARENTESISABIERTO><PARENTESISCERRADO>
+    | <REMOVE><PARENTESISABIERTO><PARENTESISCERRADO>
     {
-        String tipo=generar.buscarVariable(id1.image);
-        generar.escribirRetirar(tipo, id1.image, valores1[0]);
-        tipo=generar.buscarVariable(id1.image);
-        //String []valores5=new String[2];
-        valores5[0]=id1.image;
-        valores5[1]=tipo;
-        generar.escribirLog(id1,valores5);
+        String tipo=generar.buscarVariable(valores1[0]);
+        if (tipo.equals("stack"))
+        {
+            tipo=generar.buscarVariable(id1.image);
+            generar.escribirDesapilar(tipo, id1.image, valores1[0]);
+            tipo=generar.buscarVariable(id1.image);
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+        else
+        {
+            tipo=generar.buscarVariable(id1.image);
+            generar.escribirDesencolar(tipo, id1.image, valores1[0]);
+            tipo=generar.buscarVariable(id1.image);
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+        
     }
     |(longitud=<LENGTH>)?
     {
@@ -591,7 +617,7 @@ void FOR():
         generar.escribirLog(lfor,null);
         if (longitud==null)
         {
-            generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<"+valores2[0]+";"+id1.image+"++");
+            generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<="+valores2[0]+";"+id1.image+"++");
         }
         else
         {

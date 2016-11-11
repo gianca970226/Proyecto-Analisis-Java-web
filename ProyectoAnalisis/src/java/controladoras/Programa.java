@@ -5,8 +5,8 @@ public class Programa {
 LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();
 String resultado="";
 public int funcion1 (int y) {
-agregar("y",Integer.toString(y),2);
 agregar("funcion1","subrutina",2);
+agregar("y",Integer.toString(y),2);
 int s=y*5;
 agregar("s",Integer.toString(s),4);
 int x = 4;
@@ -20,8 +20,8 @@ return s;
 
 
 public void funcion (int y) {
-agregar("y",Integer.toString(y),9);
 agregar("funcion","subrutina",9);
+agregar("y",Integer.toString(y),9);
 int s=y*5;
 agregar("s",Integer.toString(s),11);
 agregar("funcion","subrutina",12);
@@ -38,7 +38,7 @@ int [] b = {10,5};
 agregarLista("b",b,17);
 int y= b[1]*a[0];
 agregar("y",Integer.toString(y),18);
-a[10] = b[10]*a[0];
+a[1] = b[1]*a[0];
 agregarLista("a",a,19);
 int z=x*a[0];
 agregar("z",Integer.toString(z),20);

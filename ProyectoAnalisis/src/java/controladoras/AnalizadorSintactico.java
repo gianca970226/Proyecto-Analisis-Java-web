@@ -61,10 +61,10 @@ GenerarJava generar= new GenerarJava();
       jj_consume_token(PARENTESISCERRADO);
       jj_consume_token(BEGIN);
             generar.escribirFunction(retorno.image, id1.image,parametros);
-            generar.escribirParametros(lfunction);
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
+            generar.escribirParametros(lfunction);
       E();
       jj_consume_token(RETURN);
       id2 = jj_consume_token(IDENTIFICADOR);
@@ -95,10 +95,10 @@ GenerarJava generar= new GenerarJava();
       jj_consume_token(PARENTESISCERRADO);
       jj_consume_token(BEGIN);
             generar.escribirProcedure(id1.image,parametros);
-            generar.escribirParametros(lprocedure);
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
+            generar.escribirParametros(lprocedure);
       E();
       id3 = jj_consume_token(END);
             valores[0]=id1.image;
@@ -851,7 +851,7 @@ GenerarJava generar= new GenerarJava();
         generar.escribirLog(lfor,null);
         if (longitud==null)
         {
-            generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<"+valores2[0]+";"+id1.image+"++");
+            generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<="+valores2[0]+";"+id1.image+"++");
         }
         else
         {
