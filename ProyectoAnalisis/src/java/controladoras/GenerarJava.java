@@ -92,7 +92,8 @@ public class GenerarJava {
     }
 
     public void escribirPrincipal() {
-        codigo = codigo + "public void principal() {\n";
+        codigo = codigo + "public void principal(){\n"
+                + "try{\n";
     }
 
     public void recibir(String texto) {
@@ -353,7 +354,16 @@ public class GenerarJava {
                 + "import java.util.*;\n"
                 + "public class Programa {\n"
                 + "LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();\n"
+                + "String resultado=\"\";"
                 + codigo + "\n"
+                + "}catch(Exception e)\n"
+                + "{\n"
+                + "resultado=e.toString();"
+                +"}\n"
+                +"}\n"
+                +"public String getResultado()\n"
+                + "{\n"
+                + "return this.resultado;"
                 + "}\n"
                 + "public void  agregar(String x,String valor,int linea)\n"
                 + "{\nlog.add(new EstructuraLog(x, valor,linea));\n}\n"
@@ -371,13 +381,12 @@ public class GenerarJava {
                 + "Object []aux=cola.toArray();\n"
                 + "log.add(new EstructuraLog(x, aux,linea));\n}\n"
                 + "public String mostrar()\n"
-                + "{  \n"
-                + "    Gson json = new Gson();\n"
-                + "    String resultados=\"{\\\"Variables\\\":\";\n"
-                + "    resultados += json.toJson(log)+\"}\";\n"
-                + "    \n"
-                + "    return resultados;\n"
-                + "}"
+                + "{\n"
+                + "Gson json = new Gson();\n"
+                + "String resultados=\"{\\\"Variables\\\":\";\n"
+                + "resultados += json.toJson(log)+\"}\";\n"
+                + "return resultados;\n"
+                + "}\n"
                 + "}\n";
         System.out.println(java);
         FileWriter fichero = null;
