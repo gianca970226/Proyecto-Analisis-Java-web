@@ -55,7 +55,9 @@ public class Controladora extends HttpServlet {
                     AnalizadorSintactico.main(archivoPrueba);
                     System.out.println("Ejecutado!");
                     response.setContentType("text/plain");
-                    response.getWriter().print("Ejecutado correctamente");
+                    Compilador compilador = new Compilador();
+                    String resultado = compilador.compilar2();
+                    response.getWriter().print(resultado);
                 } catch (FileNotFoundException ex) {
                     response.getWriter().print(ex.getMessage());
                 } catch (ParseException ex) {
@@ -65,15 +67,12 @@ public class Controladora extends HttpServlet {
                 response.getWriter().print(ex.getMessage());
             }
         } else if ("analizar".equals(operacion)) {
-
             Compilador compilador = new Compilador();
             try {
                 compilador.compilar();
             } catch (Exception e) {
-
                 System.out.println(e);
             }
-
             response.getWriter().write(compilador.Resultado);
         } else if ("leer".equals(operacion)) {
             String cadena = muestraContenido("C:\\Users\\Jorge Alejandro\\Documents\\GitHub\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\code1.txt");

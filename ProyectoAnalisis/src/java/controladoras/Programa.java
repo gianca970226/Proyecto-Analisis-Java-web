@@ -3,7 +3,7 @@ import com.google.gson.Gson;
 import java.util.*;
 public class Programa {
 LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();
-
+String resultado="";
 public int funcion1 (int y) {
 agregar("y",Integer.toString(y),2);
 agregar("funcion1","subrutina",2);
@@ -28,7 +28,8 @@ agregar("funcion","subrutina",12);
 
 }
 
-public void principal() {
+public void principal(){
+try{
 int x = 2;
 agregar("x",Integer.toString(x),15);
 int [] a = {2,8,10};
@@ -81,7 +82,13 @@ int t = x;
 agregar("t",Integer.toString(t),42);
 }
 
+}catch(Exception e)
+{
+resultado=e.toString();}
 }
+public String getResultado()
+{
+return this.resultado;}
 public void  agregar(String x,String valor,int linea)
 {
 log.add(new EstructuraLog(x, valor,linea));
@@ -103,11 +110,11 @@ Object []aux=cola.toArray();
 log.add(new EstructuraLog(x, aux,linea));
 }
 public String mostrar()
-{  
-    Gson json = new Gson();
-    String resultados="{\"Variables\":";
-    resultados += json.toJson(log)+"}";
-    
-    return resultados;
-}}
+{
+Gson json = new Gson();
+String resultados="{\"Variables\":";
+resultados += json.toJson(log)+"}";
+return resultados;
+}
+}
 
