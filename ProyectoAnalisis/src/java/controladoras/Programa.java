@@ -5,6 +5,7 @@ public class Programa {
 LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();
 
 public int funcion1 (int y) {
+agregar("y",Integer.toString(y),2);
 agregar("funcion1","subrutina",2);
 int s=y*5;
 agregar("s",Integer.toString(s),4);
@@ -19,6 +20,7 @@ return s;
 
 
 public void funcion (int y) {
+agregar("y",Integer.toString(y),9);
 agregar("funcion","subrutina",9);
 int s=y*5;
 agregar("s",Integer.toString(s),11);
@@ -92,11 +94,13 @@ log.add(new EstructuraLog(x, aux, linea));
 }
 public void  agregarPila(String x,Stack<Object>pila,int linea)
 {
-log.add(new EstructuraLog(x, pila,linea));
+Object []aux=pila.toArray();
+log.add(new EstructuraLog(x, aux,linea));
 }
 public void  agregarCola(String x,Queue<Object>cola,int linea)
 {
-log.add(new EstructuraLog(x, cola,linea));
+Object []aux=cola.toArray();
+log.add(new EstructuraLog(x, aux,linea));
 }
 public String mostrar()
 {  

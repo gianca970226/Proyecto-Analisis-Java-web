@@ -37,10 +37,10 @@ GenerarJava generar= new GenerarJava();
   }
 
   final public void SUBRUTINA() throws ParseException {
- Token id1; Token id2;Token id3; Token retorno; String parametros="";String parametro;String []valores=new String[2];
+ Token id1; Token id2;Token id3; Token retorno; Token lfunction; Token lprocedure; String parametros="";String parametro;String []valores=new String[2];
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case FUNCTION:
-      jj_consume_token(FUNCTION);
+      lfunction = jj_consume_token(FUNCTION);
             generar.ambienteVariables();
       retorno = jj_consume_token(TIPO);
       id1 = jj_consume_token(IDENTIFICADOR);
@@ -61,7 +61,7 @@ GenerarJava generar= new GenerarJava();
       jj_consume_token(PARENTESISCERRADO);
       jj_consume_token(BEGIN);
             generar.escribirFunction(retorno.image, id1.image,parametros);
-
+            generar.escribirParametros(lfunction);
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
@@ -75,7 +75,7 @@ GenerarJava generar= new GenerarJava();
             generar.escribirFinFunction(id2.image);
       break;
     case PROCEDURE:
-      jj_consume_token(PROCEDURE);
+      lprocedure = jj_consume_token(PROCEDURE);
             generar.ambienteVariables();
       id1 = jj_consume_token(IDENTIFICADOR);
       jj_consume_token(PARENTESISABIERTO);
@@ -95,6 +95,7 @@ GenerarJava generar= new GenerarJava();
       jj_consume_token(PARENTESISCERRADO);
       jj_consume_token(BEGIN);
             generar.escribirProcedure(id1.image,parametros);
+            generar.escribirParametros(lprocedure);
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
@@ -409,12 +410,23 @@ GenerarJava generar= new GenerarJava();
       jj_consume_token(PARENTESISABIERTO);
       valores1 = VALOR();
       jj_consume_token(PARENTESISCERRADO);
-        generar.escribirAnadir(id1.image, valores1[0]);
         String tipo=generar.buscarVariable(id1.image);
-        String []valores5=new String[2];
-        valores5[0]=id1.image;
-        valores5[1]=tipo;
-        generar.escribirLog(id1,valores5);
+        if (tipo.equals("stack"))
+        {
+            generar.escribirApilar(id1.image, valores1[0]);
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+        else
+        {
+            generar.escribirEncolar(id1.image, valores1[0]);
+            String []valores5=new String[2];
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
       break;
     default:
       jj_la1[15] = jj_gen;
@@ -624,17 +636,29 @@ GenerarJava generar= new GenerarJava();
             }
         }
       break;
-    case POP:
-      jj_consume_token(POP);
+    case REMOVE:
+      jj_consume_token(REMOVE);
       jj_consume_token(PARENTESISABIERTO);
       jj_consume_token(PARENTESISCERRADO);
-        String tipo=generar.buscarVariable(id1.image);
-        generar.escribirRetirar(tipo, id1.image, valores1[0]);
-        tipo=generar.buscarVariable(id1.image);
-        //String []valores5=new String[2];
-        valores5[0]=id1.image;
-        valores5[1]=tipo;
-        generar.escribirLog(id1,valores5);
+        String tipo=generar.buscarVariable(valores1[0]);
+        if (tipo.equals("stack"))
+        {
+            tipo=generar.buscarVariable(id1.image);
+            generar.escribirDesapilar(tipo, id1.image, valores1[0]);
+            tipo=generar.buscarVariable(id1.image);
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
+        else
+        {
+            tipo=generar.buscarVariable(id1.image);
+            generar.escribirDesencolar(tipo, id1.image, valores1[0]);
+            tipo=generar.buscarVariable(id1.image);
+            valores5[0]=id1.image;
+            valores5[1]=tipo;
+            generar.escribirLog(id1,valores5);
+        }
       break;
     default:
       jj_la1[22] = jj_gen;

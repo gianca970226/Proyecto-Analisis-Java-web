@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  *
@@ -37,9 +38,28 @@ public class GenerarJava {
 //        ambientesvariables.add(variables);
     }
 
+    public void escribirParametros(Token f) {
+        HashMap<String, String> ambiente = ambientesvariables.get(ambientesvariables.size() - 1);
+        for (Map.Entry<String, String> entry : ambiente.entrySet()) {
+            String identificador = entry.getKey();
+            String tipo = entry.getValue();
+            if ("stack".equals(tipo)) {
+                recibir("agregarPila(\"" + identificador + "\"," + identificador + "," + f.beginLine + ");");
+            } else if ("queue".equals(tipo)) {
+                recibir("agregarCola(\"" + identificador + "\"," + identificador + "," + f.beginLine + ");");
+            } else if ("array".equals(tipo)) {
+                recibir("agregarLista(\"" + identificador + "\"," + identificador + "," + f.beginLine + ");");
+            } else if (tipo.equals("chain")) {
+                recibir("agregar(\"" + identificador + "\"," + identificador + "," + f.beginLine + ");");
+            } else {
+                recibir("agregar(\"" + identificador + "\",Integer.toString(" + identificador + ")," + f.beginLine + ");");
+            }
+        }
+    }
+
     public void escribirFunction(String retorno, String id, String parametros) {
         insertarFunction(retorno, id);
-        String convertido=conversionTipo(retorno);
+        String convertido = conversionTipo(retorno);
         recibir("\npublic " + convertido + " " + id + " (" + parametros + ") {");
     }
 
@@ -118,7 +138,7 @@ public class GenerarJava {
     }
 
     public void escribirVariable(String identificador, String valores[], Token longitud) {
-        valores[1]=conversionTipo(valores[1]);
+        valores[1] = conversionTipo(valores[1]);
         if (longitud == null) {
             recibir(valores[1] + " " + identificador + " = " + valores[0] + ";");
         } else {
@@ -128,49 +148,59 @@ public class GenerarJava {
     }
 
     public void escribirArreglo(String tipo, String identificador, String elementos) {
-        tipo=conversionTipo(tipo);
+        tipo = conversionTipo(tipo);
         recibir(tipo + " " + identificador + " = {" + elementos + "};");
     }
-    
-    public void escribirPila(String id1)
-    {
-        recibir("Stack<Object>"+id1+"= new Stack<Object>();");
-    }
-    public void escribirCola(String id1)
-    {
-        recibir("Queue<Object>"+id1+"= new Queue<Object>();");
+
+    public void escribirPila(String id1) {
+        recibir("Stack<Object>" + id1 + "= new Stack<Object>();");
     }
     
-    public void escribirAnadir(String id1, String valor)
-    {
-        recibir(id1+".add("+valor+");");
+    public void escribirApilar(String id1, String valor) {
+        recibir(id1 + ".add(" + valor + ");");
     }
     
-    public void escribirRetirar(String tipo, String id1, String id2)
-    {
-        if (tipo==null)
-        {
+    public void escribirDesapilar(String tipo, String id1, String id2) {
+        if (tipo == null) {
             insertarVariable("number", id1);
             tipo = buscarVariable(id1);
             tipo = conversionTipo(tipo);
-            recibir(tipo+" "+id1+"=Integer.parseInt("+id2+".pop().toString());");
-        }
-        else
-        {
-            if (tipo.equals("number"))
-            {
-               recibir(id1+"=Integer.parseInt("+id2+".pop().toString());"); 
+            recibir(tipo + " " + id1 + "=Integer.parseInt(" + id2 + ".pop().toString());");
+        } else {
+            if (tipo.equals("number")) {
+                recibir(id1 + "=Integer.parseInt(" + id2 + ".pop().toString());");
+            } else {
+                recibir(id1 + "=" + id2 + ".pop().toString();");
             }
-            else
-            {
-                recibir(id1+"="+id2+".pop().toString();"); 
-            }
-            
         }
-        
     }
 
-    public void escribirVariableAccesoArreglo(String tipo, String id1,String id2, String pos1) {
+    public void escribirCola(String id1) {
+        recibir("LinkedList<Object>" + id1 + "= new LinkedList<>();");
+    }
+    
+    public void escribirEncolar(String id1, String parametro)
+    {
+        recibir(id1 + ".addFirst("+parametro+");");
+    }
+    
+    public void escribirDesencolar(String id1, String tipo, String id2)
+    {
+        if (tipo == null) {
+            insertarVariable("number", id1);
+            tipo = buscarVariable(id1);
+            tipo = conversionTipo(tipo);
+            recibir(tipo + " " + id1 + "=Integer.parseInt(" + id2 + ".removeLast().toString());");
+        } else {
+            if (tipo.equals("number")) {
+                recibir(id1 + "=Integer.parseInt(" + id2 + ".removeLast().toString());");
+            } else {
+                recibir(id1 + "=" + id2 + ".removeLast().toString();");
+            }
+        }
+    }
+
+    public void escribirVariableAccesoArreglo(String tipo, String id1, String id2, String pos1) {
         if (tipo == null) {
             insertarVariable("number", id1);
             tipo = buscarVariable(id1);
@@ -202,7 +232,7 @@ public class GenerarJava {
             }
 
         } else {
-            tipo=conversionTipo(tipo);
+            tipo = conversionTipo(tipo);
             if (pisobajo1 == null || pisobajo2 == null) {
                 recibir(tipo + " " + id1 + "=" + id2 + operacion + id3 + ";");
             } else {
@@ -219,9 +249,9 @@ public class GenerarJava {
                 recibir(id1 + "=(int) Math.floor(" + id2 + operacion + id3 + "[" + id4 + "]);");
             }
         } else {
-            tipo=conversionTipo(tipo);
+            tipo = conversionTipo(tipo);
             if (pisobajo1 == null || pisobajo2 == null) {
-                
+
                 recibir(tipo + " " + id1 + "=" + id2 + operacion + id3 + "[" + id4 + "];");
             } else {
                 recibir(tipo + " " + id1 + "=(int) Math.floor(" + id2 + operacion + id3 + "[" + id4 + "]);");
@@ -251,7 +281,7 @@ public class GenerarJava {
             if (tipo == null) {
                 insertarVariable("number", id1);
                 tipo = buscarVariable(id1);
-                tipo=conversionTipo(tipo);
+                tipo = conversionTipo(tipo);
                 recibir(tipo + " " + id1 + "= " + id2 + "[" + pos1 + "]" + operacion + id3 + ";");
             }
         } else {
@@ -308,14 +338,11 @@ public class GenerarJava {
             recibir("agregar(\"" + n.image + "\",Integer.toString(" + n.image + ")," + n.beginLine + ");");
         } else if (valores[1].equals("subrutina")) {
             recibir("agregar(\"" + valores[0] + "\",\"" + valores[1] + "\"," + n.beginLine + ");");
-        }
-        else if (valores[1].equals("stack")) {
+        } else if (valores[1].equals("stack")) {
             recibir("agregarPila(\"" + valores[0] + "\"," + n.image + "," + n.beginLine + ");");
-        }
-        else if (valores[1].equals("queue")) {
+        } else if (valores[1].equals("queue")) {
             recibir("agregarCola(\"" + valores[0] + "\"," + n.image + "," + n.beginLine + ");");
-        }
-        else {
+        } else {
             recibir("agregarLista(\"" + n.image + "\"," + n.image + "," + n.beginLine + ");");
         }
     }
@@ -336,9 +363,13 @@ public class GenerarJava {
                 + "System.arraycopy(lista, 0, aux,0, lista.length);\n"
                 + "log.add(new EstructuraLog(x, aux, linea));\n}\n"
                 + "public void  agregarPila(String x,Stack<Object>pila,int linea)\n"
-                + "{\nlog.add(new EstructuraLog(x, pila,linea));\n}\n"
+                + "{\n"
+                + "Object []aux=pila.toArray();\n"
+                + "log.add(new EstructuraLog(x, aux,linea));\n}\n"
                 + "public void  agregarCola(String x,Queue<Object>cola,int linea)\n"
-                + "{\nlog.add(new EstructuraLog(x, cola,linea));\n}\n"
+                + "{\n"
+                + "Object []aux=cola.toArray();\n"
+                + "log.add(new EstructuraLog(x, aux,linea));\n}\n"
                 + "public String mostrar()\n"
                 + "{  \n"
                 + "    Gson json = new Gson();\n"
@@ -352,7 +383,7 @@ public class GenerarJava {
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\Programa.java");//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\Programa.java
+            fichero = new FileWriter("C:\\Users\\Jorge Alejandro\\Documents\\GitHub\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\Programa.java");//C:\\Users\\Jorge Alejandro\\Documents\\NetBeansProjects\\Proyecto-Analisis-Java-web\\ProyectoAnalisis\\src\\java\\controladoras\\Programa.java
             pw = new PrintWriter(fichero);
             pw.println(java);
 
