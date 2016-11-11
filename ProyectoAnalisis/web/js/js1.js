@@ -82,10 +82,8 @@ $(function ()
                 if (typeof resultados.Variables[i].lista != 'undefined')
                 {
                     arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].lista.toString(), resultados.Variables[i].linea))
-                } else if (typeof resultados.Variables[i].cola != 'undefined') {
-                    arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].cola.toString(), resultados.Variables[i].linea))
-                } else if (typeof resultados.Variables[i].pila != 'undefined') {
-                    arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].pila.toString(), resultados.Variables[i].linea))
+                } else if (typeof resultados.Variables[i].pilaYcola != 'undefined') {
+                    arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].pilaYcola.toString(), resultados.Variables[i].linea))
                 } else {
                     arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].valor, resultados.Variables[i].linea))
                 }

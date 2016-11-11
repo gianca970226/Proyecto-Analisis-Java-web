@@ -38,7 +38,7 @@ int [] b = {10,5};
 agregarLista("b",b,17);
 int y= b[1]*a[0];
 agregar("y",Integer.toString(y),18);
-a[1] = b[1]*a[0];
+a[10] = b[10]*a[0];
 agregarLista("a",a,19);
 int z=x*a[0];
 agregar("z",Integer.toString(z),20);
