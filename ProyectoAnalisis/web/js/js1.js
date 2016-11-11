@@ -372,7 +372,21 @@ $(function ()
     }
 }
 );
-function processFiles(files) {
+function processFiles(files)
+{
+    var file = files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+
+        editAreaLoader.setValue("textarea_1", e.target.result + "");
+        
+
+    };
+    reader.readAsText(file);
+
+
+}
+function processFiles1(files) {
     var file = files[0];
     var reader = new FileReader();
     reader.onload = function (e) {
