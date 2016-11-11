@@ -19,16 +19,14 @@ public class EstructuraLog {
     String valor;
     int[] lista;
     int linea;
-    Stack<Object> pila;
-    Queue<Object> cola;
+    Object []pilaYcola;
 
     public EstructuraLog(String nombre, String valor, int linea) {
         this.nombre = nombre;
         this.valor = valor;
         this.lista=null;
         this.linea = linea;
-        pila=null;
-        cola=null;
+        pilaYcola=null;
     }
     //Constructor para las listas
     public EstructuraLog(String nombre, int[] lista, int linea) {
@@ -36,28 +34,14 @@ public class EstructuraLog {
         this.valor = null;
         this.lista = lista;
         this.linea = linea;
-        this.pila=null;
-        this.cola=null;
+        this.pilaYcola=null;
     }
-    
-    public EstructuraLog(String nombre, Stack<Object>pila, int linea) {
+    //Constructor para pilas y colas
+    public EstructuraLog(String nombre, Object []pilaYcola, int linea) {
         this.nombre = nombre;
         this.valor = null;
         this.lista = null;
         this.linea = linea;
-        this.pila=pila;
-        this.cola=null;
+        this.pilaYcola=pilaYcola;
     }
-    
-    public EstructuraLog(String nombre, Queue<Object>cola, int linea) {
-        this.nombre = nombre;
-        this.valor = null;
-        this.lista = null;
-        this.linea = linea;
-        this.pila=null;
-        this.cola=cola;
-    }
-    
-    
-
 }

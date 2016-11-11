@@ -61,7 +61,7 @@ public interface AnalizadorSintacticoConstants {
   /** RegularExpression Id. */
   int ADD = 30;
   /** RegularExpression Id. */
-  int POP = 31;
+  int REMOVE = 31;
   /** RegularExpression Id. */
   int PISOBAJO = 32;
   /** RegularExpression Id. */
