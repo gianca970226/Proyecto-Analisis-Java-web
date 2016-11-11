@@ -278,7 +278,7 @@ GenerarJava generar= new GenerarJava();
   }
 
   final public String CONDICION() throws ParseException {
- Token n=new Token(); String condicion="";String [] valor1;String [] valor2;
+ Token n=new Token(); String condicion="";String [] valor1;String [] valor2; String [] valor3=null; String [] valor4=null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOLEANO:
       n = jj_consume_token(BOLEANO);
@@ -295,13 +295,48 @@ GenerarJava generar= new GenerarJava();
     case IDENTIFICADOR:
     case CADENA:
       valor1 = VALOR();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CORCHETEABIERTO:
+        jj_consume_token(CORCHETEABIERTO);
+        valor3 = VALOR();
+        jj_consume_token(CORCHETECERRADO);
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        ;
+      }
       n = jj_consume_token(OPERADORR);
       valor2 = VALOR();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CORCHETEABIERTO:
+        jj_consume_token(CORCHETEABIERTO);
+        valor4 = VALOR();
+        jj_consume_token(CORCHETECERRADO);
+        break;
+      default:
+        jj_la1[10] = jj_gen;
+        ;
+      }
       condicion = OTRACONDICION();
-            {if (true) return valor1[0]+" "+n.image+" "+valor2[0]+condicion;}
+            if (valor3==null && valor4==null)
+            {
+               {if (true) return valor1[0]+" "+n.image+" "+valor2[0]+condicion;}
+            }
+            else if (valor3==null && valor4!=null)
+            {
+                {if (true) return valor1[0]+" "+n.image+" "+valor2[0]+"["+valor4[0]+"]"+condicion;}
+            }
+            else if (valor3!=null && valor4==null)
+            {
+                {if (true) return valor1[0]+"["+valor3[0]+"]"+" "+n.image+" "+valor2[0]+condicion;}
+            }
+            else
+            {
+                {if (true) return valor1[0]+"["+valor3[0]+"]"+" "+n.image+" "+valor2[0]+"["+valor4[0]+"]"+condicion;}
+            }
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -317,7 +352,7 @@ GenerarJava generar= new GenerarJava();
         ;
         break;
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[12] = jj_gen;
         break label_6;
       }
       n = jj_consume_token(OPERADORL);
@@ -358,7 +393,7 @@ GenerarJava generar= new GenerarJava();
           ;
           break;
         default:
-          jj_la1[11] = jj_gen;
+          jj_la1[13] = jj_gen;
           break label_7;
         }
         elemento = ELEMENTO();
@@ -369,7 +404,7 @@ GenerarJava generar= new GenerarJava();
         generar.escribirLog(id,null);
       break;
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[14] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -385,7 +420,7 @@ GenerarJava generar= new GenerarJava();
         pisobajo1 = jj_consume_token(PISOBAJO);
         break;
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[15] = jj_gen;
         ;
       }
       OPERACION2(id, null, pisobajo1);
@@ -400,7 +435,7 @@ GenerarJava generar= new GenerarJava();
         pisobajo1 = jj_consume_token(PISOBAJO);
         break;
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[16] = jj_gen;
         ;
       }
       OPERACION2(id1, valores1, pisobajo1);
@@ -429,7 +464,7 @@ GenerarJava generar= new GenerarJava();
         }
       break;
     default:
-      jj_la1[15] = jj_gen;
+      jj_la1[17] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -455,7 +490,7 @@ GenerarJava generar= new GenerarJava();
           ;
           break;
         default:
-          jj_la1[16] = jj_gen;
+          jj_la1[18] = jj_gen;
           break label_8;
         }
         elemento = ELEMENTO();
@@ -483,7 +518,7 @@ GenerarJava generar= new GenerarJava();
           ;
           break;
         default:
-          jj_la1[17] = jj_gen;
+          jj_la1[19] = jj_gen;
           break label_9;
         }
         elemento = ELEMENTO();
@@ -542,7 +577,7 @@ GenerarJava generar= new GenerarJava();
         generar.escribirLog(id1,valores6);
       break;
     default:
-      jj_la1[18] = jj_gen;
+      jj_la1[20] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -567,7 +602,7 @@ GenerarJava generar= new GenerarJava();
         jj_consume_token(CORCHETECERRADO);
         break;
       default:
-        jj_la1[19] = jj_gen;
+        jj_la1[21] = jj_gen;
         ;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -575,7 +610,7 @@ GenerarJava generar= new GenerarJava();
         pisobajo2 = jj_consume_token(PISOBAJO);
         break;
       default:
-        jj_la1[20] = jj_gen;
+        jj_la1[22] = jj_gen;
         ;
       }
         if (valores4!=null) //Es cuando se le asigna una operacion a una posicion de un arreglo, si es diferente de null es porque la asignacion a una posicion de un arreglo
@@ -661,13 +696,13 @@ GenerarJava generar= new GenerarJava();
         }
       break;
     default:
-      jj_la1[22] = jj_gen;
+      jj_la1[24] = jj_gen;
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case LENGTH:
         longitud = jj_consume_token(LENGTH);
         break;
       default:
-        jj_la1[21] = jj_gen;
+        jj_la1[23] = jj_gen;
         ;
       }
         //si no paso por la gramatica de empezar con una posicion de un arreglo entonces fue una variable
@@ -725,7 +760,7 @@ GenerarJava generar= new GenerarJava();
         jj_consume_token(CORCHETECERRADO);
         break;
       default:
-        jj_la1[23] = jj_gen;
+        jj_la1[25] = jj_gen;
         ;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -733,7 +768,7 @@ GenerarJava generar= new GenerarJava();
         pisobajo2 = jj_consume_token(PISOBAJO);
         break;
       default:
-        jj_la1[24] = jj_gen;
+        jj_la1[26] = jj_gen;
         ;
       }
         if (valores1==null)
@@ -782,11 +817,12 @@ GenerarJava generar= new GenerarJava();
         }
       break;
     default:
-      jj_la1[25] = jj_gen;
+      jj_la1[27] = jj_gen;
         if (valores1==null)
         {
             String tipo=generar.buscarVariable(id1.image);
             generar.escribirVariableAccesoArreglo(tipo, id1.image, valores2[0],valores3[0]);
+            tipo=generar.buscarVariable(id1.image);
             String []valores6=new String[2];
             valores6[0]=id1.image;
             valores6[1]=tipo;
@@ -813,7 +849,7 @@ GenerarJava generar= new GenerarJava();
       coma = jj_consume_token(COMA);
       break;
     default:
-      jj_la1[26] = jj_gen;
+      jj_la1[28] = jj_gen;
       ;
     }
         if (coma!=null)
@@ -841,7 +877,7 @@ GenerarJava generar= new GenerarJava();
       longitud = jj_consume_token(LENGTH);
       break;
     default:
-      jj_la1[27] = jj_gen;
+      jj_la1[29] = jj_gen;
       ;
     }
     jj_consume_token(PARENTESISCERRADO);
@@ -851,7 +887,7 @@ GenerarJava generar= new GenerarJava();
         generar.escribirLog(lfor,null);
         if (longitud==null)
         {
-            generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<="+valores2[0]+";"+id1.image+"++");
+            generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<"+valores2[0]+";"+id1.image+"++");
         }
         else
         {
@@ -886,7 +922,7 @@ GenerarJava generar= new GenerarJava();
         {if (true) return valores;}
       break;
     default:
-      jj_la1[28] = jj_gen;
+      jj_la1[30] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -902,7 +938,7 @@ GenerarJava generar= new GenerarJava();
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[29];
+  final private int[] jj_la1 = new int[31];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -910,10 +946,10 @@ GenerarJava generar= new GenerarJava();
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x3000,0x100000,0x100000,0x3000,0x0,0x7008800,0x7008800,0x60000,0x60000,0x280040,0x800000,0x40,0x800,0x0,0x0,0x40000000,0x40,0x40,0x30000840,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0x0,0x0,0x40,};
+      jj_la1_0 = new int[] {0x3000,0x100000,0x100000,0x3000,0x0,0x7008800,0x7008800,0x60000,0x60000,0x0,0x0,0x280040,0x800000,0x40,0x800,0x0,0x0,0x40000000,0x40,0x40,0x30000840,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0x0,0x0,0x40,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x100,0x200,0x200,0x0,0x0,0xa00,0x0,0xa00,0x200,0x1,0x1,0x28,0xa00,0xa00,0xa08,0x8,0x1,0x2000,0x1008,0x8,0x1,0x1000,0x100,0x2000,0xa00,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x100,0x200,0x200,0x0,0x0,0x8,0x8,0xa00,0x0,0xa00,0x200,0x1,0x1,0x28,0xa00,0xa00,0xa08,0x8,0x1,0x2000,0x1008,0x8,0x1,0x1000,0x100,0x2000,0xa00,};
    }
 
   /** Constructor with InputStream. */
@@ -927,7 +963,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 29; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -941,7 +977,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 29; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -951,7 +987,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 29; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -961,7 +997,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 29; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -970,7 +1006,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 29; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -979,7 +1015,7 @@ GenerarJava generar= new GenerarJava();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 29; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -1035,7 +1071,7 @@ GenerarJava generar= new GenerarJava();
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 29; i++) {
+    for (int i = 0; i < 31; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
