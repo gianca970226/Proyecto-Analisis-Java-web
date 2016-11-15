@@ -37,10 +37,8 @@ function removeAllChilds(a)
 function removeAllFrame()
 {
     var iframes = document.getElementsByTagName('iframe');
-
     for (var i = 0; i < iframes.length; i++) {
         iframes[i].parentNode.removeChild(iframes[i]);
-
     }
 }
 $(function ()
@@ -75,7 +73,8 @@ $(function ()
                 async: false
             });
             bandera = false;
-            enviar()
+            //metodo enviar para subdividir la estructura log 
+            enviar();
             pila = new stack();
             var arregloaux = new Array()
             for (i = 0; i < resultados.Variables.length; i++) {
@@ -88,7 +87,6 @@ $(function ()
                     arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].valor, resultados.Variables[i].linea))
                 }
             }
-
             pila.push(new rutina("principal", 0, "textarea_" + actual + " ", 0, arregloaux))
         } else {
             console.log(pila)
@@ -96,144 +94,147 @@ $(function ()
             {
                 if (pila.peek().nombre != "textarea_1 ") {
                     var oe = pila.peek().contadorLinea
-//                    var frame = document.getElementById("frame_" + pila.peek().nombre),
-//             
-//                            
-//                                                          frameDoc = frame.contentDocument || frame.contentWindow.document;
-//                    frameDoc.documentElement.innerHTML = "";
+                    //var frame = document.getElementById("frame_" + pila.peek().nombre),
+                    //frameDoc = frame.contentDocument || frame.contentWindow.document;
+                    //frameDoc.documentElement.innerHTML = "";
                     removeAllChilds("tabla_" + pila.peek().nombre);
                     var iframes = document.getElementsByTagName('iframe');
-
                     for (var i = 0; i < iframes.length; i++) {
-
                         if (iframes[i].id.trim() == "frame_" + pila.peek().nombre) {
                             iframes[i].parentNode.removeChild(iframes[i]);
                         }
                     }
-
                     document.getElementById("Variables").removeChild(document.getElementById("tabla_" + pila.peek().nombre));
-
                     pila.pop();
                     console.log(pila)
                 } else
                 {
                     alert("Fin")
-                    location.reload();
+                    //location.reload();
                 }
             }
+
+            var thbody = document.getElementById("bodyTable" + pila.peek().nombre);
+            if (!contiene(thbody.children, pila.peek().variables[pila.peek().contadorLinea].nombre) && (typeof pila.peek().variables[pila.peek().contadorLinea].valor != 'undefined' || typeof pila.peek().variables[pila.peek().contadorLinea].lista != 'undefined'))
+            {
+                var tr = document.createElement("tr")
+                tr.id = pila.peek().variables[pila.peek().contadorLinea].nombre
+                var thNombre = document.createElement("td")
+                var thValor = document.createElement("td")
+                thNombre.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].nombre));
+                thValor.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].valor));
+                tr.appendChild(thNombre);
+                tr.appendChild(thValor);
+                thbody.appendChild(tr);
+            } else if (typeof pila.peek().variables[pila.peek().contadorLinea].valor != 'undefined' || typeof pila.peek().variables[pila.peek().contadorLinea].lista != 'undefined')
+            {
+                console.log(pila.peek().variables[pila.peek().contadorLinea].nombre)
+
+                var tr1 = document.getElementById(pila.peek().variables[pila.peek().contadorLinea].nombre.trim() + "")
+                console.log(tr1);
+                removeAllChilds(pila.peek().variables[pila.peek().contadorLinea].nombre.trim())
+
+                var thNombre1 = document.createElement("td")
+                var thValor1 = document.createElement("td")
+                thNombre1.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].nombre));
+                if (pila.peek().variables[pila.peek().contadorLinea].valor != null)
+                {
+                    thValor1.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].valor));
+                } else
+                {
+                    if (typeof pila.peek().variables[pila.peek().contadorLinea].lista != 'undefined') {
+                        thValor1.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].lista));
+                    }
+                }
+
+                tr1.appendChild(thNombre1);
+                tr1.appendChild(thValor1);
+            }
+        }
+        var codigo = editAreaLoader.getValue(pila.peek().nombre.trim());
+        codigo = codigo.split('\n')
+        if (pila.peek().variables[(pila.peek().contadorLinea)].valor == "subrutina")
+        {
+
+            ambientes(subrutinas[pila.peek().variables[(pila.peek().contadorLinea)].nombre])
+            var nom = pila.peek().variables[(pila.peek().contadorLinea)].nombre;
+            var arr = pila.peek().variables
+            var index = pila.peek().contadorLinea;
+            var aux2 = pila.peek().variables[(pila.peek().contadorLinea)].linea;
+            var arreglo1 = sacarRutina(arr, nom, index)
+            arreglo1[0].valor = null
+            arreglo1[arreglo1.length - 1].valor = null
+            console.log(pila.peek().variables)
+            document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
+            pila.push(new rutina(pila.peek().variables[(pila.peek().contadorLinea)].nombreRutina, 0, "textarea_" + actual + "." + contadorSub, 0, arreglo1))
 
 
             var tabla = document.createElement("tabla")
             tabla.setAttribute("id", "tabla_" + pila.peek().nombre);
             tabla.setAttribute("class", "table table-bordered ambientes");
 
-            if (!contiene(document.getElementById("Variables").children, "tabla_" + pila.peek().nombre))
+            var thhead = document.createElement("thead")
+            var trEncabezado = document.createElement("tr")
+            var tdVariable = document.createElement("th")
+            tdVariable.appendChild(document.createTextNode("Variable"))
+            var tdValor = document.createElement("th")
+            tdValor.appendChild(document.createTextNode("Valor"))
+            trEncabezado.appendChild(tdVariable)
+            trEncabezado.appendChild(tdValor)
+            thhead.appendChild(trEncabezado)
+            var thbody = document.createElement("tbody")
+            thbody.setAttribute("id", "bodyTable" + pila.peek().nombre);
+            tabla.appendChild(thhead)
+            tabla.appendChild(thbody)
+            document.getElementById("Variables").appendChild(tabla);
+
+            contadorSub++;
+            var cont = 0;
+            console.log(pila.peek());
+            pila.actualizar1(aux2 - 1)
+            var lineaaux = pila.peek().variables[0].linea;
+            while (pila.peek().variables[cont].linea == lineaaux)
             {
 
-                document.getElementById("Variables").appendChild(tabla);
-                var thhead = document.createElement("thead")
-                var trEncabezado = document.createElement("tr")
-                var tdVariable = document.createElement("th")
-                tdVariable.appendChild(document.createTextNode("Variable"))
-                var tdValor = document.createElement("th")
-                tdValor.appendChild(document.createTextNode("Valor"))
-                trEncabezado.appendChild(tdVariable)
-                trEncabezado.appendChild(tdValor)
-                thhead.appendChild(trEncabezado)
-                document.getElementById("Variables").lastChild.appendChild(thhead);
-                console.log("Aquii")
-            } else {
-                removeAllChilds("tabla_" + pila.peek().nombre);
-                var thhead = document.createElement("thead")
-                var trEncabezado = document.createElement("tr")
-                var tdVariable = document.createElement("th")
-                tdVariable.appendChild(document.createTextNode("NomVar"))
-                var tdValor = document.createElement("th")
-                tdValor.appendChild(document.createTextNode("Valor"))
-                trEncabezado.appendChild(tdVariable)
-                trEncabezado.appendChild(tdValor)
-                thhead.appendChild(trEncabezado)
-                document.getElementById("Variables").lastChild.appendChild(thhead);
-                var thbody = document.createElement("tbody")
-                
-                for (i = 0; i < pila.peek().variables.length; i++) {
-                    
-                    var tr = document.createElement("tr");
-                    tr.className = "variables";
-                    if ((i + 1) <= pila.peek().contadorLinea) {
-                        if (typeof pila.peek().variables[i].valor != 'undefined' || typeof pila.peek().variables[i].lista != 'undefined') {
-                            var tdNombre = document.createElement("td");
-                            tdNombre.appendChild(document.createTextNode(pila.peek().variables[i].nombre));
-                            var tdValor = document.createElement("td");
-                            if (pila.peek().variables[i].valor != null)
-                            {
-                                tdValor.appendChild(document.createTextNode("" + pila.peek().variables[i].valor));
-
-                            } else
-                            {
-                                if (typeof pila.peek().variables[i].lista != 'undefined') {
-                                    tdValor.appendChild(document.createTextNode(pila.peek().variables[i].lista));
-
-                                }
-                            }
-
-                            tr.appendChild(tdNombre);
-                            tr.appendChild(tdValor);
-
-                        }
-                    }
-
-                    thbody.appendChild(tr)
-
-                }
-                document.getElementById("Variables").lastChild.appendChild(thbody);
-            }
-            var codigo = editAreaLoader.getValue(pila.peek().nombre.trim());
-            codigo = codigo.split('\n')
-            if (pila.peek().variables[(pila.peek().contadorLinea)].valor == "subrutina")
-            {
-                ambientes(subrutinas[pila.peek().variables[(pila.peek().contadorLinea)].nombre])
-                var nom = pila.peek().variables[(pila.peek().contadorLinea)].nombre;
-                var arr = pila.peek().variables
-                var index = pila.peek().contadorLinea;
-                var aux2 = pila.peek().variables[(pila.peek().contadorLinea)].linea;
-                var arreglo1 = sacarRutina(arr, nom, index)
-                arreglo1[0].valor = null
-                arreglo1[arreglo1.length - 1].valor = null
-                console.log(pila.peek().variables)
-                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
-                pila.push(new rutina(pila.peek().variables[(pila.peek().contadorLinea)].nombreRutina, 0, "textarea_" + actual + "." + contadorSub, 0, arreglo1))
-                contadorSub++;
-                var cont=0;
-                
-                console.log(pila.peek());
-                pila.actualizar1(aux2 - 1)
-                var lineaaux=pila.peek().variables[0].linea;
-                while(pila.peek().variables[cont].linea==lineaaux)
+                if ( typeof pila.peek().variables[cont].valor != 'undefined' || typeof pila.peek().variables[cont].lista != 'undefined')
                 {
-                    cont++;
+                    var tr = document.createElement("tr")
+                    tr.id = pila.peek().variables[cont].nombre
+                    var thNombre = document.createElement("td")
+                    var thValor = document.createElement("td")
+                    thNombre.appendChild(document.createTextNode(pila.peek().variables[cont].nombre));
+                    thValor.appendChild(document.createTextNode(pila.peek().variables[cont].valor));
+                    tr.appendChild(thNombre);
+                    tr.appendChild(thValor);
+                    thbody.appendChild(tr);
                 }
-                pila.actualizar(cont-1);
+                cont++;
+
+
+
             }
-            if (pila.peek().contadorLinea == 0)
-            {
-                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea ].linea - pila.peek().aux);
-            } else
-            {
-                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
-            }
-            if (typeof pila.peek().variables[pila.peek().contadorLinea+1].linea!='undefined' ) {
-                console.log("aaa"+typeof pila.peek().variables[pila.peek().contadorLinea].nombre);
-                if (typeof pila.peek().variables[pila.peek().contadorLinea].nombre == 'undefined' && pila.peek().variables[pila.peek().contadorLinea].linea == pila.peek().variables[pila.peek().contadorLinea + 1].linea)
-                {
-                    console.log("hola");
-                    pila.actualizar(pila.peek().contadorLinea + 1)
-                    contadorLineas++;
-                }
-            }
-            pila.actualizar(pila.peek().contadorLinea + 1)
-            contadorLineas++;
+            pila.actualizar(cont - 1);
         }
+        if (pila.peek().contadorLinea == 0)
+        {
+            document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea ].linea - pila.peek().aux);
+        } else
+        {
+            document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
+        }
+        if (pila.peek().variables.length < pila.peek().contadorLinea + 1) {
+            console.log("aaa" + typeof pila.peek().variables[pila.peek().contadorLinea].nombre);
+            if (pila.peek().variables[pila.peek().contadorLinea].linea == pila.peek().variables[pila.peek().contadorLinea + 1].linea)
+            {
+                pila.actualizar(pila.peek().contadorLinea + 1)
+                contadorLineas++;
+            }
+        }
+
+
+
+        pila.actualizar(pila.peek().contadorLinea + 1)
+        contadorLineas++;
     }
 
 
@@ -375,7 +376,6 @@ $(function ()
             removeAllChilds("Errores")
             if (data == "") {
                 document.getElementById("Errores").appendChild(document.createTextNode(("value", "Correcto")));
-
             } else {
 
                 document.getElementById("Errores").appendChild(document.createTextNode(("value", data)))
@@ -395,12 +395,8 @@ function processFiles(files)
     reader.onload = function (e) {
 
         editAreaLoader.setValue("textarea_1", e.target.result + "");
-
-
     };
     reader.readAsText(file);
-
-
 }
 function processFiles1(files) {
     var file = files[0];
@@ -426,14 +422,12 @@ function processFiles1(files) {
         $("#frame_textarea_" + contador + "").addClass("frames");
         $("#frame_textarea_" + contador + "").attr("style", "heigth:1000");
         actual = contador;
-
     };
     reader.readAsText(file);
 }
 
 function ambientes(mensaje) {
     console.log(mensaje);
-
     var nombre = "textarea_" + (actual) + "." + contadorSubrutinas;
     var nuevoProyecto = $('<textarea id="textarea_' + (actual) + "." + contadorSubrutinas + '" class="textarea" name="content" cols="80" rows="1"></textarea>');
     $("#container").append(nuevoProyecto);
