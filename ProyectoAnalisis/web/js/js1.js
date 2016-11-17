@@ -89,16 +89,15 @@ $(function ()
             }
             pila.push(new rutina("principal", 0, "textarea_" + actual + " ", 0, arregloaux))
         } else {
-            console.log(pila)
+            //vemos si ya se termina un subrutina 
             if (pila.peek().contadorLinea == pila.peek().variables.length)
             {
+                //si todavia no es la subrutina principa no sea finalizad si no que quitamos de la pila
+                //y borramos los frame que que genero y ademas sus respectivas tablas
                 if (pila.peek().nombre != "textarea_1 ") {
-                    var oe = pila.peek().contadorLinea
-                    //var frame = document.getElementById("frame_" + pila.peek().nombre),
-                    //frameDoc = frame.contentDocument || frame.contentWindow.document;
-                    //frameDoc.documentElement.innerHTML = "";
                     removeAllChilds("tabla_" + pila.peek().nombre);
                     var iframes = document.getElementsByTagName('iframe');
+                    //borramos los frame que genero esa rutina
                     for (var i = 0; i < iframes.length; i++) {
                         if (iframes[i].id.trim() == "frame_" + pila.peek().nombre) {
                             iframes[i].parentNode.removeChild(iframes[i]);
@@ -106,17 +105,79 @@ $(function ()
                     }
                     document.getElementById("Variables").removeChild(document.getElementById("tabla_" + pila.peek().nombre));
                     pila.pop();
-                    console.log(pila)
+
                 } else
                 {
                     alert("Fin")
                     //location.reload();
                 }
             }
+            if (pila.peek().variables[(pila.peek().contadorLinea)].valor == "subrutina")
+            {
+                ambientes(subrutinas[pila.peek().variables[(pila.peek().contadorLinea)].nombre])
+                var nommbreSubrutina = pila.peek().variables[(pila.peek().contadorLinea)].nombre;
+                var arr = pila.peek().variables
+                var index = pila.peek().contadorLinea;
+                var aux2 = pila.peek().variables[(pila.peek().contadorLinea)].linea;
+                var arreglo1 = sacarRutina(arr, nommbreSubrutina, index)
+                arreglo1[0].valor = null
+                arreglo1[arreglo1.length - 1].valor = null
+
+                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
+                pila.push(new rutina(pila.peek().variables[(pila.peek().contadorLinea)].nombreRutina, 0, "textarea_" + actual + "." + contadorSub, 0, arreglo1))
+
+
+                //Colocamos en la tabla los parametos de que vienen en la funcion o procedimiento
+                var tabla = document.createElement("tabla")
+                tabla.setAttribute("id", "tabla_" + pila.peek().nombre);
+                tabla.setAttribute("class", "table table-bordered ambientes");
+
+                var thhead = document.createElement("thead")
+                var trEncabezado = document.createElement("tr")
+                var tdVariable = document.createElement("th")
+                tdVariable.appendChild(document.createTextNode("Variable"))
+                var tdValor = document.createElement("th")
+                tdValor.appendChild(document.createTextNode("Valor"))
+                trEncabezado.appendChild(tdVariable)
+                trEncabezado.appendChild(tdValor)
+                thhead.appendChild(trEncabezado)
+                var thbody = document.createElement("tbody")
+                thbody.setAttribute("id", "bodyTable" + pila.peek().nombre);
+                tabla.appendChild(thhead)
+                tabla.appendChild(thbody)
+                document.getElementById("Variables").appendChild(tabla);
+
+
+                contadorSub++;
+                var cont = 0;
+
+                pila.actualizar1(aux2 - 1)
+                var lineaaux = pila.peek().variables[0].linea;
+                while (pila.peek().variables[cont].linea == lineaaux)
+                {
+                    if (typeof pila.peek().variables[cont].valor != 'undefined' || typeof pila.peek().variables[cont].lista != 'undefined')
+                    {
+                        var tr = document.createElement("tr")
+                        tr.id = pila.peek().variables[cont].nombre
+                        var thNombre = document.createElement("td")
+                        var thValor = document.createElement("td")
+                        thNombre.appendChild(document.createTextNode(pila.peek().variables[cont].nombre));
+                        thValor.appendChild(document.createTextNode(pila.peek().variables[cont].valor));
+                        tr.appendChild(thNombre);
+                        tr.appendChild(thValor);
+                        thbody.appendChild(tr);
+                    }
+                    cont++;
+                }
+                pila.actualizar(cont);
+
+            }
 
             var thbody = document.getElementById("bodyTable" + pila.peek().nombre);
+            //si no contiene la tabla la variable que estamos analizando
             if (!contiene(thbody.children, pila.peek().variables[pila.peek().contadorLinea].nombre) && (typeof pila.peek().variables[pila.peek().contadorLinea].valor != 'undefined' || typeof pila.peek().variables[pila.peek().contadorLinea].lista != 'undefined'))
             {
+
                 var tr = document.createElement("tr")
                 tr.id = pila.peek().variables[pila.peek().contadorLinea].nombre
                 var thNombre = document.createElement("td")
@@ -128,17 +189,16 @@ $(function ()
                 thbody.appendChild(tr);
             } else if (typeof pila.peek().variables[pila.peek().contadorLinea].valor != 'undefined' || typeof pila.peek().variables[pila.peek().contadorLinea].lista != 'undefined')
             {
-                console.log(pila.peek().variables[pila.peek().contadorLinea].nombre)
 
+                //Si Si lo contiene seria modificar ese campo de la tabla por el nuevo valor
                 var tr1 = document.getElementById(pila.peek().variables[pila.peek().contadorLinea].nombre.trim() + "")
-                console.log(tr1);
                 removeAllChilds(pila.peek().variables[pila.peek().contadorLinea].nombre.trim())
-
                 var thNombre1 = document.createElement("td")
                 var thValor1 = document.createElement("td")
                 thNombre1.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].nombre));
                 if (pila.peek().variables[pila.peek().contadorLinea].valor != null)
                 {
+                    console.log(tr1)
                     thValor1.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].valor));
                 } else
                 {
@@ -146,97 +206,36 @@ $(function ()
                         thValor1.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].lista));
                     }
                 }
-
                 tr1.appendChild(thNombre1);
                 tr1.appendChild(thValor1);
+               
             }
-        }
-        var codigo = editAreaLoader.getValue(pila.peek().nombre.trim());
-        codigo = codigo.split('\n')
-        if (pila.peek().variables[(pila.peek().contadorLinea)].valor == "subrutina")
-        {
-
-            ambientes(subrutinas[pila.peek().variables[(pila.peek().contadorLinea)].nombre])
-            var nom = pila.peek().variables[(pila.peek().contadorLinea)].nombre;
-            var arr = pila.peek().variables
-            var index = pila.peek().contadorLinea;
-            var aux2 = pila.peek().variables[(pila.peek().contadorLinea)].linea;
-            var arreglo1 = sacarRutina(arr, nom, index)
-            arreglo1[0].valor = null
-            arreglo1[arreglo1.length - 1].valor = null
-            console.log(pila.peek().variables)
-            document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
-            pila.push(new rutina(pila.peek().variables[(pila.peek().contadorLinea)].nombreRutina, 0, "textarea_" + actual + "." + contadorSub, 0, arreglo1))
 
 
-            var tabla = document.createElement("tabla")
-            tabla.setAttribute("id", "tabla_" + pila.peek().nombre);
-            tabla.setAttribute("class", "table table-bordered ambientes");
 
-            var thhead = document.createElement("thead")
-            var trEncabezado = document.createElement("tr")
-            var tdVariable = document.createElement("th")
-            tdVariable.appendChild(document.createTextNode("Variable"))
-            var tdValor = document.createElement("th")
-            tdValor.appendChild(document.createTextNode("Valor"))
-            trEncabezado.appendChild(tdVariable)
-            trEncabezado.appendChild(tdValor)
-            thhead.appendChild(trEncabezado)
-            var thbody = document.createElement("tbody")
-            thbody.setAttribute("id", "bodyTable" + pila.peek().nombre);
-            tabla.appendChild(thhead)
-            tabla.appendChild(thbody)
-            document.getElementById("Variables").appendChild(tabla);
-
-            contadorSub++;
-            var cont = 0;
-            console.log(pila.peek());
-            pila.actualizar1(aux2 - 1)
-            var lineaaux = pila.peek().variables[0].linea;
-            while (pila.peek().variables[cont].linea == lineaaux)
+            //pintamos el paso a paso color azul
+            if (pila.peek().contadorLinea == 0)
             {
+                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea ].linea - pila.peek().aux);
+            } else
+            {
+                document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
+            }
 
-                if ( typeof pila.peek().variables[cont].valor != 'undefined' || typeof pila.peek().variables[cont].lista != 'undefined')
+            if (pila.peek().variables.length < pila.peek().contadorLinea + 1) {
+                console.log("aaa" + typeof pila.peek().variables[pila.peek().contadorLinea].nombre);
+                if (pila.peek().variables[pila.peek().contadorLinea].linea == pila.peek().variables[pila.peek().contadorLinea + 1].linea)
                 {
-                    var tr = document.createElement("tr")
-                    tr.id = pila.peek().variables[cont].nombre
-                    var thNombre = document.createElement("td")
-                    var thValor = document.createElement("td")
-                    thNombre.appendChild(document.createTextNode(pila.peek().variables[cont].nombre));
-                    thValor.appendChild(document.createTextNode(pila.peek().variables[cont].valor));
-                    tr.appendChild(thNombre);
-                    tr.appendChild(thValor);
-                    thbody.appendChild(tr);
+                    console.log("Holal")
+                    pila.actualizar(pila.peek().contadorLinea + 1)
+                    contadorLineas++;
                 }
-                cont++;
-
-
-
             }
-            pila.actualizar(cont - 1);
-        }
-        if (pila.peek().contadorLinea == 0)
-        {
-            document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea ].linea - pila.peek().aux);
-        } else
-        {
-            document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
-        }
-        if (pila.peek().variables.length < pila.peek().contadorLinea + 1) {
-            console.log("aaa" + typeof pila.peek().variables[pila.peek().contadorLinea].nombre);
-            if (pila.peek().variables[pila.peek().contadorLinea].linea == pila.peek().variables[pila.peek().contadorLinea + 1].linea)
-            {
-                pila.actualizar(pila.peek().contadorLinea + 1)
-                contadorLineas++;
-            }
-        }
 
-
-
-        pila.actualizar(pila.peek().contadorLinea + 1)
-        contadorLineas++;
+            pila.actualizar(pila.peek().contadorLinea + 1)
+            contadorLineas++;
+        }
     }
-
 
     $('#tabla').click(function (e) {
 
