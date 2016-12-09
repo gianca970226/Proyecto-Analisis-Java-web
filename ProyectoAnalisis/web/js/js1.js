@@ -1,14 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-var Ambiente = function (nombre, valor, linea)
-{
-    this.nombre = nombre;
-    this.valor = valor;
-    this.linea = linea;
-}
 var desdeNodo = 0;
 var banderaFinal = false;
 var contador = 1;
@@ -27,78 +16,7 @@ var edges;
 var contSub = 2;
 var network;
 
-function activar()
-{
-    $('li.noactivo').click(function () {
-        $('li.noactivo').removeClass("active");
-        $(this).addClass("active");
-    });
-}
-function removeAllChilds(a)
-{
-    console.log(a)
-    var a = document.getElementById(a);
-    while (a.hasChildNodes())
-        a.removeChild(a.firstChild);
-}
-function removeAllFrame()
-{
-    var iframes = document.getElementsByTagName('iframe');
-    for (var i = 0; i < iframes.length; i++) {
-        iframes[i].parentNode.removeChild(iframes[i]);
-    }
-}
-function mostrarTabla(id)
-{
-    console.log(id)
 
-    var a = document.getElementById("Variables");
-    var tablas = a.children;
-
-    for (var i = 0; i < tablas.length; i++) {
-
-        if (tablas[i].id.trim() == id.trim())
-        {
-            document.getElementById(tablas[i].id.trim()).style.display = "block";
-        } else
-        {
-            document.getElementById(tablas[i].id.trim()).style.display = "none";
-        }
-    }
-}
-function arbol()
-{
-    // create an array with nodes
-    nodes = new vis.DataSet([
-        {id: 1, label: 'Principal', color: '#FFFF00'},
-        //  {id: 2, label: 'Principal', color: '#FFFF00'},
-    ]);
-
-    // create an array with edges
-    edges = new vis.DataSet();
-    var container = document.getElementById('mynetwork');
-    var data = {
-        nodes: nodes,
-        edges: edges
-    };
-    var options = {};
-    network = new vis.Network(container, data, options);
-
-}
-
-function pintarNodo(id, color)
-{
-    for (var i = 1; i <= nodes.length; i++) {
-        if (nodes._data[i].id == id)
-        {
-            nodes._data[i].color = color;
-            break;
-        }
-
-    }
-    nodes.update([{id: id, color: {background: color}}]);
-
-}
 $(function ()
 {
     arbol();
@@ -547,4 +465,75 @@ function ambientes(mensaje) {
     });
     editAreaLoader.setValue(nombre, mensaje + "");
     contadorSubrutinas++;
+}
+function activar()
+{
+    $('li.noactivo').click(function () {
+        $('li.noactivo').removeClass("active");
+        $(this).addClass("active");
+    });
+}
+function removeAllChilds(a)
+{
+    console.log(a)
+    var a = document.getElementById(a);
+    while (a.hasChildNodes())
+        a.removeChild(a.firstChild);
+}
+function removeAllFrame()
+{
+    var iframes = document.getElementsByTagName('iframe');
+    for (var i = 0; i < iframes.length; i++) {
+        iframes[i].parentNode.removeChild(iframes[i]);
+    }
+}
+function mostrarTabla(id)
+{
+    console.log(id)
+
+    var a = document.getElementById("Variables");
+    var tablas = a.children;
+
+    for (var i = 0; i < tablas.length; i++) {
+
+        if (tablas[i].id.trim() == id.trim())
+        {
+            document.getElementById(tablas[i].id.trim()).style.display = "block";
+        } else
+        {
+            document.getElementById(tablas[i].id.trim()).style.display = "none";
+        }
+    }
+}
+/*Esta funcion me crea la estructura de los ambientes en forma de grafo
+ como inicio le mandamos un nodo que es el principal del algotrimo de entrada 
+ */
+function arbol()
+{
+    // creamos  un arreglo de nodos 
+    nodes = new vis.DataSet([
+        {id: 1, label: 'Principal', color: '#FFFF00'},
+    ]);
+    edges = new vis.DataSet();
+    var container = document.getElementById('mynetwork');
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {};
+    network = new vis.Network(container, data, options);
+}
+/*pintarNodo nos pide un id que es el id del nodo de la estructura del arbol de ejecucion
+ y un color que es el color que se va actualizar ese nodo*/
+function pintarNodo(id, color)
+{
+    for (var i = 1; i <= nodes.length; i++) {
+        if (nodes._data[i].id == id)
+        {
+            nodes._data[i].color = color;
+            break;
+        }
+
+    }
+    nodes.update([{id: id, color: {background: color}}]);
 }
