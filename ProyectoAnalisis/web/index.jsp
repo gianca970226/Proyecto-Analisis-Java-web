@@ -22,10 +22,12 @@
             });
             $("#line_number").attr('onclick', "breakpoint()");
         </script>
+        <script src="js/googleAnalytics.js"></script>
+        <script type="text/javascript" src="js/vis.js"></script>
+        <link href="css/vis-network.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="css/estilo.css" >
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" >
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
     </head>
     <body>
         <nav class="col-xs-12">
@@ -35,7 +37,8 @@
              <button id="mover">Mover Archivos</button>-->
             <button id="run"><span class="glyphicon glyphicon-play"></span></button>
             <button id="step"><span class="glyphicon glyphicon-download"></span>
-            </button>
+                <button id="auto"><span class="glyphicon glyphicon-asterisk"></span>
+                </button>
         </nav>
         <div class="col-xs-12">
             <div id="cssmenu"  >
@@ -67,6 +70,10 @@
         <div class="col-xs-12">
             <label id="Errores">Eroores</label>
         </div>
+
+
+
+        <div id="mynetwork" class="col-xs-12" style="width: 100%"></div>
 
     </body>
 </html>
