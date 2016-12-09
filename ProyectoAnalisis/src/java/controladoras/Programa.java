@@ -11,45 +11,63 @@ x=x+5;
 agregar("x",Integer.toString(x),4);
 int z=34*2;
 agregar("z",Integer.toString(z),5);
-agregar("oe","subrutina",6);
+oe1(3);
+
+agregar(null,null,6);
+agregar("oe","subrutina",7);
+
+}
+
+
+public void oe1 (int x) {
+agregar("oe1","subrutina",8);
+agregar("x",Integer.toString(x),8);
+x=x+5;
+agregar("x",Integer.toString(x),10);
+int z=34*2;
+agregar("z",Integer.toString(z),11);
+agregar("oe1","subrutina",12);
 
 }
 
 public void principal(){
 try{
 int [] a = {2,1,20,17};
-agregarLista("a",a,9);
+agregarLista("a",a,15);
 int lon = a.length;
-agregar("lon",Integer.toString(lon),10);
+agregar("lon",Integer.toString(lon),16);
 int i = 1;
-agregar("i",Integer.toString(i),11);
-agregar(null,null,12);
+agregar("i",Integer.toString(i),17);
+agregar(null,null,18);
 for(i=1;i<lon;i++){
-agregar("i",Integer.toString(i),12);
+agregar("i",Integer.toString(i),18);
 int x=a[i];
-agregar("x",Integer.toString(x),14);
+agregar("x",Integer.toString(x),20);
 int j=i-1;
-agregar("j",Integer.toString(j),15);
-agregar(null,null,16);
+agregar("j",Integer.toString(j),21);
+agregar(null,null,22);
 while(j >= 0 && x < a[j]){
-agregar(null,null,16);
+agregar(null,null,22);
 int temp=j+1;
-agregar("temp",Integer.toString(temp),18);
+agregar("temp",Integer.toString(temp),24);
 a[temp]=a[j];
-agregarLista("a",a,19);
+agregarLista("a",a,25);
 j=j-1;
-agregar("j",Integer.toString(j),20);
+agregar("j",Integer.toString(j),26);
 }
 int aux=j+1;
-agregar("aux",Integer.toString(aux),22);
+agregar("aux",Integer.toString(aux),28);
 a[aux]=x;
-agregarLista("a",a,23);
+agregarLista("a",a,29);
 oe(4);
 
-agregar(null,null,24);
+agregar(null,null,30);
 int z = 0;
-agregar("z",Integer.toString(z),25);
+agregar("z",Integer.toString(z),31);
 }
+oe1(1);
+
+agregar(null,null,33);
 
 }catch(Exception e)
 {

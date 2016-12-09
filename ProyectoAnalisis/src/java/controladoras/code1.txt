@@ -3,6 +3,12 @@ procedure oe (number x)
 begin
 x<-x+5
 z<-34*2
+call oe1(3)
+end
+procedure oe1 (number x)
+begin
+x<-x+5
+z<-34*2
 end
 enddeclare
 begin
@@ -24,7 +30,13 @@ a[aux]<-x
 call oe(4)
 z<-0
 end
+call oe1(1)
 end
+
+
+
+
+
 
 
 

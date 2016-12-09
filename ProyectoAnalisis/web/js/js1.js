@@ -9,6 +9,8 @@ var Ambiente = function (nombre, valor, linea)
     this.valor = valor;
     this.linea = linea;
 }
+var desdeNodo = 0;
+var banderaFinal = false;
 var contador = 1;
 var actual = 1;
 var texto;
@@ -20,6 +22,11 @@ var contadorSubrutinas = 0;
 var contadorSub = 0;
 var pila;
 var objetoAux = new Array();
+var nodes;
+var edges;
+var contSub = 2;
+var network;
+
 function activar()
 {
     $('li.noactivo').click(function () {
@@ -41,12 +48,65 @@ function removeAllFrame()
         iframes[i].parentNode.removeChild(iframes[i]);
     }
 }
+function mostrarTabla(id)
+{
+    console.log(id)
+
+    var a = document.getElementById("Variables");
+    var tablas = a.children;
+
+    for (var i = 0; i < tablas.length; i++) {
+
+        if (tablas[i].id.trim() == id.trim())
+        {
+            document.getElementById(tablas[i].id.trim()).style.display = "block";
+        } else
+        {
+            document.getElementById(tablas[i].id.trim()).style.display = "none";
+        }
+    }
+}
+function arbol()
+{
+    // create an array with nodes
+    nodes = new vis.DataSet([
+        {id: 1, label: 'Principal', color: '#FFFF00'},
+        //  {id: 2, label: 'Principal', color: '#FFFF00'},
+    ]);
+
+    // create an array with edges
+    edges = new vis.DataSet();
+    var container = document.getElementById('mynetwork');
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {};
+    network = new vis.Network(container, data, options);
+
+}
+
+function pintarNodo(id, color)
+{
+    for (var i = 1; i <= nodes.length; i++) {
+        if (nodes._data[i].id == id)
+        {
+            nodes._data[i].color = color;
+            break;
+        }
+
+    }
+    nodes.update([{id: id, color: {background: color}}]);
+
+}
 $(function ()
 {
+    arbol();
     var listener = new window.keypress.Listener();
     listener.simple_combo("i", function () {
         step()
     });
+
     $.post("Controladora", {
         operacion: "leer",
         texto: texto
@@ -57,6 +117,12 @@ $(function ()
     {
         alert("Error en la operacion");
     });
+    $('#auto').click(auto);
+    function auto()
+    {
+        alert("Hols")
+    }
+
     $('#step').click(step);
     function step() {
         if (bandera)
@@ -87,8 +153,11 @@ $(function ()
                     arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].valor, resultados.Variables[i].linea))
                 }
             }
-            pila.push(new rutina("principal", 0, "textarea_" + actual + " ", 0, arregloaux))
+            pila.push(new rutina("principal", 0, "textarea_" + actual + " ", 0, arregloaux, 1))
         } else {
+            console.log(pila);
+            mostrarTabla("tabla_" + pila.peek().nombre)
+            pintarNodo(pila.peek().id, "#00ff00");
             //vemos si ya se termina un subrutina 
             if (pila.peek().contadorLinea == pila.peek().variables.length)
             {
@@ -104,11 +173,13 @@ $(function ()
                         }
                     }
                     document.getElementById("Variables").removeChild(document.getElementById("tabla_" + pila.peek().nombre));
+                    pintarNodo(pila.peek().id, "#ff0000");
                     pila.pop();
 
                 } else
                 {
                     alert("Fin")
+                    banderaFinal = true;
                     //location.reload();
                 }
             }
@@ -124,11 +195,13 @@ $(function ()
                 arreglo1[arreglo1.length - 1].valor = null
 
                 document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
-                pila.push(new rutina(pila.peek().variables[(pila.peek().contadorLinea)].nombreRutina, 0, "textarea_" + actual + "." + contadorSub, 0, arreglo1))
+                desdeNodo = pila.peek().id;
+                pintarNodo(pila.peek().id, "#00ffff");
+                pila.push(new rutina(pila.peek().variables[(pila.peek().contadorLinea)].nombreRutina, 0, "textarea_" + actual + "." + contadorSub, 0, arreglo1, contSub))
 
 
                 //Colocamos en la tabla los parametos de que vienen en la funcion o procedimiento
-                var tabla = document.createElement("tabla")
+                var tabla = document.createElement("table")
                 tabla.setAttribute("id", "tabla_" + pila.peek().nombre);
                 tabla.setAttribute("class", "table table-bordered ambientes");
 
@@ -153,15 +226,24 @@ $(function ()
 
                 pila.actualizar1(aux2 - 1)
                 var lineaaux = pila.peek().variables[0].linea;
+                var parametros = "";
                 while (pila.peek().variables[cont].linea == lineaaux)
                 {
                     if (typeof pila.peek().variables[cont].valor != 'undefined' || typeof pila.peek().variables[cont].lista != 'undefined')
                     {
                         var tr = document.createElement("tr")
                         tr.id = pila.peek().variables[cont].nombre
+                        if (cont != 0) {
+                            parametros += pila.peek().variables[cont].valor + ","
+                            parametros += pila.peek().variables[cont].nombre
+                        } else
+                        {
+                            parametros = pila.peek().variables[cont].nombre + ",";
+                        }
                         var thNombre = document.createElement("td")
                         var thValor = document.createElement("td")
                         thNombre.appendChild(document.createTextNode(pila.peek().variables[cont].nombre));
+
                         thValor.appendChild(document.createTextNode(pila.peek().variables[cont].valor));
                         tr.appendChild(thNombre);
                         tr.appendChild(thValor);
@@ -169,7 +251,20 @@ $(function ()
                     }
                     cont++;
                 }
-                pila.actualizar(cont);
+                //agregamos el nuevo nodo de la subrutina 
+                nodes.add({id: contSub, label: parametros});
+                contSub++;
+                try {
+                    edges.update({
+                        id: contSub,
+                        from: desdeNodo,
+                        to: pila.peek().id,
+                    });
+                } catch (err) {
+                    alert(err);
+                }
+                pila.actualizar(cont - 1);
+
 
             }
 
@@ -191,8 +286,22 @@ $(function ()
             {
 
                 //Si Si lo contiene seria modificar ese campo de la tabla por el nuevo valor
-                var tr1 = document.getElementById(pila.peek().variables[pila.peek().contadorLinea].nombre.trim() + "")
-                removeAllChilds(pila.peek().variables[pila.peek().contadorLinea].nombre.trim())
+
+                var tr1;
+
+                var arreglo = thbody.childNodes;
+                var i;
+                for (i = 0; i < arreglo.length; i++) {
+                    if (arreglo[i].id == pila.peek().variables[pila.peek().contadorLinea].nombre.trim())
+                    {
+                        console.log(arreglo[i])
+
+                        tr1 = arreglo[i];
+                        tr1.innerHTML = '';
+                        break;
+                    }
+
+                }
                 var thNombre1 = document.createElement("td")
                 var thValor1 = document.createElement("td")
                 thNombre1.appendChild(document.createTextNode(pila.peek().variables[pila.peek().contadorLinea].nombre));
@@ -208,7 +317,7 @@ $(function ()
                 }
                 tr1.appendChild(thNombre1);
                 tr1.appendChild(thValor1);
-               
+
             }
 
 
