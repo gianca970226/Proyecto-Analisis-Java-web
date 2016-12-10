@@ -82,10 +82,8 @@ $(function ()
                 if (typeof resultados.Variables[i].lista != 'undefined')
                 {
                     arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].lista.toString(), resultados.Variables[i].linea))
-                } else if (typeof resultados.Variables[i].cola != 'undefined') {
-                    arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].cola.toString(), resultados.Variables[i].linea))
-                } else if (typeof resultados.Variables[i].pila != 'undefined') {
-                    arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].pila.toString(), resultados.Variables[i].linea))
+                } else if (typeof resultados.Variables[i].pilaYcola != 'undefined') {
+                    arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].pilaYcola.toString(), resultados.Variables[i].linea))
                 } else {
                     arregloaux.push(new Ambiente(resultados.Variables[i].nombre, resultados.Variables[i].valor, resultados.Variables[i].linea))
                 }
@@ -157,8 +155,9 @@ $(function ()
                 thhead.appendChild(trEncabezado)
                 document.getElementById("Variables").lastChild.appendChild(thhead);
                 var thbody = document.createElement("tbody")
+                
                 for (i = 0; i < pila.peek().variables.length; i++) {
-
+                    
                     var tr = document.createElement("tr");
                     tr.className = "variables";
                     if ((i + 1) <= pila.peek().contadorLinea) {
@@ -205,8 +204,16 @@ $(function ()
                 document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
                 pila.push(new rutina(pila.peek().variables[(pila.peek().contadorLinea)].nombreRutina, 0, "textarea_" + actual + "." + contadorSub, 0, arreglo1))
                 contadorSub++;
+                var cont=0;
+                
+                console.log(pila.peek());
                 pila.actualizar1(aux2 - 1)
-
+                var lineaaux=pila.peek().variables[0].linea;
+                while(pila.peek().variables[cont].linea==lineaaux)
+                {
+                    cont++;
+                }
+                pila.actualizar(cont-1);
             }
             if (pila.peek().contadorLinea == 0)
             {
@@ -215,9 +222,11 @@ $(function ()
             {
                 document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.step(pila.peek().variables[(pila.peek().contadorLinea)].linea - pila.peek().aux, pila.peek().variables[pila.peek().contadorLinea - 1].linea - pila.peek().aux);
             }
-            if (pila.peek().variables.length < pila.peek().contadorLinea + 1) {
-                if (pila.peek().variables[pila.peek().contadorLinea].linea == pila.peek().variables[pila.peek().contadorLinea + 1].linea)
+            if (typeof pila.peek().variables[pila.peek().contadorLinea+1].linea!='undefined' ) {
+                console.log("aaa"+typeof pila.peek().variables[pila.peek().contadorLinea].nombre);
+                if (typeof pila.peek().variables[pila.peek().contadorLinea].nombre == 'undefined' && pila.peek().variables[pila.peek().contadorLinea].linea == pila.peek().variables[pila.peek().contadorLinea + 1].linea)
                 {
+                    console.log("hola");
                     pila.actualizar(pila.peek().contadorLinea + 1)
                     contadorLineas++;
                 }
@@ -364,7 +373,14 @@ $(function ()
         }, function (data) {
 
             removeAllChilds("Errores")
-            document.getElementById("Errores").appendChild(document.createTextNode(("value", data)));
+            if (data == "") {
+                document.getElementById("Errores").appendChild(document.createTextNode(("value", "Correcto")));
+
+            } else {
+
+                document.getElementById("Errores").appendChild(document.createTextNode(("value", data)))
+            }
+            ;
         }).fail(function ()
         {
             alert("Error en la operacion");
@@ -372,7 +388,21 @@ $(function ()
     }
 }
 );
-function processFiles(files) {
+function processFiles(files)
+{
+    var file = files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+
+        editAreaLoader.setValue("textarea_1", e.target.result + "");
+
+
+    };
+    reader.readAsText(file);
+
+
+}
+function processFiles1(files) {
     var file = files[0];
     var reader = new FileReader();
     reader.onload = function (e) {

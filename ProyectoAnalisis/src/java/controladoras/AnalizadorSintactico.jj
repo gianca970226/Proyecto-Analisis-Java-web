@@ -96,10 +96,11 @@ void SUBRUTINA():
         {
             
             generar.escribirFunction(retorno.image, id1.image,parametros);
-            generar.escribirParametros(lfunction);
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
+            generar.escribirParametros(lfunction);
+            
             
         }
         E()
@@ -124,10 +125,11 @@ void SUBRUTINA():
         )*<PARENTESISCERRADO><BEGIN>
         {
             generar.escribirProcedure(id1.image,parametros);
-            generar.escribirParametros(lprocedure);
             valores[0]=id1.image;
             valores[1]="subrutina";
             generar.escribirLog(id1,valores);
+            generar.escribirParametros(lprocedure);
+            
         }
         E()id3=<END>
         {
@@ -233,7 +235,7 @@ void WHILE():
         E()
 }
 String CONDICION():
-{Token n=new Token(); String condicion="";String [] valor1;String [] valor2;}
+{Token n=new Token(); String condicion="";String [] valor1;String [] valor2; String [] valor3=null; String [] valor4=null;}
 {
 	n= <BOLEANO>condicion=OTRACONDICION()
         {
@@ -243,9 +245,25 @@ String CONDICION():
         {
             return ("!"+ n.image+" "+ condicion); 
         }
-        | valor1=VALOR() n=<OPERADORR> valor2=VALOR() condicion=OTRACONDICION()
+        | valor1=VALOR()(<CORCHETEABIERTO>valor3=VALOR()<CORCHETECERRADO>)? n=<OPERADORR> valor2=VALOR()(<CORCHETEABIERTO>valor4=VALOR()<CORCHETECERRADO>)? condicion=OTRACONDICION()
         {
-            return valor1[0]+" "+n.image+" "+valor2[0]+condicion;
+            if (valor3==null && valor4==null)
+            {
+               return valor1[0]+" "+n.image+" "+valor2[0]+condicion; 
+            }
+            else if (valor3==null && valor4!=null)
+            {
+                return valor1[0]+" "+n.image+" "+valor2[0]+"["+valor4[0]+"]"+condicion;
+            }
+            else if (valor3!=null && valor4==null)
+            {
+                return valor1[0]+"["+valor3[0]+"]"+" "+n.image+" "+valor2[0]+condicion;
+            }
+            else
+            {
+                return valor1[0]+"["+valor3[0]+"]"+" "+n.image+" "+valor2[0]+"["+valor4[0]+"]"+condicion;
+            }
+            
         }
 }
 String OTRACONDICION():
@@ -571,6 +589,7 @@ void OPERACION4(Token id,String []valoresp1, String []valoresp2,String []valores
         {
             String tipo=generar.buscarVariable(id1.image);
             generar.escribirVariableAccesoArreglo(tipo, id1.image, valores2[0],valores3[0]);
+            tipo=generar.buscarVariable(id1.image);
             String []valores6=new String[2];
             valores6[0]=id1.image;
             valores6[1]=tipo;

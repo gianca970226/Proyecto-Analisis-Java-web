@@ -3,83 +3,37 @@ import com.google.gson.Gson;
 import java.util.*;
 public class Programa {
 LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();
-String resultado="";
-public int funcion1 (int y) {
-agregar("y",Integer.toString(y),2);
-agregar("funcion1","subrutina",2);
-int s=y*5;
-agregar("s",Integer.toString(s),4);
-int x = 4;
-agregar("x",Integer.toString(x),5);
-funcion(5);
-
-agregar(null,null,6);
-agregar("funcion1","subrutina",7);
-return s;
-}
-
-
-public void funcion (int y) {
-agregar("y",Integer.toString(y),9);
-agregar("funcion","subrutina",9);
-int s=y*5;
-agregar("s",Integer.toString(s),11);
-agregar("funcion","subrutina",12);
-
-}
-
-public void principal(){
+String resultado="";public void principal(){
 try{
-int x = 2;
-agregar("x",Integer.toString(x),15);
-int [] a = {2,8,10};
-agregarLista("a",a,16);
-int [] b = {10,5};
-agregarLista("b",b,17);
-int y= b[1]*a[0];
-agregar("y",Integer.toString(y),18);
-a[1] = b[1]*a[0];
-agregarLista("a",a,19);
-int z=x*a[0];
-agregar("z",Integer.toString(z),20);
-Stack<Object>f= new Stack<Object>();
-agregarPila("f",f,21);
-f.add(x);
-agregarPila("f",f,22);
-int i=Integer.parseInt(f.pop().toString());
-agregar("i",Integer.toString(i),23);
-int p=(int) Math.floor(y/z);
-agregar("p",Integer.toString(p),24);
-a[1] = a[1]+z;
-agregarLista("a",a,25);
-a[x]=z;
-agregarLista("a",a,26);
-a[x]=z*5;
-agregarLista("a",a,27);
-a[1]=z+y;
-agregarLista("a",a,28);
-int q = a.length;
-agregar("q",Integer.toString(q),29);
-agregar(null,null,30);
-while(x < z){
-agregar(null,null,30);
-x=x+1;
-agregar("x",Integer.toString(x),32);
+int [] a = {5,2,20,17};
+agregarLista("a",a,4);
+int lon = a.length;
+agregar("lon",Integer.toString(lon),5);
+int i = 1;
+agregar("i",Integer.toString(i),6);
+agregar(null,null,7);
+for(i=1;i<lon;i++){
+agregar("i",Integer.toString(i),7);
+int x=a[i];
+agregar("x",Integer.toString(x),9);
+int j=i-1;
+agregar("j",Integer.toString(j),10);
+agregar(null,null,11);
+while(j >= 0 && x < a[j]){
+agregar(null,null,11);
+int temp=j+1;
+agregar("temp",Integer.toString(temp),13);
+a[temp]=a[j];
+agregarLista("a",a,14);
+j=j-1;
+agregar("j",Integer.toString(j),15);
 }
-a[2]=funcion1(x);
-agregarLista("a",a,34);
-agregar(null,null,35);
-if(x < z){
-agregar(null,null,35);
-int t = x;
-agregar("t",Integer.toString(t),37);
-t=10*5;
-agregar("t",Integer.toString(t),38);
-}
-else{
-agregar(null,null,40);
-int t = x;
-agregar("t",Integer.toString(t),42);
+int aux=j+1;
+agregar("aux",Integer.toString(aux),17);
+a[aux]=x;
+agregarLista("a",a,18);
+int z = 0;
+agregar("z",Integer.toString(z),19);
 }
 
 }catch(Exception e)

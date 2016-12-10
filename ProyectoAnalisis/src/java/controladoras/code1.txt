@@ -1,47 +1,42 @@
 declare
-function number funcion1(number y)
-begin
-s<-y*5
-x<-4
-call funcion(5)
-return s
-end 
-procedure funcion(number y)
-begin
-s<-y*5
-end 
 enddeclare
 begin
-x<-2
-a<-[2,8,10]
-b<-[10,5]
-y<-b[1]*a[0]
-a[1]<-b[1]*a[0]
-z<-x*a[0]
-f<-stack()
-f.add(x)
-i<-f.pop()
-p<-!y/z!
-a[1]<-a[0]+z
-a[x]<-z
-a[x]<-z*5
-a[1]<-z+y
-q<-a.length
-while(x<z) do
+a<-[2,5,20,17]
+lon<-a.length
+i<-1
+for (i<-1 to lon) do
 begin
-x<-x+1
-end
-a[2]<-call funcion1(x)
-if (x<z) then
+x<-a[i]
+j<-i-1
+while (j>=0 and x<a[j]) do
 begin
-t<-x
-t<-10*5
+temp<-j+1
+a[temp]<-a[j]
+j<-j-1
 end
-else
-begin
-t<-x
+aux<-j+1
+a[aux]<-x
+z<-0
 end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
