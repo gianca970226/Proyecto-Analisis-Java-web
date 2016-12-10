@@ -10,8 +10,10 @@
     <head>
         <title>EditArea Test</title>
         <script language="javascript" type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/ambiente.js"></script>
         <script type="text/javascript" src="js/js1.js"></script>
         <script type="text/javascript" src="js/stack.js"></script>
+
         <script type="text/javascript" src="js/keypress.js"></script>
         <script language="javascript" type="text/javascript" src="edit_area/edit_area_loader.js"></script>
         <script language="javascript" type="text/javascript">
