@@ -3,7 +3,7 @@ procedure oe (number x,number y)
 begin
 x<-x+5
 z<-34*2
-call oe1(3)
+call oe1(5)
 end
 procedure oe1 (number x)
 begin
@@ -27,11 +27,20 @@ j<-j-1
 end
 aux<-j+1
 a[aux]<-x
-call oe()
+call oe(2,3)
 z<-0
 end
-call oe1(1)
+call oe1(5)
 end
+
+
+
+
+
+
+
+
+
 
 
 

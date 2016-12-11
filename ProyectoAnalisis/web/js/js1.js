@@ -52,6 +52,7 @@ $(function ()
             /// console.log(puntoCorte[15]);
             sacarBreakpoint();
             bandera = true;
+            document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.bandera = false;
         } else {
             document.getElementById("frame_" + pila.peek().nombre.trim()).contentWindow.bandera = false;
             mostrarTabla("tabla_" + pila.peek().nombre)
