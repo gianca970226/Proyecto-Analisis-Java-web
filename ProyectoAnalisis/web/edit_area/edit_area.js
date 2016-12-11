@@ -1,11 +1,28 @@
 
 
 var lineas = new Object();
+var bandera = false;
+var listaBreakPoint = new Array();
 function oe() {
     console.log("asd")
 }
+/* 
+ en el array que entra como parametro buscamos i ya existe el valor retorna
+ true si lo encuentra o false si no esta el elemento
+ */
+function contieneArray(valor, array)
+{
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] == valor)
+        {
+            return true
+        }
+    }
+    return false;
+}
 function pintarPuntos(actual)
 {
+
     for (x in lineas)
     {
         if (x != actual) {
@@ -14,10 +31,10 @@ function pintarPuntos(actual)
         }
     }
 }
-;
+
 function step(idLine, idanterior) {
 
-    console.log(idLine + '-' + idanterior)
+    //  console.log(idLine + '-' + idanterior)
 
     var linea = document.getElementById("line_" + idLine)
     if (idLine != idanterior) {
@@ -38,7 +55,7 @@ function step(idLine, idanterior) {
         pintarPuntos(idLine)
     } else
     {
-      if (linea.getAttribute('style') == "background-color:red")
+        if (linea.getAttribute('style') == "background-color:red")
         {
             linea.setAttribute('style', 'background-color:yellow')
 
@@ -50,22 +67,23 @@ function step(idLine, idanterior) {
         pintarPuntos(idLine)
     }
 }
-;
+
 function breakPoint(idLine) {
+    if (bandera && contieneArray(idLine, listaBreakPoint)) {
+        var linea = document.getElementById("line_" + idLine)
 
-    var linea = document.getElementById("line_" + idLine)
-
-    if (linea.getAttribute('style') == null || linea.getAttribute('style') == "background-color:white")
-    {
-        linea.setAttribute('style', 'background-color:red')
-        lineas[idLine] = idLine;
-    } else
-    {
-        delete lineas[idLine];
-        linea.setAttribute('style', 'background-color:white')
+        if (linea.getAttribute('style') == null || linea.getAttribute('style') == "background-color:white")
+        {
+            linea.setAttribute('style', 'background-color:red')
+            lineas[idLine] = idLine;
+        } else
+        {
+            delete lineas[idLine];
+            linea.setAttribute('style', 'background-color:white')
+        }
     }
 }
-;
+
 function EditArea() {
 
 

@@ -1,7 +1,18 @@
 declare
+procedure oe (number x,number y)
+begin
+x<-x+5
+z<-34*2
+call oe1(3)
+end
+procedure oe1 (number x)
+begin
+x<-x+5
+z<-34*2
+end
 enddeclare
 begin
-a<-[2,5,20,17]
+a<-[2,1,20,17]
 lon<-a.length
 i<-1
 for (i<-1 to lon) do
@@ -16,9 +27,31 @@ j<-j-1
 end
 aux<-j+1
 a[aux]<-x
+call oe()
 z<-0
 end
+call oe1(1)
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
