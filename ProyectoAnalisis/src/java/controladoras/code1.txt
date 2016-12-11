@@ -1,5 +1,5 @@
 declare
-procedure oe (number x)
+procedure oe (number x,number y)
 begin
 x<-x+5
 z<-34*2
@@ -27,11 +27,25 @@ j<-j-1
 end
 aux<-j+1
 a[aux]<-x
-call oe(4)
+call oe()
 z<-0
 end
 call oe1(1)
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

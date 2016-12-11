@@ -75,7 +75,7 @@
         </div>
 
         <div class="col-xs-12">
-            <label id="Errores">Eroores</label>
+            <label id="Errores" style="color: red">Eroores</label>
         </div>
         <div class="col-xs-8">
             <div id="mynetwork" class="col-xs-12" ></div>

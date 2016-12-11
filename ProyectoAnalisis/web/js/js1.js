@@ -140,17 +140,28 @@ $(function ()
                     {
 
                         if (cont != 0) {
-                            parametros += pila.peek().variables[cont].valor + ","
-                            parametros += pila.peek().variables[cont].nombre
+                            if (cont == 1)
+                            {
+                                parametros += pila.peek().variables[cont].nombre + "="
+                                parametros += pila.peek().variables[cont].valor
+
+                            } else
+                            {
+                                parametros += "," + pila.peek().variables[cont].nombre + "="
+                                parametros += pila.peek().variables[cont].valor
+                            }
+
                         } else
                         {
-                            parametros = pila.peek().variables[cont].nombre + ",";
+                            parametros = pila.peek().variables[cont].nombre + "->(";
                         }
+
                         var tr = crearTrVariable(pila.peek().variables[cont].nombre, pila.peek().variables[cont].valor)
                         thbody.appendChild(tr);
                     }
                     cont++;
                 }
+                parametros += ")"
                 //fin de la busca de parametros
                 //agregamos el nuevo nodo de la subrutina 
                 agregarNodo(contadorSubrutinas + 1, parametros, desdeNodo, pila.peek().id);
@@ -463,7 +474,20 @@ $(function ()
         return objetoAux
     }
 
+    function lineaCodigo(linea)
+    {
+        var codigo = editAreaLoader.getValue("textarea_" + actual + "");
+        codigo = codigo.split("\n");
+        console.log(codigo)
+        for (var i = 0; i < codigo.length; i++) {
+            if (i + 1 == linea)
+            {
+                return codigo[i];
+            }
 
+        }
+        return "";
+    }
     /*
      Me ingresa un codigo fuente splitiado por salto de lineas me organiza en la variable subtina 
      que es un hash donde la llave es el nombre de la subrtuina y el valor 
@@ -556,7 +580,7 @@ $(function ()
             var tdNumero = document.createElement("td")
             var tdCantidad1 = document.createElement("td")
             tdCantidad1.id = "cantidad_" + window.parent.frames[actual - 1].lineas[x];
-            tdCodigo.appendChild(document.createTextNode("codigo"));
+            tdCodigo.appendChild(document.createTextNode(lineaCodigo(window.parent.frames[actual - 1].lineas[x])));
             tdNumero.appendChild(document.createTextNode(window.parent.frames[actual - 1].lineas[x]));
             tdCantidad1.appendChild(document.createTextNode(0));
             tr.appendChild(tdCodigo);

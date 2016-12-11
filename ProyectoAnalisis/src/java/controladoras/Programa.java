@@ -4,9 +4,10 @@ import java.util.*;
 public class Programa {
 LinkedList<EstructuraLog> log=new LinkedList<EstructuraLog>();
 String resultado="";
-public void oe (int x) {
+public void oe (int x,int y) {
 agregar("oe","subrutina",2);
 agregar("x",Integer.toString(x),2);
+agregar("y",Integer.toString(y),2);
 x=x+5;
 agregar("x",Integer.toString(x),4);
 int z=34*2;
@@ -59,7 +60,7 @@ int aux=j+1;
 agregar("aux",Integer.toString(aux),28);
 a[aux]=x;
 agregarLista("a",a,29);
-oe(4);
+oe();
 
 agregar(null,null,30);
 int z = 0;
