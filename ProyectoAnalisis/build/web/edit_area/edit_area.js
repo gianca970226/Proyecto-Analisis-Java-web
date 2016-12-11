@@ -1,6 +1,89 @@
 
 
 var lineas = new Object();
+var bandera = false;
+var listaBreakPoint = new Array();
+function oe() {
+    console.log("asd")
+}
+/* 
+ en el array que entra como parametro buscamos i ya existe el valor retorna
+ true si lo encuentra o false si no esta el elemento
+ */
+function contieneArray(valor, array)
+{
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] == valor)
+        {
+            return true
+        }
+    }
+    return false;
+}
+function pintarPuntos(actual)
+{
+
+    for (x in lineas)
+    {
+        if (x != actual) {
+            var linea = document.getElementById("line_" + x)
+            linea.setAttribute('style', 'background-color:red')
+        }
+    }
+}
+
+function step(idLine, idanterior) {
+
+    //  console.log(idLine + '-' + idanterior)
+
+    var linea = document.getElementById("line_" + idLine)
+    if (idLine != idanterior) {
+        if (idLine > 1) {
+            var linea1 = document.getElementById("line_" + (idanterior))
+        } else {
+            var linea1 = document.getElementById("line_" + (idLine))
+        }
+        if (linea.getAttribute('style') == "background-color:red")
+        {
+            linea.setAttribute('style', 'background-color:yellow')
+            linea1.setAttribute('style', 'background-color:white')
+        } else
+        {
+            linea.setAttribute('style', 'background-color:blue')
+            linea1.setAttribute('style', 'background-color:white')
+        }
+        pintarPuntos(idLine)
+    } else
+    {
+        if (linea.getAttribute('style') == "background-color:red")
+        {
+            linea.setAttribute('style', 'background-color:yellow')
+
+        } else
+        {
+            linea.setAttribute('style', 'background-color:blue')
+
+        }
+        pintarPuntos(idLine)
+    }
+}
+
+function breakPoint(idLine) {
+    if (bandera && contieneArray(idLine, listaBreakPoint)) {
+        var linea = document.getElementById("line_" + idLine)
+
+        if (linea.getAttribute('style') == null || linea.getAttribute('style') == "background-color:white")
+        {
+            linea.setAttribute('style', 'background-color:red')
+            lineas[idLine] = idLine;
+        } else
+        {
+            delete lineas[idLine];
+            linea.setAttribute('style', 'background-color:white')
+        }
+    }
+}
+
 function EditArea() {
 
 
@@ -89,6 +172,7 @@ function EditArea() {
 }
 ;
 EditArea.prototype.init = function () {
+
     var t = this, a, s = t.settings;
     t.textarea = _$("textarea");
     t.container = _$("container");
@@ -186,6 +270,7 @@ EditArea.prototype.init = function () {
     parent.editAreaLoader.toggle(t.id, "on");
     //a.focus();
     // line selection init
+
     t.change_smooth_selection_mode(editArea.smooth_selection);
     // highlight
     t.execCommand("change_highlight", s["start_highlight"]);
@@ -421,6 +506,7 @@ EditArea.prototype.execCommand = function (cmd, param) {
                 eval("parent." + this.settings["load_callback"] + "('" + this.id + "');");
             break;
         case "onchange":
+
             if (this.settings["change_callback"].length > 0)
                 eval("parent." + this.settings["change_callback"] + "('" + this.id + "');");
             break;
@@ -538,20 +624,3 @@ function init() {
 }
 ;
 
-function breakPoint(idLine) {
-
-    var linea = document.getElementById("line_" + idLine)
-
-    if (linea.getAttribute('style') == null || linea.getAttribute('style') == "background-color:white")
-    {
-        linea.setAttribute('style', 'background-color:red')
-        lineas[idLine] = idLine;
-    } else
-    {
-        delete lineas[idLine];
-        linea.setAttribute('style', 'background-color:white')
-    }
-
-
-}
-;

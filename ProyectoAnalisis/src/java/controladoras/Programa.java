@@ -12,7 +12,7 @@ x=x+5;
 agregar("x",Integer.toString(x),4);
 int z=34*2;
 agregar("z",Integer.toString(z),5);
-oe1(3);
+oe1(5);
 
 agregar(null,null,6);
 agregar("oe","subrutina",7);
@@ -60,13 +60,13 @@ int aux=j+1;
 agregar("aux",Integer.toString(aux),28);
 a[aux]=x;
 agregarLista("a",a,29);
-oe();
+oe(2,3);
 
 agregar(null,null,30);
 int z = 0;
 agregar("z",Integer.toString(z),31);
 }
-oe1(1);
+oe1(5);
 
 agregar(null,null,33);
 

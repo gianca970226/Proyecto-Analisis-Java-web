@@ -12,16 +12,14 @@ editAreaLoader.load_syntax["java"] = {
             'String', 'int', 'short', 'long', 'char', 'double', 'byte',
             'float', 'static', 'void', 'private', 'boolean', 'protected',
             'public', 'const', 'class', 'final', 'abstract', 'volatile',
-            'enum', 'transient', 'interface'
+            'enum', 'transient', 'interface', 'return', 'procedure', 'function',
         ]
         , 'statements': [
             'if', 'then', 'for', 'to', 'while',
             'else', 'elif', 'end', 'do',
-            'until', 'begin', 'repet', 'to', 'call'
+            'until', 'begin', 'repet', 'to', 'call','enddeclare','declare',
         ]
-        , 'keywords': [
-            'return', 'procedure', 'function'
-        ]
+     
     }
     , 'OPERATORS': [
         'and', 'not', 'mod', 'not', 'or', '+', '-', '/', '*', '=', '<', '>'
