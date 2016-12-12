@@ -223,7 +223,7 @@ void WHILE():
 {
 	lwhile=<WHILE><PARENTESISABIERTO>ncondicion=CONDICION()<PARENTESISCERRADO> <DO> <BEGIN>
         {
-            generar.escribirLog(lwhile,null);
+            //generar.escribirLog(lwhile,null);
             generar.escribirWhile(ncondicion);
             generar.escribirLog(lwhile,null);
         } 
@@ -232,6 +232,9 @@ void WHILE():
             generar.recibir("}");
         } 
         <END>
+        {
+            generar.escribirLog(lwhile,null);
+        }
         E()
 }
 String CONDICION():
@@ -631,7 +634,7 @@ void FOR():
     lfor=<FOR><PARENTESISABIERTO>id1=<IDENTIFICADOR><ASIGNACION>valores1=VALOR()<TO>valores2=VALOR()(longitud=<LENGTH>)?<PARENTESISCERRADO><DO><BEGIN>
     {
         generar.insertarVariable(valores1[1],id1.image);
-        generar.escribirLog(lfor,null);
+        //generar.escribirLog(lfor,null);
         if (longitud==null)
         {
             generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<"+valores2[0]+";"+id1.image+"++");
@@ -645,6 +648,7 @@ void FOR():
     E()<END>
     {
         generar.recibir("}");
+        generar.escribirLog(lfor,null);
     }
     E()
 }

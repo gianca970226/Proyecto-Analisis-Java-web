@@ -33,7 +33,7 @@ function EditAreaLoader() {
         //id: "src"	// id of the textarea to transform
         debug: false
         , smooth_selection: true
-        , font_size: "12"		// not for IE
+        , font_size: "10"		// not for IE
         , font_family: "monospace"	// can be "verdana,monospace". Allow non monospace font but Firefox get smaller tabulation with non monospace fonts. IE doesn't change the tabulation width and Opera doesn't take this option into account... 
         , start_highlight: false	// if start with highlight
         , toolbar: "search, go_to_line, fullscreen, |, undo, redo, |, select_font,|, change_smooth_selection, highlight, reset_highlight, word_wrap, |, help"
@@ -42,7 +42,7 @@ function EditAreaLoader() {
         , is_multi_files: false		// enable the multi file mode (the textarea content is ignored)
         , allow_resize: "both"	// possible values: "no", "both", "x", "y"
         , show_line_colors: false	// if the highlight is disabled for the line currently beeing edited (if enabled => heavy CPU use)
-        , min_width: 900
+        , min_width: 600
         , min_height: 450
         , replace_tab_by_spaces: false
         , allow_toggle: false		// true or false

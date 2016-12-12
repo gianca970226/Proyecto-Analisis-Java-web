@@ -19,10 +19,74 @@ var listaRutinas = new Array();
 var auxBreackPoint = 0;
 var puntoCorte = new Object();
 
-$(function ()
+var worker1;
+var banderaFin = false;
+
+var auxLineaAnterior = 0;
+function pintarGrafico()
 {
 
+    var dataLength = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+    var data = [];
+    for (var i = 0; i < dataLength.length; i++) {
+        data.push({
+            x: parseInt(dataLength[i]),
+            y: parseInt(dataLength[i])
+        });
+    }
+
+    var chart = new CanvasJS.Chart("chart", {
+        title: {
+            text: "TIEMPO X vs. CONTEO DE PASOS Y"
+        },
+        axisX: {
+            title: "TIEMPO X",
+        },
+        axisY: {
+            title: "CONTEO DE PASOS",
+        },
+        data: [{type: "line", dataPoints: data}],
+    });
+    chart.render();
+
+
+}
+
+$(function ()
+{
+    $("#grafico").on("click", grafico);
+    function grafico()
+    {
+        $.post("Controladora", {
+            operacion: "tiempo",
+        }, function (data) {
+            alert(data)
+        }).fail(function ()
+        {
+            alert("Error en la operacion");
+        });
+    }
+    $("#auto").on("click", start1_onClick);
+    function start1_onClick()
+    {
+        if (typeof (Worker) !== "undefined") {
+            if (typeof (worker1) == "undefined") {
+                worker1 = new Worker("js/hilo.js");
+            }
+            worker1.onmessage = function (event) {
+                if (!banderaFin)
+                {
+                    step()
+                }
+
+            };
+        } else {
+            console.log("Sorry, your browser does not support Web Workers...");
+        }
+    }
+
     arbol();
+    //  pintarGrafico()
     //asociamos la function setp a correspondiente boton
     $('#step').click(step);
     //libreria para capturar evento de presionar una tecla 
@@ -82,6 +146,10 @@ $(function ()
                 {
                     // si ya se termino la rutina principal ya se termina el proceso
                     alert("Fin")
+                    banderaFin = true;
+                    worker1.terminate();
+
+
 
                     //location.reload();
                 }
@@ -92,16 +160,16 @@ $(function ()
             {
                 banderaRutina = true;
 
-                if (contieneObjeto(puntoCorte, lineallamado) && auxBreackPoint != lineallamado)
-                {
-                    auxBreackPoint = lineallamado;
-                    puntoCorte[lineallamado] = puntoCorte[lineallamado] + 1;
-                    var tdAux = document.getElementById("cantidad_" + lineallamado);
-                    console.log("cantidad_" + lineallamado)
-                    removeAllChilds("cantidad_" + lineallamado);
-                    tdAux.appendChild(document.createTextNode(puntoCorte[lineallamado]));
-
-                }
+//                if (contieneObjeto(puntoCorte, lineallamado) && auxBreackPoint != lineallamado)
+//                {
+//                    auxBreackPoint = lineallamado;
+//                    puntoCorte[lineallamado] = puntoCorte[lineallamado] + 1;
+//                    var tdAux = document.getElementById("cantidad_" + lineallamado);
+//                    console.log("cantidad_" + lineallamado)
+//                    removeAllChilds("cantidad_" + lineallamado);
+//                    tdAux.appendChild(document.createTextNode(puntoCorte[lineallamado]));
+//
+//                }
                 //creamos un nuevo area de editor de texto con el codigo correspondiente
                 //guardado en la subrutinas 
                 crearAmbiente(subrutinas[pila.peek().variables[(pila.peek().contadorLinea)].nombre]);
@@ -207,9 +275,13 @@ $(function ()
             if (!banderaRutina) {
                 // console.log(pila.peek().variables[(pila.peek().contadorLinea)].linea + "aa");
                 var auxLinea = pila.peek().variables[(pila.peek().contadorLinea)].linea;
-                if (contieneObjeto(puntoCorte, auxLinea) && auxBreackPoint != auxLinea)
+                var auxLinea
+                console.log(tamañoObject(auxLinea))
+
+                if (contieneObjeto(puntoCorte, auxLinea))
                 {
                     auxBreackPoint = auxLinea;
+
                     puntoCorte[auxLinea] += 1;
                     var tdAux = document.getElementById("cantidad_" + auxLinea);
                     console.log("cantidad_" + auxLinea)
@@ -422,6 +494,16 @@ $(function ()
         }
         nodes.update([{id: id, color: {background: color}}]);
     }
+    function tamañoObject(object)
+    {
+        var contador = 0;
+        for (x in object)
+        {
+            contador++;
+
+        }
+        return contador;
+    }
     function contieneObjeto(object, valor)
     {
         for (x in object)
@@ -560,7 +642,7 @@ $(function ()
         }
     }
 
-    $("#auto").on("click", MostarPuntosSeleccionados);
+
     function MostarPuntosSeleccionados()
     {
         for (x in puntoCorte)

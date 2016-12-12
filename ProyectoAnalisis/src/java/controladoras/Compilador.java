@@ -24,50 +24,52 @@ public class Compilador {
 
     public Compilador() {
     }
-    
-    public String compilar2()
-    {
-        String resultado="ecelente";
+
+    public String compilar2() {
+
+        String resultado = "ecelente";
         try {
             clase = Class.forName(Compilador.class.getPackage().getName() + "." + "Programa");
             objeto = clase.newInstance();
             Method ejecutarTarea = clase.getMethod("principal", null);
             ejecutarTarea.invoke(objeto, null);
             Method ejecutarTarea2 = clase.getMethod("getResultado", null);
-            resultado=(String)ejecutarTarea2.invoke(objeto, null);
+            resultado = (String) ejecutarTarea2.invoke(objeto, null);
         } catch (ClassNotFoundException ex) {
             System.out.println("Error al obtener la clase");
-            resultado=ex.toString();
+            resultado = ex.toString();
         } catch (InstantiationException ex) {
             System.out.println(ex.getMessage());
-            resultado=ex.toString();
+            resultado = ex.toString();
         } catch (IllegalAccessException ex) {
             System.out.println("Error acceso ilegal");
-            resultado=ex.toString();
+            resultado = ex.toString();
         } catch (NoSuchMethodException ex) {
             System.out.println("No se encontro el metodo");
-            resultado=ex.toString();
+            resultado = ex.toString();
         } catch (SecurityException ex) {
             System.out.println("Excepcion de seguridad");
-            resultado=ex.toString();
+            resultado = ex.toString();
         } catch (IllegalArgumentException ex) {
             System.out.println("Argumentacion ilegal");
-            resultado=ex.toString();
+            resultado = ex.toString();
         } catch (InvocationTargetException ex) {
             System.out.println(ex.getMessage());
-            resultado=ex.toString();
+            resultado = ex.toString();
         }
+
         return resultado;
     }
 
     public void compilar() {
+
         try {
             clase = Class.forName(Compilador.class.getPackage().getName() + "." + "Programa");
             objeto = clase.newInstance();
             Method ejecutarTarea = clase.getMethod("principal", null);
             ejecutarTarea.invoke(objeto, null);
             Method ejecutarTarea1 = clase.getMethod("mostrar", null);
-            Resultado =  (String) ejecutarTarea1.invoke(objeto, null);
+            Resultado = (String) ejecutarTarea1.invoke(objeto, null);
         } catch (ClassNotFoundException ex) {
             System.out.println("Error al obtener la clase");
         } catch (InstantiationException ex) {
@@ -86,12 +88,17 @@ public class Compilador {
 //            return resultados;
             System.out.println("Error al invocar" + ex.toString());
         }
+
+    }
+
+    public String getResultado() {
+        return Resultado;
     }
 
     public static void main(String[] args) {
 
         Compilador com = new Compilador();
-        String resultado=com.compilar2();
+        String resultado = com.compilar2();
         System.out.println(resultado);
     }
 }

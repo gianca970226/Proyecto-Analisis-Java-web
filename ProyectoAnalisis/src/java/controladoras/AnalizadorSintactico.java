@@ -268,12 +268,13 @@ GenerarJava generar= new GenerarJava();
     jj_consume_token(PARENTESISCERRADO);
     jj_consume_token(DO);
     jj_consume_token(BEGIN);
-            generar.escribirLog(lwhile,null);
+            //generar.escribirLog(lwhile,null);
             generar.escribirWhile(ncondicion);
             generar.escribirLog(lwhile,null);
     E();
             generar.recibir("}");
     jj_consume_token(END);
+            generar.escribirLog(lwhile,null);
     E();
   }
 
@@ -884,7 +885,7 @@ GenerarJava generar= new GenerarJava();
     jj_consume_token(DO);
     jj_consume_token(BEGIN);
         generar.insertarVariable(valores1[1],id1.image);
-        generar.escribirLog(lfor,null);
+        //generar.escribirLog(lfor,null);
         if (longitud==null)
         {
             generar.escribirFor(id1.image+"="+valores1[0]+";"+id1.image+"<"+valores2[0]+";"+id1.image+"++");
@@ -897,6 +898,7 @@ GenerarJava generar= new GenerarJava();
     E();
     jj_consume_token(END);
         generar.recibir("}");
+        generar.escribirLog(lfor,null);
     E();
   }
 

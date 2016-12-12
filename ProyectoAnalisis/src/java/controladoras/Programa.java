@@ -39,14 +39,12 @@ int lon = a.length;
 agregar("lon",Integer.toString(lon),16);
 int i = 1;
 agregar("i",Integer.toString(i),17);
-agregar(null,null,18);
 for(i=1;i<lon;i++){
 agregar("i",Integer.toString(i),18);
 int x=a[i];
 agregar("x",Integer.toString(x),20);
 int j=i-1;
 agregar("j",Integer.toString(j),21);
-agregar(null,null,22);
 while(j >= 0 && x < a[j]){
 agregar(null,null,22);
 int temp=j+1;
@@ -56,19 +54,18 @@ agregarLista("a",a,25);
 j=j-1;
 agregar("j",Integer.toString(j),26);
 }
+agregar(null,null,22);
 int aux=j+1;
 agregar("aux",Integer.toString(aux),28);
 a[aux]=x;
 agregarLista("a",a,29);
-oe(2,3);
-
-agregar(null,null,30);
 int z = 0;
-agregar("z",Integer.toString(z),31);
-}
+agregar("z",Integer.toString(z),30);
 oe1(5);
 
-agregar(null,null,33);
+agregar(null,null,31);
+}
+agregar(null,null,18);
 
 }catch(Exception e)
 {
