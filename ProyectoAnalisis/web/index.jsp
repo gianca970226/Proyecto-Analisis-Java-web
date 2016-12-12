@@ -15,7 +15,10 @@
         <script type="text/javascript" src="js/js1.js"></script>
         <script type="text/javascript" src="js/stack.js"></script>
 
+
         <script type="text/javascript" src="js/keypress.js"></script>
+        <script type="text/javascript" src="js/canvasjs.min.js"></script>
+        <script type="text/javascript" src="js/jquery.canvasjs.min.js"></script>
         <script language="javascript" type="text/javascript" src="edit_area/edit_area_loader.js"></script>
         <script language="javascript" type="text/javascript">
             editAreaLoader.init({
@@ -27,6 +30,7 @@
             $("#line_number").attr('onclick', "breakpoint()");
 
         </script>
+
         <script src="js/googleAnalytics.js"></script>
         <script type="text/javascript" src="js/vis.js"></script>
         <script type="text/javascript" src="js/bootstrap-filestyle.min.js"></script>
@@ -34,6 +38,9 @@
         <link rel="stylesheet" type="text/css" href="css/estilo.css" >
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" >
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/vis-timeline-graph2d.min.css">
+
+
 
     </head>
     <body>
@@ -42,6 +49,7 @@
             <button id="run" class="btn-lg"><span class="glyphicon glyphicon-play "></span></button>
             <button id="step" class="btn-lg"><span class="glyphicon glyphicon-download"></span></button>
             <button id="auto" class="btn-lg"><span class="glyphicon glyphicon-asterisk"></span></button>
+
         </nav>
 
 
@@ -93,6 +101,9 @@
                 <tbody id="bodyPuntosCorte">
                 </tbody>
             </table>
+        </div>
+        <div class="col-xs-12">
+            <div id="chart"></div>
         </div>
 
     </body>
